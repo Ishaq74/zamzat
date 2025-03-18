@@ -1,0 +1,86 @@
+---
+import Icon from 'node_modules/astro-icon/components/Icon.astro';
+import Grid from './Elements/Grid.astro';
+import { SOCIAL_MEDIA, NAV_LINKS_SECONDARY, NAV_LINKS, FOOTER_TEXT , SITE_DEV_URL } from '../const';
+import Link from './Elements/Link.astro';
+
+const config = {
+  showResources: true,
+  navPrimary: true,
+  navSecondary: true,
+  showSocialMedia: true,
+  showCopyright: false,
+};
+---
+<Grid tag="footer" customClasses="border-t-3" borderColor="border-white" borderStyle="border-double" backgroundColor="bg-black" cols={1} hFull={false} yPadding="py-4">
+	<Grid tag="footer" backgroundColor="bg-black" cols={4} gap="gap-4 md:gap-8" yPadding="py-2">
+	  {config.showSocialMedia && SOCIAL_MEDIA?.length > 0 && (
+		<div>
+		  <span class="text-white font-medium uppercase">Nos Réseaux Sociaux</span>
+		  <ul class="flex space-x-4 mt-4">
+			{SOCIAL_MEDIA.map((social) => (
+			  <li>
+				<a href={social.url} target="_blank" rel="noopener noreferrer">
+					<Icon name={social.iconClass} title={social.name} size={32} class="text-white p-1 bg-yellow-500 border-1 rounded-full" />
+				</a>
+			  </li>
+			))}
+		  </ul>
+		</div>
+	  )}
+
+
+	{config.navPrimary && NAV_LINKS?.length > 0 && (
+		<div>
+		<span class="text-white font-medium uppercase">Navigation Principale</span>
+		<ul class="space-y-2.5 mt-4">
+			{NAV_LINKS.map((link) => (
+			<li>
+				<a href={link.url} class="text-[13px] text-gray-400 hover:text-white">{link.name}</a>
+			</li>
+			))}
+		</ul>
+		</div>
+	)}
+  
+	  {config.navSecondary && NAV_LINKS_SECONDARY?.length > 0 && (
+		<div>
+		  <span class="text-white font-medium uppercase mt-4">Navigation Secondaire</span>
+		  <ul class="space-y-2.5 mt-4">
+			{NAV_LINKS_SECONDARY.map((link) => (
+			  <li>
+				<a href={link.url} class="text-[13px] text-gray-400 hover:text-white">{link.name}</a>
+			  </li>
+			))}
+		  </ul>
+		</div>
+	  )}
+  
+  
+	  {config.showResources && NAV_LINKS_SECONDARY?.length > 0 && (
+		<div>
+		  <span class="text-white font-medium uppercase">Mentions Légales</span>
+		  <ul class="space-y-2.5 mt-4">
+			{NAV_LINKS_SECONDARY.map((link) => (
+			  <li>
+				<a href={link.url} class="text-[13px] text-gray-400 hover:text-white">{link.name}</a>
+			  </li>
+			))}
+		  </ul>
+		</div>
+	  )}
+  	</Grid>
+
+
+		{config.showCopyright && (
+		<Grid tag="footer" backgroundColor="bg-black" cols={1}>
+		<hr class="my-2 border-gray-600" />
+		<div class="max-w-screen-xl mx-auto text-center">
+			<p class="text-gray-400">
+			<Link style="outline" href={SITE_DEV_URL} target="_blank" rel="noopener noreferrer">{FOOTER_TEXT}</Link>
+			</p>
+		</div>
+		</Grid>
+		)}
+</Grid>
+  

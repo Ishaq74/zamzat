@@ -1,0 +1,75 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { Icon } from 'astro-icon/components'
+
+type ButtonStyle = 'primary' | 'secondary' | 'accent' | 'outline';
+
+
+// Typage Typescript
+interface Props extends HTMLAttributes<'button'> {
+  style?: ButtonStyle;
+  ariaLabel?: string;
+  icon?: { name: string; side: 'left' | 'right' };
+  disabled?: boolean;
+  shape?: 'sharp' | 'rounded' | 'circle';
+  customClasses?: string;
+  paddingY?: string;
+  paddingX?: string;
+  fontSize?: string;
+  fontWeight?: string;
+  fitContent?: boolean;
+  onClick?: () => void; 
+}
+
+// Valeurs par défault
+const {
+  type = 'button',
+  style = 'primary',
+  ariaLabel,
+  icon,
+  disabled = false,
+  shape = 'sharp',
+  customClasses = '',
+  paddingY = 'py-3',
+  paddingX = 'px-6',
+  fontSize = 'text-base',
+  fontWeight,
+  fitContent = true,
+  ...htmlAttributes
+} = Astro.props as Props;
+
+// Map des classes Tailwind
+const buttonClasses = {
+  primary:
+    "text-center no-underline bg-primary text-light hover:bg-primary-light focus:ring-2 focus:ring-primary border border-primary-dark shadow-lg",
+  secondary:
+    "text-center no-underline bg-secondary text-light hover:bg-secondary-light focus:ring-2 focus:ring-secondary border border-secondary-dark shadow-lg",
+  accent:
+    "text-center no-underline bg-accent text-light hover:bg-accent-light focus:ring-2 focus:ring-accent border border-accent-dark shadow-lg",
+  outline:
+    "text-center no-underline bg-transparent text-primary border-2 border-primary hover:bg-primary-light focus:ring-2 focus:ring-primary shadow-lg",
+};
+
+// Récupération des classes du style sélectionné
+const selectedStyleClasses = buttonClasses[style];
+
+// Gestion des formes
+const shapeClass = shape === 'sharp' ? 'rounded-none' : shape === 'rounded' ? 'rounded-lg' : 'rounded-full';
+
+// Gestion du fitContent
+const fitContentClass = fitContent ? 'w-fit' : '';
+
+---
+
+<button
+  type={type}
+  aria-label={ariaLabel}
+  class={`inline-flex items-center justify-center ${paddingY} ${paddingX} ${fontSize} ${fontWeight} ${selectedStyleClasses} ${shapeClass} ${fitContentClass} ${disabled ? 'opacity-50 cursor-not-allowed' : ''} ${customClasses}`}
+  disabled={disabled}
+  tabindex={disabled ? -1 : 0}
+  {...htmlAttributes}
+>
+  {icon && icon.side === 'left' && <Icon name={icon.name} class="mr-2" />}
+  <slot />
+  {icon && icon.side === 'right' && <Icon name={icon.name} class="ml-2" />}
+</button>

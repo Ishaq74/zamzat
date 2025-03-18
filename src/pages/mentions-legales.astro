@@ -1,0 +1,703 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Grid from '@components/Elements/Grid.astro';
+import {
+DEFAULT_TITLE,
+DEFAULT_AUTHOR,
+SITE_URL,
+DEFAULT_DESCRIPTION,
+SITE_DEV_URL,
+SITE_DEV_EMAIL,
+SITE_HOST_NAME,
+SITE_HOST_ADDRESS,
+SITE_HOST_URL,
+SITE_HOST_CONTACT,
+SITE_MEDIATEUR_NAME,
+SITE_MEDIATEUR_ADRESS,
+SITE_MEDIATEUR_URL,
+SITE_MEDIATEUR_CONTACT } from "../const";
+
+const pageTitle = `Mentions Légales`;
+const pageDescription = 'Toutes les mentions Légales de CommentCuireAuAirFryer.fr sont sur cette page.';
+const pageKeywords = "mentions-legales, commentcuireauairfryer, commentcuireauairfryer.fr, commentcuireauairfryer.fr mentions-legales";
+const pageOgImage = "";
+const pageLang = 'fr';
+const pageRobots = "index, follow";
+
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+
+<!-- Section Hero avec image d'arrière-plan dynamique -->
+<Grid tag="section" textAlign="center" backgroundColor="bg-blue-200" align="center" gap="gap-0">
+    <h1>{pageTitle}</h1>
+    <p>{pageDescription}</p>
+</Grid>
+
+<section id="faq-1720" data-astro-cid-qzrizkdj="" class="mt-8">
+<div class="cs-container" data-astro-cid-qzrizkdj="">
+    <div class="cs-flex-group" data-astro-cid-qzrizkdj="">
+        <div class="cs-button-group" data-astro-cid-qzrizkdj="">
+            <div class="cs-flex" data-astro-cid-qzrizkdj="">
+                <button class="cs-option cs-active" data-filter="one" data-astro-cid-qzrizkdj="">
+                    <img class="cs-icon" src="https://csimg.nyc3.cdn.digitaloceanspaces.com/Images/Graphics/plus.svg" alt="plus graphic" width="12" height="12" decoding="async" aria-hidden="true" data-astro-cid-qzrizkdj="">
+                    Mentions Légales
+                </button>
+                <button class="cs-option" data-filter="two" data-astro-cid-qzrizkdj="">
+                    <img class="cs-icon" src="https://csimg.nyc3.cdn.digitaloceanspaces.com/Images/Graphics/plus.svg" alt="plus graphic" width="12" height="12" decoding="async" aria-hidden="true" data-astro-cid-qzrizkdj="">
+                    Politique de Confidentialité
+                </button>
+                <button class="cs-option" data-filter="three" data-astro-cid-qzrizkdj="">
+                    <img class="cs-icon" src="https://csimg.nyc3.cdn.digitaloceanspaces.com/Images/Graphics/plus.svg" alt="plus graphic" width="12" height="12" decoding="async" aria-hidden="true" data-astro-cid-qzrizkdj="">
+                    Conditions Générales de vente
+                </button>
+            </div>
+            <picture class="cs-picture" data-astro-cid-qzrizkdj="">
+                <source media="(max-width: 600px)" srcset="https://csimg.nyc3.cdn.digitaloceanspaces.com/Images/People/people2.jpg" data-astro-cid-qzrizkdj="">
+                <source media="(min-width: 601px)" srcset="https://csimg.nyc3.cdn.digitaloceanspaces.com/Images/People/people2.jpg" data-astro-cid-qzrizkdj="">
+                <img loading="lazy" decoding="async" src="https://csimg.nyc3.cdn.digitaloceanspaces.com/Images/People/people2.jpg" alt="people" width="353" height="493" data-astro-cid-qzrizkdj="">
+            </picture>
+        </div>
+        <div id="mentions-legales" class="cs-wrapper" data-astro-cid-qzrizkdj="">
+            <ul class="cs-faq-group" data-category="one" data-astro-cid-qzrizkdj="">
+                <h2 class="cs-title" data-astro-cid-qzrizkdj="">
+                    Mentions Légales
+                </h2>
+                <p class="cs-text" data-astro-cid-qzrizkdj="">
+                    Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la confiance en l’économie numérique, nous tenons à vous informer de l’identité des différents intervenants impliqués dans la réalisation et le suivi du site "{DEFAULT_TITLE}".
+                </p>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">
+                            Identité du Site
+                        </span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        {DEFAULT_DESCRIPTION}
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">
+                            Hébergement
+                        </span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Le Site est hébergé par la société <b>{SITE_HOST_NAME}</b>, située au <b>{SITE_HOST_ADDRESS}</b> (contact téléphonique ou email : <b>{SITE_HOST_CONTACT}</b>).
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">
+                            Directeur de publication
+                        </span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Le Directeur de la publication du Site est <b>{DEFAULT_AUTHOR}</b>.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">
+                            Nous contacter
+                        </span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Par téléphone : <b>{SITE_DEV_EMAIL}</b><br data-astro-cid-qzrizkdj="">
+                        Par email : <b>{SITE_DEV_EMAIL}</b><br data-astro-cid-qzrizkdj="">
+                        Par courrier : <b>{SITE_HOST_ADDRESS}</b>
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">
+                            Données personnelles
+                        </span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Le traitement de vos données à caractère personnel est régi par notre Politique de Confidentialité, disponible dans la section « Politique de Confidentialité », conformément au Règlement Général sur la Protection des Données 2016/679 du 27 avril 2016 (« RGPD »).
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">
+                            Litiges
+                        </span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        En cas de litige entre le professionnel et le consommateur, ceux-ci s’efforceront de trouver une solution amiable.
+                        A défaut d’accord amiable, le consommateur a la possibilité de saisir gratuitement le médiateur de la consommation dont relève le professionnel, à savoir <b>{SITE_MEDIATEUR_NAME}</b>, dans un délai d’un an à compter de la réclamation écrite adressée au professionnel.
+                        La saisine du médiateur de la consommation devra s’effectuer :
+                        - soit en complétant le formulaire prévu à cet effet sur le site internet de <b>{SITE_MEDIATEUR_URL}</b> : <a href={SITE_MEDIATEUR_URL}>{SITE_MEDIATEUR_URL}</a>
+                        - soit par courrier adressé à <b>{SITE_MEDIATEUR_ADRESS}</b>.
+                    </p>
+                </li>
+            </ul>
+            <ul id="politique-confidentialite" class="cs-faq-group cs-hidden" data-category="two" data-astro-cid-qzrizkdj="">
+                <h2 class="cs-title" data-astro-cid-qzrizkdj="">
+                    Politique de Confidentialité
+                </h2>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Informations sur l'entreprise</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        L'entreprise XYZ, située au 123 rue Principale, 75000 Ville, France, est responsable du traitement des données personnelles collectées sur ce site.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Collecte des données personnelles</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Nous collectons des données personnelles telles que le nom, l'adresse e-mail, l'adresse postale, etc., uniquement dans le cadre de la fourniture de nos services et produits, et avec le consentement explicite de l'utilisateur.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">But de la collecte des données</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Les données personnelles collectées sont utilisées dans le but de fournir nos services, de traiter les commandes, d'améliorer notre site et nos produits, et de communiquer avec nos utilisateurs.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Consentement</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        En utilisant ce site, vous consentez à la collecte et au traitement de vos données personnelles conformément à notre politique de confidentialité.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Utilisation des données</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Les données personnelles sont utilisées uniquement aux fins spécifiées lors de la collecte et sont protégées conformément aux lois sur la protection des données en vigueur.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Partage des données</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Nous ne partageons pas vos données personnelles avec des tiers, sauf dans les cas prévus par la loi ou avec votre consentement explicite.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Droits des utilisateurs</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Vous avez le droit d'accéder à vos données personnelles, de les corriger, de les supprimer et de vous opposer à leur traitement. Pour exercer ces droits, veuillez nous contacter à <b>{SITE_DEV_EMAIL}</b>.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Cookies et suivi en ligne</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Ce site utilise des cookies et d'autres technologies de suivi pour améliorer votre expérience de navigation et pour collecter des informations sur la manière dont vous utilisez le site.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Mises à jour de la politique de confidentialité</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Cette politique de confidentialité peut être mise à jour périodiquement pour refléter les changements dans nos pratiques en matière de confidentialité. Toute modification importante sera clairement indiquée sur cette page.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Coordonnées de contact</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Si vous avez des questions ou des préoccupations concernant notre politique de confidentialité, veuillez nous contacter à <b>{SITE_DEV_EMAIL}</b> ou par courrier à <b>{SITE_HOST_ADDRESS}</b>.
+                    </p>
+                </li>
+            </ul>
+            <ul id="cgv" class="cs-faq-group cs-hidden" data-category="three" data-astro-cid-qzrizkdj="">
+                <h2 class="cs-title" data-astro-cid-qzrizkdj="">
+                    Conditions Générales de Vente
+                </h2>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Champ d'application</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Les présentes Conditions Générales de Vente (CGV) s'appliquent à toutes les commandes passées par le client (ci-après dénommé "le Client") auprès de l'entreprise XYZ (ci-après dénommée "le Vendeur") via le site web <b>{SITE_URL}</b>.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Commandes</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Le Client peut passer commande via le site web <b>{SITE_URL}</b>. Toute commande implique l'acceptation expresse et sans réserve des présentes CGV.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Prix</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Les prix des produits sont indiqués en euros toutes taxes comprises (TTC). Le Vendeur se réserve le droit de modifier ses prix à tout moment, mais les produits seront facturés sur la base des tarifs en vigueur au moment de la validation de la commande.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Paiement</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Le paiement s'effectue en ligne par carte bancaire ou tout autre moyen de paiement sécurisé accepté par le Vendeur. La commande ne sera traitée qu'après réception du paiement.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Livraison</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Les produits seront livrés à l'adresse indiquée par le Client lors de la commande. Les délais de livraison sont donnés à titre indicatif et peuvent varier en fonction du lieu de livraison et de la disponibilité des produits.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Droit de rétractation</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Conformément à la législation en vigueur, le Client dispose d'un délai de [nombre de jours] jours pour exercer son droit de rétractation à compter de la réception des produits, sans avoir à justifier de motifs ni à payer de pénalités.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Garantie</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Les produits vendus sont soumis à la garantie légale de conformité et à la garantie des vices cachés prévues par la loi. En cas de non-conformité ou de vice caché, le Client peut choisir entre la réparation, le remplacement ou le remboursement du produit.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Responsabilité</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Le Vendeur ne saurait être tenu pour responsable des dommages directs ou indirects causés par l'utilisation des produits vendus. La responsabilité du Vendeur est limitée au montant de la commande.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Litiges</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        En cas de litige, une solution amiable sera recherchée en priorité. À défaut d'accord amiable, le litige sera soumis aux tribunaux compétents.
+                    </p>
+                </li>
+                <li class="cs-faq-item" data-astro-cid-qzrizkdj="">
+                    <button class="cs-button" data-astro-cid-qzrizkdj="">
+                        <span class="cs-button-text" data-astro-cid-qzrizkdj="">Coordonnées de contact</span>
+                    </button>
+                    <p class="cs-item-p" data-astro-cid-qzrizkdj="">
+                        Pour toute question ou réclamation concernant les CGV, le Client peut contacter le Vendeur par e-mail à <b>{SITE_DEV_EMAIL}</b> ou par courrier à <b>{SITE_HOST_ADDRESS}</b>.
+                    </p>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+</section>
+</Layout>
+
+
+<style>
+@media only screen and (min-width: 0rem) {
+  #faq-1720[data-astro-cid-qzrizkdj] {
+    padding-inline:16px;
+    position:relative
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-container[data-astro-cid-qzrizkdj] {
+    width:100%;
+    max-width:80rem;
+    margin:auto;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:clamp(3rem,6vw,4rem);
+    position:relative;
+    z-index:1
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-content[data-astro-cid-qzrizkdj] {
+    text-align:left;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-title[data-astro-cid-qzrizkdj] {
+    margin:0
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-flex-group[data-astro-cid-qzrizkdj] {
+    width:100%;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    gap:clamp(1rem,2.3vw,1.25rem);
+    position:relative
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-wrapper[data-astro-cid-qzrizkdj] {
+    width:100%;
+    position:relative
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-button-group[data-astro-cid-qzrizkdj] {
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:clamp(1rem,2.5vw,1.25rem);
+    flex:none
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-flex[data-astro-cid-qzrizkdj] {
+    width:100%;
+    padding:clamp(1.5rem,3vw,2rem);
+    background-color:#f7f7f7;
+    display:flex;
+    flex-direction:column;
+    order:3;
+    gap:1.25rem
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-option[data-astro-cid-qzrizkdj] {
+    font-size:clamp(1rem,2vw,1.25rem);
+    line-height:1.2em;
+    font-weight:700;
+    padding:0;
+    color:var(--bodyTextColor);
+    background-color:transparent;
+    border:none;
+    display:flex;
+    justify-content:flex-start;
+    align-items:center;
+    gap:.5rem;
+    position:relative;
+    z-index:1;
+    transition:color .3s;
+    text-align:left
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-option[data-astro-cid-qzrizkdj]:hover {
+    color:var(--primary);
+    cursor:pointer
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-option[data-astro-cid-qzrizkdj].cs-active {
+    color:var(--primary)
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-picture[data-astro-cid-qzrizkdj] {
+    width:100%;
+    height:clamp(20.5rem,30vw,28.125rem);
+    margin:0 0 clamp(1rem,2.4vw,1.25rem);
+    order:2;
+    position:relative;
+    z-index:1
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-picture[data-astro-cid-qzrizkdj] img[data-astro-cid-qzrizkdj] {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    position:absolute;
+    top:0;
+    left:0
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-group[data-astro-cid-qzrizkdj] {
+    width:100%;
+    padding:0;
+    margin:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    order:3;
+    gap:.5rem;
+    transition:transform .7s,opacity .3s,visibility .5s,top .3s,left .3s;
+    transform-origin:top;
+    transform-style:preserve-3d;
+    perspective:900px
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-group[data-astro-cid-qzrizkdj].cs-hidden {
+    visibility:hidden;
+    pointer-events:none;
+    opacity:0;
+    top:0;
+    left:0;
+    position:absolute;
+    transform:scaleY(0)
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-group[data-astro-cid-qzrizkdj].cs-hidden .cs-faq-item[data-astro-cid-qzrizkdj] {
+    transform:rotateX(270deg);
+    opacity:0
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj] {
+    list-style:none;
+    width:100%;
+    overflow:hidden;
+    opacity:1;
+    top:0;
+    transform:rotateX(0);
+    transition:transform .6s,opacity .3s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj]:nth-of-type(2) {
+    transition-delay:.1s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj]:nth-of-type(3) {
+    transition-delay:.2s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj]:nth-of-type(4) {
+    transition-delay:.3s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj]:nth-of-type(5) {
+    transition-delay:.4s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj]:nth-of-type(6) {
+    transition-delay:.5s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj]:nth-of-type(7) {
+    transition-delay:.6s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj]:nth-of-type(8) {
+    transition-delay:.7s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj]:nth-of-type(9) {
+    transition-delay:.8s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj]:nth-of-type(10) {
+    transition-delay:.9s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj].active .cs-button[data-astro-cid-qzrizkdj] {
+    color:var(--primary)
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj].active .cs-button[data-astro-cid-qzrizkdj]:before {
+    background-color:var(--primary);
+    transform:rotate(315deg)
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj].active .cs-button[data-astro-cid-qzrizkdj]:after {
+    background-color:var(--primary);
+    transform:rotate(-315deg)
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-faq-item[data-astro-cid-qzrizkdj].active .cs-item-p[data-astro-cid-qzrizkdj] {
+    height:auto;
+    padding:0 clamp(1rem,2vw,1.5rem) clamp(1.25rem,1.3vw,1.5rem);
+    opacity:1
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-button[data-astro-cid-qzrizkdj] {
+    font-size:clamp(1rem,2vw,1.25rem);
+    line-height:1.2em;
+    text-align:left;
+    font-weight:700;
+    padding:clamp(1rem,2vw,1.5rem) clamp(1rem,2vw,1.25rem);
+    background-color:#f7f7f7;
+    border:none;
+    color:var(--headerColor);
+    display:block;
+    width:100%;
+    position:relative;
+    transition:background-color .3s,color .3s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-button[data-astro-cid-qzrizkdj]:hover {
+    cursor:pointer
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-button[data-astro-cid-qzrizkdj]:before {
+    content:"";
+    width:.5rem;
+    height:.125rem;
+    background-color:var(--headerColor);
+    opacity:1;
+    border-radius:50%;
+    position:absolute;
+    display:block;
+    top:50%;
+    right:1.5rem;
+    transform:rotate(45deg);
+    transform-origin:left center;
+    transition:transform .5s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-button[data-astro-cid-qzrizkdj]:after {
+    content:"";
+    width:.5rem;
+    height:.125rem;
+    background-color:var(--headerColor);
+    opacity:1;
+    border-radius:50%;
+    position:absolute;
+    display:block;
+    top:50%;
+    right:1.3125rem;
+    transform:rotate(-45deg);
+    transform-origin:right center;
+    transition:transform .5s
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-button-text[data-astro-cid-qzrizkdj] {
+    width:80%;
+    display:block
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-item-p[data-astro-cid-qzrizkdj] {
+    font-size:clamp(.875rem,1.5vw,1rem);
+    line-height:1.5em;
+    width:100%;
+    height:0;
+    margin:0;
+    padding:0 clamp(1rem,2vw,1.5rem);
+    opacity:0;
+    background-color:#f7f7f7;
+    color:var(--bodyTextColor);
+    overflow:hidden;
+    transition:opacity .3s,padding-bottom .3s
+  }
+}
+@media only screen and (min-width: 37.5rem) {
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-button-group[data-astro-cid-qzrizkdj] {
+    width:80%;
+    max-width:22.0625rem;
+    flex-direction:row;
+    align-items:stretch;
+    flex:none
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-content[data-astro-cid-qzrizkdj] {
+    width:100%
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-picture[data-astro-cid-qzrizkdj] {
+    min-height:clamp(18.75rem,30vw,30.8125rem);
+    margin:0;
+    height:100%;
+    flex:none;
+    order:3
+  }
+}
+@media only screen and (min-width: 48rem) {
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-flex-group[data-astro-cid-qzrizkdj] {
+    display:flex;
+    flex-direction:row;
+    flex-wrap:nowrap;
+    column-gap:clamp(1.25rem,3vw,5rem)
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-button-group[data-astro-cid-qzrizkdj] {
+    flex-direction:column;
+    flex:auto
+  }
+  #faq-1720[data-astro-cid-qzrizkdj] .cs-picture[data-astro-cid-qzrizkdj] {
+    max-height:31.25rem
+  }
+}
+
+</style>
+
+<script>
+const faqItems = Array.from(document.querySelectorAll('.cs-faq-item'));
+        for (const item of faqItems) {
+            const onClick = () => {
+            item.classList.toggle('active')
+        }
+        item.addEventListener('click', onClick)
+        }
+
+        class FAQFilter {
+        filtersSelector = '.cs-option'
+        FAQselector = '.cs-faq-group'
+        activeClass = 'cs-active'
+        hiddenClass = 'cs-hidden'
+
+        constructor() {
+            const $filters = document.querySelectorAll(this.filtersSelector)
+            this.$activeFilter = $filters[0]
+            this.$images = document.querySelectorAll(this.FAQselector)
+
+            this.$activeFilter.classList.add(this.activeClass)
+
+            for (const $filter of $filters) {
+            $filter.addEventListener('click', () => this.onClick($filter))
+            }
+        }
+
+        onClick($filter) {
+            this.filter($filter.dataset.filter)
+
+            const { activeClass } = this
+
+            this.$activeFilter.classList.remove(activeClass)
+            $filter.classList.add(activeClass)
+
+            this.$activeFilter = $filter
+        }
+
+        filter(filter) {
+            const showAll = filter == 'all'
+            const { hiddenClass } = this
+
+            for (const $image of this.$images) {
+            const show = showAll || $image.dataset.category == filter
+            $image.classList.toggle(hiddenClass, !show)
+            }
+        }
+        }
+
+        new FAQFilter()
+
+    document.addEventListener('DOMContentLoaded', function() {
+        function activateSectionFromHash() {
+            const hash = window.location.hash;
+            if (hash) {
+                const section = document.querySelector(hash);
+                if (section) {
+                    // Hide all sections
+                    const sections = document.querySelectorAll('.cs-faq-group');
+                    sections.forEach(function(sec) {
+                        sec.classList.add('cs-hidden');
+                    });
+
+                    // Show the selected section
+                    section.classList.remove('cs-hidden');
+
+                    // Highlight the corresponding button
+                    const buttons = document.querySelectorAll('.cs-option');
+                    buttons.forEach(function(button) {
+                        button.classList.remove('cs-active');
+                        if (button.getAttribute('data-filter') === section.getAttribute('data-category')) {
+                            button.classList.add('cs-active');
+                        }
+                    });
+
+                    // Scroll to the section
+                    section.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
+
+        // Activate section based on current hash on page load
+        activateSectionFromHash();
+
+        // Handle clicks on anchor links
+        const anchorLinks = document.querySelectorAll('a[href^="#"]');
+        anchorLinks.forEach(function(link) {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const targetId = link.getAttribute('href');
+                if (targetId) {
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.history.pushState(null, null, targetId);
+                        activateSectionFromHash();
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            });
+        });
+
+        // Handle browser back/forward navigation
+        window.addEventListener('popstate', function() {
+            activateSectionFromHash();
+        });
+    });
+</script>

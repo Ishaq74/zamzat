@@ -1,0 +1,142 @@
+---
+export const prerender = false;
+import { type CollectionEntry, getCollection, getEntry, render } from 'astro:content';
+import Layout from '@layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
+import Grid from '@components/Elements/Grid.astro';
+import FormattedDate from '@components/FormattedDate.astro';
+import QueryLoop from '@components/Elements/QueryLoop.astro';
+
+const { slug } = Astro.params;
+const blogPosts = await getCollection('blog');
+const post = blogPosts.find((post) => post.data.slug === slug);
+if (!post) return Astro.redirect("/404");
+const { ...postdata } = post.data;
+
+const authorData = postdata.author ? await getEntry('profiles', postdata.author) : null;
+const categoryData = postdata.category ? await getEntry('blogcategories', postdata.category) : null;
+
+const pageTitle = postdata.title;
+const pageDescription = postdata.description || '';
+const pageKeywords = Array.isArray(postdata.category) ? postdata.category.join(', ') : postdata.category;
+const pageOgImage = postdata.heroimage || '/default-og-image.jpg';
+const pageLang = 'fr';
+const pageRobots = "index, follow";
+---
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+<main class="min-h-screen bg-gray-50">
+    <article class="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
+      <!-- Hero Image -->
+      {postdata.heroimage && (
+        <div class="relative mb-8 rounded-lg overflow-hidden shadow-lg">
+          <img 
+            src={postdata.heroimage} 
+            alt={postdata.title || postdata.title} 
+            class="w-full h-96 object-cover transition-transform duration-300 hover:scale-105"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent"></div>
+        </div>
+      )}
+
+      <!-- Content Section -->
+      <div class="bg-white p-8 rounded-lg shadow-md">
+        <!-- Meta Info -->
+        <div class="flex items-center justify-between mb-6 text-gray-600 text-sm">
+          <div class="flex items-center space-x-2">
+            {postdata.pubdate && (
+              <span class="flex items-center">
+                <Icon name="mdi:calendar" class="w-5 h-5 mr-1 text-indigo-500" />
+                <FormattedDate date={postdata.pubdate} />
+              </span>
+            )}
+            {postdata.updateddate !== postdata.pubdate && (
+              <span class="flex items-center ml-4">
+                <Icon name="mdi:update" class="w-5 h-5 mr-1 text-green-500" />
+                Dernière mise à jour le <FormattedDate date={postdata.updateddate} />
+              </span>
+            )}
+          </div>
+          {categoryData && (
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-indigo-100 text-indigo-800">
+              <Icon name="mdi:tag" class="w-4 h-4 mr-1" />
+              {categoryData.data.name}
+            </span>
+          )}
+        </div>
+
+        <!-- Title -->
+        <h1 class="text-4xl font-bold text-gray-900 mb-4 leading-tight">
+          {postdata.title}
+        </h1>
+
+        <!-- Author Info -->
+        {authorData && (
+          <div class="flex items-center mb-6 text-gray-700">
+            <Icon name="mdi:account" class="w-6 h-6 mr-2 text-indigo-500" />
+            <span>Par {authorData.data.name}</span>
+          </div>
+        )}
+
+        <!-- Divider -->
+        <hr class="my-6 border-gray-200" />
+
+        <!-- Post Content -->
+        <div class="prose prose-lg text-gray-800 max-w-none">
+          <!-- Insère ici ton contenu dynamique, par exemple avec render() si tu utilises Astro Content -->
+          CONTENT
+        </div>
+      </div>
+        <h2><Icon name="mdi:book-open-page-variant" class="w-6 h-6 mr-2 text-indigo-500" />
+          Articles similaires
+        </h2>
+          <QueryLoop collection="blog" limit={3} relatedContent />
+    </article>
+  </main>
+</Layout>
+
+<style>
+	main {
+		width: calc(100% - 2em);
+		max-width: 100%;
+		margin: 0;
+	}
+	.hero-image {
+		width: 100%;
+	}
+	.hero-image img {
+		display: block;
+		margin: 0 auto;
+		border-radius: 12px;
+		box-shadow: var(--box-shadow);
+	}
+	.prose {
+		width: 720px;
+		max-width: calc(100% - 2em);
+		margin: auto;
+		padding: 1em;
+		color: rgb(var(--gray-dark));
+	}
+	.title {
+		margin-bottom: 1em;
+		padding: 1em 0;
+		text-align: center;
+		line-height: 1;
+	}
+	.title h1 {
+		margin: 0 0 0.5em 0;
+	}
+	.date {
+		margin-bottom: 0.5em;
+		color: rgb(var(--gray));
+	}
+	.last-updated-on {
+		font-style: italic;
+	}
+</style>

@@ -1,0 +1,556 @@
+---
+import { getCollection } from 'astro:content';
+import Landing from '@layouts/Landing.astro';
+
+const organizationEntries = await getCollection('organizations');
+const organizationData = organizationEntries[0]?.data;
+
+const pageTitle = `Créer un site Internet - Étape 2 : UI / UX Design`;
+const pageDescription = 'Commencer par définir son identité';
+const pageKeywords = "créer un site internet, zatchouli";
+const pageOgImage = "/images/logo-msbc.png";
+const pageLang = 'fr';
+const pageRobots = "index, follow";
+---
+<Landing
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+
+  <style>
+    /* Styles pour la validation des toggles */
+    details.invalid summary {
+      border: 2px solid var(--color-error);
+      animation: shake 0.5s ease-in-out;
+    }
+    details.valid summary {
+      border: 2px solid var(--color-success);
+    }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+      20%, 40%, 60%, 80% { transform: translateX(3px); }
+    }
+    .preview-element {
+      position: sticky;
+    top: 20px;
+    height: fit-content;
+      display: none;
+      margin-bottom: var(--spacing-md);
+    }
+    .preview-element.visible {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h1>Personnalisez Votre Design</h1>
+    <p>Définissez les styles de votre site étape par étape. Validez chaque section pour continuer.</p>
+
+    <div class="progress-container">
+      <progress value="50" max="100" aria-label="Progression : 50%"></progress>
+      <span class="progress-text">Étape 2/3 : Personnalisation du design</span>
+    </div>
+
+    <!-- Bouton pour activer le mode test -->
+    <button id="test-mode-btn" class="btn tertiary">Activer le mode test</button>
+
+    <div class="grid-container">
+      <!-- Prévisualisation (Sticky) -->
+      <div class="sticky-experiment grid-col-6">
+        <h2>Prévisualisation</h2>
+        <div id="preview-typography" class="preview-element">
+          <h3>Exemple de Titre</h3>
+          <p>Exemple de texte avec la typographie personnalisée.</p>
+        </div>
+        <div id="preview-buttons" class="preview-element">
+          <button class="btn">Bouton Primaire</button>
+          <button class="btn secondary">Bouton Secondaire</button>
+          <button class="btn tertiary">Bouton Tertiaire</button>
+        </div>
+        <div id="preview-links" class="preview-element">
+          <a href="#" class="link">Lien Standard</a>
+          <a href="#" class="link underline">Lien Souligné</a>
+          <a href="#" class="link subtle">Lien Subtil</a>
+        </div>
+        <div id="preview-card" class="preview-element card">
+          <h3>Carte Exemple</h3>
+          <p>Ceci est une carte avec du texte et un bouton.</p>
+          <button class="btn">En savoir plus</button>
+        </div>
+        <div id="preview-grid" class="preview-element grid-container">
+          <div class="grid-col-4 experiment">Élément 1</div>
+          <div class="grid-col-4 experiment">Élément 2</div>
+          <div class="grid-col-4 experiment">Élément 3</div>
+        </div>
+      </div>
+
+      <!-- Formulaire de personnalisation (Toggles) -->
+      <div class="grid-col-6">
+        <h2>Modifier les Styles</h2>
+        <form id="customize-form">
+          <!-- Typographie -->
+          <details id="typography-section" class="invalid" open>
+            <summary>Typographie</summary>
+            <div class="form-group">
+              <label for="font-family">Police principale</label>
+              <select id="font-family" name="font-family">
+                <option value="'Inter', sans-serif" selected>Inter</option>
+                <option value="'Arial', sans-serif">Arial</option>
+                <option value="'Roboto', sans-serif">Roboto</option>
+                <option value="'Helvetica', sans-serif">Helvetica</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="font-size-base">Taille de police de base (px)</label>
+              <input type="number" id="font-size-base" name="font-size-base" value="16" min="12" max="24">
+            </div>
+            <div class="form-group">
+              <label for="font-size-h1">Taille h1 (rem)</label>
+              <input type="number" id="font-size-h1" name="font-size-h1" value="2.5" step="0.1" min="1">
+            </div>
+            <div class="form-group">
+              <label for="font-size-h2">Taille h2 (rem)</label>
+              <input type="number" id="font-size-h2" name="font-size-h2" value="2" step="0.1" min="1">
+            </div>
+            <div class="form-group">
+              <label for="font-size-h3">Taille h3 (rem)</label>
+              <input type="number" id="font-size-h3" name="font-size-h3" value="1.5" step="0.1" min="1">
+            </div>
+            <div class="form-group">
+              <label for="font-size-small">Taille petite (rem)</label>
+              <input type="number" id="font-size-small" name="font-size-small" value="0.875" step="0.1" min="0.5">
+            </div>
+            <div class="form-group">
+              <label for="font-weight-bold">Poids gras</label>
+              <input type="number" id="font-weight-bold" name="font-weight-bold" value="700" min="400" max="900">
+            </div>
+            <div class="form-group">
+              <label for="font-weight-medium">Poids moyen</label>
+              <input type="number" id="font-weight-medium" name="font-weight-medium" value="500" min="400" max="900">
+            </div>
+            <div class="form-group">
+              <label for="color-text">Couleur du texte</label>
+              <input type="color" id="color-text" name="color-text" value="#1f2527">
+            </div>
+            <button type="button" class="btn validate-section" data-section="typography">Valider</button>
+          </details>
+
+          <!-- Boutons -->
+          <details id="buttons-section">
+            <summary>Boutons</summary>
+            <div class="form-group">
+              <label for="color-primary">Couleur principale (boutons primaires)</label>
+              <input type="color" id="color-primary" name="color-primary" value="#2c2e3b">
+            </div>
+            <div class="form-group">
+              <label for="color-accent">Couleur au survol</label>
+              <input type="color" id="color-accent" name="color-accent" value="#5e6b8a">
+            </div>
+            <div class="form-group">
+              <label for="color-secondary">Couleur des boutons secondaires</label>
+              <input type="color" id="color-secondary" name="color-secondary" value="#e0e2e9">
+            </div>
+            <div class="form-group">
+              <label for="color-hover">Couleur au survol (boutons secondaires)</label>
+              <input type="color" id="color-hover" name="color-hover" value="#c4c8d4">
+            </div>
+            <div class="form-group">
+              <label for="color-disabled">Couleur des boutons désactivés</label>
+              <input type="color" id="color-disabled" name="color-disabled" value="#a0a4b0">
+            </div>
+            <button type="button" class="btn validate-section" data-section="buttons">Valider</button>
+          </details>
+
+          <!-- Liens -->
+          <details id="links-section">
+            <summary>Liens</summary>
+            <div class="form-group">
+              <label for="color-primary-links">Couleur des liens</label>
+              <input type="color" id="color-primary-links" name="color-primary" value="#2c2e3b">
+            </div>
+            <div class="form-group">
+              <label for="color-accent-links">Couleur au survol des liens</label>
+              <input type="color" id="color-accent-links" name="color-accent" value="#5e6b8a">
+            </div>
+            <button type="button" class="btn validate-section" data-section="links">Valider</button>
+          </details>
+
+          <!-- Espacement -->
+          <details id="spacing-section">
+            <summary>Espacement</summary>
+            <div class="form-group">
+              <label for="spacing-xs">Espacement XS (px)</label>
+              <input type="number" id="spacing-xs" name="spacing-xs" value="10" min="0">
+            </div>
+            <div class="form-group">
+              <label for="spacing-sm">Espacement SM (px)</label>
+              <input type="number" id="spacing-sm" name="spacing-sm" value="15" min="0">
+            </div>
+            <div class="form-group">
+              <label for="spacing-md">Espacement MD (px)</label>
+              <input type="number" id="spacing-md" name="spacing-md" value="20" min="0">
+            </div>
+            <div class="form-group">
+              <label for="spacing-lg">Espacement LG (px)</label>
+              <input type="number" id="spacing-lg" name="spacing-lg" value="30" min="0">
+            </div>
+            <div class="form-group">
+              <label for="grid-gap">Espacement de grille (px)</label>
+              <input type="number" id="grid-gap" name="grid-gap" value="20" min="0">
+            </div>
+            <div class="form-group">
+              <label for="flex-gap">Espacement flex (px)</label>
+              <input type="number" id="flex-gap" name="flex-gap" value="20" min="0">
+            </div>
+            <button type="button" class="btn validate-section" data-section="spacing">Valider</button>
+          </details>
+
+          <!-- Bordures -->
+          <details id="borders-section">
+            <summary>Bordures</summary>
+            <div class="form-group">
+              <label for="border-width">Épaisseur des bordures (px)</label>
+              <input type="number" id="border-width" name="border-width" value="1" min="0">
+            </div>
+            <div class="form-group">
+              <label for="border-radius">Rayon des bordures (px)</label>
+              <input type="number" id="border-radius" name="border-radius" value="8" min="0">
+            </div>
+            <div class="form-group">
+              <label for="border-radius-large">Rayon des bordures large (px)</label>
+              <input type="number" id="border-radius-large" name="border-radius-large" value="12" min="0">
+            </div>
+            <div class="form-group">
+              <label for="color-border">Couleur des bordures</label>
+              <input type="color" id="color-border" name="color-border" value="#d5d8e0">
+            </div>
+            <button type="button" class="btn validate-section" data-section="borders">Valider</button>
+          </details>
+
+          <!-- Ombres -->
+          <details id="shadows-section">
+            <summary>Ombres</summary>
+            <div class="form-group">
+              <label for="box-shadow">Ombre par défaut (CSS)</label>
+              <input type="text" id="box-shadow" name="box-shadow" value="0 4px 12px rgba(0, 0, 0, 0.1)">
+            </div>
+            <div class="form-group">
+              <label for="box-shadow-hover">Ombre au survol (CSS)</label>
+              <input type="text" id="box-shadow-hover" name="box-shadow-hover" value="0 6px 18px rgba(0, 0, 0, 0.15)">
+            </div>
+            <div class="form-group">
+              <label for="box-shadow-focus">Ombre au focus (CSS)</label>
+              <input type="text" id="box-shadow-focus" name="box-shadow-focus" value="0 0 5px rgba(94, 107, 138, 0.3)">
+            </div>
+            <button type="button" class="btn validate-section" data-section="shadows">Valider</button>
+          </details>
+
+          <!-- Formulaires -->
+          <details id="forms-section">
+            <summary>Formulaires</summary>
+            <div class="form-group">
+              <label for="form-input-height">Hauteur des inputs (px)</label>
+              <input type="number" id="form-input-height" name="form-input-height" value="40" min="20">
+            </div>
+            <div class="form-group">
+              <label for="form-input-border-radius">Rayon des bordures des inputs (px)</label>
+              <input type="number" id="form-input-border-radius" name="form-input-border-radius" value="6" min="0">
+            </div>
+            <div class="form-group">
+              <label for="form-input-background">Couleur de fond des inputs</label>
+              <input type="color" id="form-input-background" name="form-input-background" value="#ffffff">
+            </div>
+            <div class="form-group">
+              <label for="form-input-border-color">Couleur des bordures des inputs</label>
+              <input type="color" id="form-input-border-color" name="form-input-border-color" value="#d5d8e0">
+            </div>
+            <div class="form-group">
+              <label for="form-input-text-color">Couleur du texte des inputs</label>
+              <input type="color" id="form-input-text-color" name="form-input-text-color" value="#1f2527">
+            </div>
+            <div class="form-group">
+              <label for="form-input-placeholder-color">Couleur des placeholders</label>
+              <input type="color" id="form-input-placeholder-color" name="form-input-placeholder-color" value="#6b7280">
+            </div>
+            <button type="button" class="btn validate-section" data-section="forms">Valider</button>
+          </details>
+
+          <div id="feedback" class="feedback"></div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn">Suivant</button>
+            <button type="reset" class="btn secondary">Réinitialiser</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</body>
+</Landing>
+<script is:inline>
+    const form = document.getElementById('customize-form');
+    const root = document.documentElement;
+    const feedback = document.getElementById('feedback');
+    const validateButtons = document.querySelectorAll('.validate-section');
+    const sections = {
+      typography: false,
+      buttons: false,
+      links: false,
+      spacing: false,
+      borders: false,
+      shadows: false,
+      forms: false
+    };
+    const previewTypography = document.getElementById('preview-typography');
+    const previewButtons = document.getElementById('preview-buttons');
+    const previewLinks = document.getElementById('preview-links');
+    const previewCard = document.getElementById('preview-card');
+    const previewGrid = document.getElementById('preview-grid');
+    const testModeBtn = document.getElementById('test-mode-btn');
+
+    // Afficher le premier élément de prévisualisation (typographie)
+    previewTypography.classList.add('visible');
+
+    // Jeu de données de test
+    const testData = {
+      // Typographie
+      "font-family": "'Roboto', sans-serif",
+      "font-size-base": 18,
+      "font-size-h1": 3,
+      "font-size-h2": 2.5,
+      "font-size-h3": 2,
+      "font-size-small": 1,
+      "font-weight-bold": 800,
+      "font-weight-medium": 600,
+      "color-text": "#333333",
+      // Boutons
+      "color-primary": "#ff5733",
+      "color-accent": "#c70039",
+      "color-secondary": "#f0e6e6",
+      "color-hover": "#d9c7c7",
+      "color-disabled": "#cccccc",
+      // Liens
+      "color-primary-links": "#ff5733",
+      "color-accent-links": "#c70039",
+      // Espacement
+      "spacing-xs": 8,
+      "spacing-sm": 12,
+      "spacing-md": 16,
+      "spacing-lg": 24,
+      "grid-gap": 16,
+      "flex-gap": 16,
+      // Bordures
+      "border-width": 2,
+      "border-radius": 10,
+      "border-radius-large": 14,
+      "color-border": "#999999",
+      // Ombres
+      "box-shadow": "0 6px 16px rgba(0, 0, 0, 0.2)",
+      "box-shadow-hover": "0 8px 20px rgba(0, 0, 0, 0.3)",
+      "box-shadow-focus": "0 0 8px rgba(94, 107, 138, 0.5)",
+      // Formulaires
+      "form-input-height": 48,
+      "form-input-border-radius": 8,
+      "form-input-background": "#f0f0f0",
+      "form-input-border-color": "#cccccc",
+      "form-input-text-color": "#333333",
+      "form-input-placeholder-color": "#888888"
+    };
+
+    // Activer le mode test
+    testModeBtn.addEventListener('click', () => {
+      Object.keys(testData).forEach(key => {
+        const input = document.getElementById(key);
+        if (input) {
+          input.value = testData[key];
+          const event = new Event('input', { bubbles: true });
+          input.dispatchEvent(event);
+        }
+      });
+
+      // Valider automatiquement toutes les sections
+      Object.keys(sections).forEach(section => {
+        sections[section] = true;
+        document.getElementById(`${section}-section`).classList.remove('invalid');
+        document.getElementById(`${section}-section`).classList.add('valid');
+      });
+
+      // Afficher tous les éléments de prévisualisation
+      previewTypography.classList.add('visible');
+      previewButtons.classList.add('visible');
+      previewLinks.classList.add('visible');
+      previewCard.classList.add('visible');
+      previewGrid.classList.add('visible');
+
+      feedback.textContent = 'Mode test activé avec les données fictives.';
+      feedback.className = 'feedback success';
+    });
+
+    // Validation des sections
+    validateButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const section = button.dataset.section;
+        sections[section] = true;
+        const sectionElement = document.getElementById(`${section}-section`);
+        sectionElement.classList.remove('invalid');
+        sectionElement.classList.add('valid');
+
+        // Afficher l’élément correspondant dans la prévisualisation
+        if (section === 'typography') {
+          previewTypography.classList.add('visible');
+        } else if (section === 'buttons') {
+          previewButtons.classList.add('visible');
+        } else if (section === 'links') {
+          previewLinks.classList.add('visible');
+        } else if (section === 'spacing') {
+          previewCard.classList.add('visible');
+        } else if (section === 'borders' || section === 'shadows' || section === 'forms') {
+          previewGrid.classList.add('visible');
+        }
+
+        // Vérifier si toutes les sections sont validées
+        const allValidated = Object.values(sections).every(valid => valid);
+        if (allValidated) {
+          feedback.textContent = 'Toutes les sections sont validées ! Vous pouvez continuer.';
+          feedback.className = 'feedback success';
+        } else {
+          feedback.textContent = 'Veuillez valider toutes les sections pour continuer.';
+          feedback.className = 'feedback error';
+        }
+      });
+    });
+
+    // Mettre à jour les variables :root en temps réel
+    form.addEventListener('input', (e) => {
+      const { name, value } = e.target;
+      if (name === 'font-size-base') {
+        root.style.setProperty('--font-size-base', `${value}px`);
+      } else if (name.includes('font-size-')) {
+        root.style.setProperty(`--${name}`, `${value}rem`);
+      } else if (name === 'transition-duration') {
+        root.style.setProperty('--transition-duration', `${value}s`);
+        root.style.setProperty('--transition', `all ${value}s var(--transition-timing)`);
+      } else if (name === 'transition-timing') {
+        root.style.setProperty('--transition-timing', value);
+        root.style.setProperty('--transition', `all var(--transition-duration) ${value}`);
+      } else if (name.includes('spacing-') || name.includes('gap')) {
+        root.style.setProperty(`--${name}`, `${value}px`);
+      } else if (name.includes('box-shadow')) {
+        root.style.setProperty(`--${name}`, value);
+      } else if (name.includes('color-')) {
+        root.style.setProperty(`--${name}`, value);
+      } else if (name.includes('form-')) {
+        if (name.includes('height') || name.includes('radius')) {
+          root.style.setProperty(`--${name}`, `${value}px`);
+        } else {
+          root.style.setProperty(`--${name}`, value);
+        }
+      } else {
+        root.style.setProperty(`--${name}`, value);
+      }
+    });
+
+      form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const allValidated = Object.values(sections).every(valid => valid);
+    if (allValidated) {
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+      localStorage.setItem('styles_organization', JSON.stringify(data));
+      feedback.textContent = 'Styles enregistrés ! Passage à l’étape suivante.';
+      feedback.className = 'feedback success';
+      window.location.href = '/genepy/data'; // Redirection vers l'étape 3
+    } else {
+      feedback.textContent = 'Veuillez valider toutes les sections.';
+      feedback.className = 'feedback error';
+    }
+  });
+
+    // Soumission finale (nécessite toutes les sections validées)
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const allValidated = Object.values(sections).every(valid => valid);
+      if (allValidated) {
+        form.querySelector('progress').value = 75;
+        feedback.textContent = 'Styles enregistrés avec succès ! Passage à l’étape suivante.';
+        feedback.className = 'feedback success';
+        // Ici, on pourrait rediriger vers l’étape 3
+      } else {
+        feedback.textContent = 'Veuillez valider toutes les sections avant de continuer.';
+        feedback.className = 'feedback error';
+        Object.keys(sections).forEach(section => {
+          if (!sections[section]) {
+            document.getElementById(`${section}-section`).classList.add('invalid');
+          }
+        });
+      }
+    });
+
+    // Réinitialisation
+    form.addEventListener('reset', () => {
+      root.style.setProperty('--color-primary', '#2c2e3b');
+      root.style.setProperty('--color-secondary', '#e0e2e9');
+      root.style.setProperty('--color-accent', '#5e6b8a');
+      root.style.setProperty('--color-background', '#f8f9fc');
+      root.style.setProperty('--color-text', '#1f2527');
+      root.style.setProperty('--color-border', '#d5d8e0');
+      root.style.setProperty('--color-hover', '#c4c8d4');
+      root.style.setProperty('--color-focus', '#5e6b8a');
+      root.style.setProperty('--color-error', '#d9534f');
+      root.style.setProperty('--color-success', '#5cb85c');
+      root.style.setProperty('--color-warning', '#f0ad4e');
+      root.style.setProperty('--color-info', '#5bc0de');
+      root.style.setProperty('--color-disabled', '#a0a4b0');
+      root.style.setProperty('--color-muted', '#6b7280');
+      root.style.setProperty('--color-surface', '#ffffff');
+      root.style.setProperty('--font-family', "'Inter', sans-serif");
+      root.style.setProperty('--font-size-base', '1rem');
+      root.style.setProperty('--font-size-h1', '2.5rem');
+      root.style.setProperty('--font-size-h2', '2rem');
+      root.style.setProperty('--font-size-h3', '1.5rem');
+      root.style.setProperty('--font-size-small', '0.875rem');
+      root.style.setProperty('--font-weight-bold', '700');
+      root.style.setProperty('--font-weight-medium', '500');
+      root.style.setProperty('--spacing-xs', '10px');
+      root.style.setProperty('--spacing-sm', '15px');
+      root.style.setProperty('--spacing-md', '20px');
+      root.style.setProperty('--spacing-lg', '30px');
+      root.style.setProperty('--grid-gap', '20px');
+      root.style.setProperty('--flex-gap', '20px');
+      root.style.setProperty('--border-width', '1px');
+      root.style.setProperty('--border-radius', '8px');
+      root.style.setProperty('--border-radius-large', '12px');
+      root.style.setProperty('--box-shadow', '0 4px 12px rgba(0, 0, 0, 0.1)');
+      root.style.setProperty('--box-shadow-hover', '0 6px 18px rgba(0, 0, 0, 0.15)');
+      root.style.setProperty('--box-shadow-focus', '0 0 5px rgba(94, 107, 138, 0.3)');
+      root.style.setProperty('--form-input-height', '40px');
+      root.style.setProperty('--form-input-border-radius', '6px');
+      root.style.setProperty('--form-input-background', '#ffffff');
+      root.style.setProperty('--form-input-border-color', '#d5d8e0');
+      root.style.setProperty('--form-input-text-color', '#1f2527');
+      root.style.setProperty('--form-input-placeholder-color', '#6b7280');
+      form.querySelector('progress').value = 50;
+
+      // Réinitialiser les sections et la prévisualisation
+      Object.keys(sections).forEach(section => {
+        sections[section] = false;
+        const sectionElement = document.getElementById(`${section}-section`);
+        sectionElement.classList.remove('valid');
+        sectionElement.classList.add('invalid');
+      });
+      previewTypography.classList.remove('visible');
+      previewButtons.classList.remove('visible');
+      previewLinks.classList.remove('visible');
+      previewCard.classList.remove('visible');
+      previewGrid.classList.remove('visible');
+      previewTypography.classList.add('visible');
+      feedback.textContent = 'Styles réinitialisés. Validez toutes les sections pour continuer.';
+      feedback.className = 'feedback error';
+    });
+  </script>

@@ -1,0 +1,47 @@
+---
+import Layout from '@layouts/Layout.astro';
+import {SITE_URL} from '../../const';
+
+const token = Astro.url.searchParams.get('token') || '';
+let status = '';
+let message = '';
+
+const apiUrl = import.meta.env.MODE === 'production'
+  ? `https://${SITE_URL}/api/auth/verify-email`
+  : 'http://localhost:4321/api/auth/verify-email';
+
+if (token) {
+  try {
+    const res = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token })
+    });
+
+    const result = await res.json();
+
+    if (res.ok) {
+      status = 'success';
+      message = result.message || 'Vérification réussie';
+    } else {
+      status = 'error';
+      message = result.message || 'Erreur lors de la vérification. Veuillez vérifier le lien ou réessayer plus tard.';
+    }
+  } catch (error) {
+    status = 'error';
+    message = 'Erreur de serveur, veuillez réessayer plus tard.';
+    console.error('Erreur lors de la vérification de l\'email:', error);
+  }
+} else {
+  status = 'error';
+  message = 'Token de vérification manquant. Assurez-vous d\'utiliser un lien valide.';
+}
+---
+<Layout title="Vérification de votre Email" description="Page de vérification de votre email">
+  <h1>Vérification de votre Email</h1>
+  {status === 'success' ? (
+    <p style="color:green;">{message}</p>
+  ) : (
+    <p style="color:red;">{message}</p>
+  )}
+</Layout>

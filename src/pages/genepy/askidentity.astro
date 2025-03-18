@@ -1,0 +1,760 @@
+---
+import { getCollection } from 'astro:content';
+import Landing from '@layouts/Landing.astro';
+
+const organizationEntries = await getCollection('organizations');
+const organizationData = organizationEntries[0]?.data;
+
+const pageTitle = `Créer un site Internet - Étape 1 : Identité`;
+const pageDescription = 'Commencer par définir son identité';
+const pageKeywords = "créer un site internet, zatchouli";
+const pageOgImage = "/images/logo-msbc.png";
+const pageLang = 'fr';
+const pageRobots = "index, follow";
+---
+<Landing
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+
+<body>
+  <section>
+    <h1>Créer Votre Site</h1>
+    <p>Bienvenue sur Zatchouli.fr ! Remplissez les informations de votre organisation pour commencer.</p>
+
+    <!-- Bouton pour activer le mode test -->
+    <button id="test-mode-btn" class="btn tertiary">Activer le mode test</button>
+
+    <form id="organization-form">
+      <div class="progress-container">
+        <progress value="25" max="100" aria-label="Progression : 25%"></progress>
+        <span class="progress-text">Étape 1/3 : Informations de base</span>
+      </div>
+
+      <!-- Informations Générales -->
+      <details open>
+        <summary>Informations Générales</summary>
+        <div class="form-group">
+          <label for="name">Nom de l’organisation <span aria-hidden="true">*</span></label>
+          <input type="text" id="name" name="name" required aria-required="true" placeholder="Ex. MS Belle à Croquer">
+        </div>
+        <div class="form-group">
+          <label for="alternateName">Noms alternatifs (séparés par des virgules)</label>
+          <input type="text" id="alternateName" name="alternateName" placeholder="Ex. Zatchouli, Zatch">
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea id="description" name="description" placeholder="Décrivez votre organisation..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="logo">Logo</label>
+          <input type="file" id="logo" name="logo" accept="image/*" aria-label="Choisir un fichier image">
+        </div>
+        <div class="form-group">
+          <label for="image">Image principale</label>
+          <input type="file" id="image" name="image" accept="image/*" aria-label="Choisir une image">
+        </div>
+        <div class="form-group">
+          <label for="legalName">Nom légal</label>
+          <input type="text" id="legalName" name="legalName" placeholder="Ex. MS Belle à Croquer SAS">
+        </div>
+        <div class="form-group">
+          <label for="slogan">Slogan</label>
+          <input type="text" id="slogan" name="slogan" placeholder="Ex. Bien-être et beauté">
+        </div>
+      </details>
+
+      <!-- Contact -->
+      <details>
+        <summary>Contact</summary>
+        <div class="form-group">
+          <label for="email">Email <span aria-hidden="true">*</span></label>
+          <input type="email" id="email" name="email" required aria-required="true" placeholder="Ex. contact@exemple.com">
+        </div>
+        <div class="form-group">
+          <label for="defaultEmail">Email par défaut (métadonnées)</label>
+          <input type="email" id="defaultEmail" name="defaultEmail" placeholder="Ex. info@exemple.com">
+        </div>
+        <div class="form-group">
+          <label for="telephone">Téléphone</label>
+          <input type="tel" id="telephone" name="telephone" placeholder="Ex. +33 6 12 34 56 78">
+        </div>
+        <div class="form-group">
+          <label for="defaultPhone">Téléphone par défaut (métadonnées)</label>
+          <input type="tel" id="defaultPhone" name="defaultPhone" placeholder="Ex. +33 6 12 34 56 78">
+        </div>
+        <div class="form-group">
+          <label for="faxNumber">Numéro de fax</label>
+          <input type="tel" id="faxNumber" name="faxNumber" placeholder="Ex. +33 1 23 45 67 89">
+        </div>
+        <div class="form-group">
+          <label for="url">Site web</label>
+          <input type="url" id="url" name="url" placeholder="Ex. https://www.exemple.com">
+        </div>
+        <div class="form-group">
+          <label for="siteUrl">URL du site (métadonnées)</label>
+          <input type="url" id="siteUrl" name="siteUrl" placeholder="Ex. https://www.exemple.com">
+        </div>
+      </details>
+
+      <!-- Adresse -->
+      <details>
+        <summary>Adresse</summary>
+        <div class="form-group">
+          <label for="streetAddress">Rue</label>
+          <input type="text" id="streetAddress" name="streetAddress" placeholder="Ex. 12 Rue de la Paix">
+        </div>
+        <div class="form-group">
+          <label for="addressLocality">Ville</label>
+          <input type="text" id="addressLocality" name="addressLocality" placeholder="Ex. Annecy">
+        </div>
+        <div class="form-group">
+          <label for="addressRegion">Région</label>
+          <input type="text" id="addressRegion" name="addressRegion" placeholder="Ex. Auvergne-Rhône-Alpes">
+        </div>
+        <div class="form-group">
+          <label for="postalCode">Code postal</label>
+          <input type="text" id="postalCode" name="postalCode" placeholder="Ex. 74000">
+        </div>
+        <div class="form-group">
+          <label for="addressCountry">Pays</label>
+          <select id="addressCountry" name="addressCountry" aria-label="Sélectionner un pays">
+            <option value="">Sélectionner</option>
+            <option value="FR">France</option>
+            <option value="US">États-Unis</option>
+            <option value="UK">Royaume-Uni</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="defaultAddress">Adresse par défaut (métadonnées)</label>
+          <input type="text" id="defaultAddress" name="defaultAddress" placeholder="Ex. 12 Rue de la Paix, 74000 Annecy, France">
+        </div>
+      </details>
+
+      <!-- Réseaux Sociaux -->
+      <details>
+        <summary>Réseaux Sociaux</summary>
+        <div class="form-group">
+          <label for="facebook">Facebook</label>
+          <input type="url" id="facebook" name="facebook" placeholder="Ex. https://facebook.com/exemple">
+        </div>
+        <div class="form-group">
+          <label for="instagram">Instagram</label>
+          <input type="url" id="instagram" name="instagram" placeholder="Ex. https://instagram.com/exemple">
+        </div>
+        <div class="form-group">
+          <label for="twitter">Twitter</label>
+          <input type="url" id="twitter" name="twitter" placeholder="Ex. https://twitter.com/exemple">
+        </div>
+        <div class="form-group">
+          <label for="sameAs">Autres profils (séparés par des virgules)</label>
+          <input type="text" id="sameAs" name="sameAs" placeholder="Ex. https://linkedin.com/exemple, https://pinterest.com/exemple">
+        </div>
+      </details>
+
+      <!-- Informations Légales -->
+      <details>
+        <summary>Informations Légales</summary>
+        <div class="form-group">
+          <label for="legalName">Nom légal</label>
+          <input type="text" id="legalName" name="legalName" placeholder="Ex. MS Belle à Croquer SAS">
+        </div>
+        <div class="form-group">
+          <label for="taxID">Numéro fiscal (Tax ID)</label>
+          <input type="text" id="taxID" name="taxID">
+        </div>
+        <div class="form-group">
+          <label for="vatID">Numéro de TVA (VAT ID)</label>
+          <input type="text" id="vatID" name="vatID">
+        </div>
+        <div class="form-group">
+          <label for="leiCode">Code LEI</label>
+          <input type="text" id="leiCode" name="leiCode">
+        </div>
+        <div class="form-group">
+          <label for="duns">Numéro DUNS</label>
+          <input type="text" id="duns" name="duns">
+        </div>
+        <div class="form-group">
+          <label for="isicV4">Code ISIC V4</label>
+          <input type="text" id="isicV4" name="isicV4">
+        </div>
+        <div class="form-group">
+          <label for="naics">Code NAICS</label>
+          <input type="text" id="naics" name="naics">
+        </div>
+      </details>
+
+      <!-- Informations sur l’Organisation -->
+      <details>
+        <summary>Informations sur l’Organisation</summary>
+        <div class="form-group">
+          <label for="founder">Fondateur(s) (séparés par des virgules)</label>
+          <input type="text" id="founder" name="founder" placeholder="Ex. John Doe, Jane Smith">
+        </div>
+        <div class="form-group">
+          <label for="foundingDate">Date de fondation</label>
+          <input type="date" id="foundingDate" name="foundingDate">
+        </div>
+        <div class="form-group">
+          <label for="foundingLocation">Lieu de fondation</label>
+          <input type="text" id="foundingLocation" name="foundingLocation" placeholder="Ex. Annecy, France">
+        </div>
+        <div class="form-group">
+          <label for="dissolutionDate">Date de dissolution (si applicable)</label>
+          <input type="date" id="dissolutionDate" name="dissolutionDate">
+        </div>
+        <div class="form-group">
+          <label for="numberOfEmployees">Nombre d’employés</label>
+          <input type="number" id="numberOfEmployees" name="numberOfEmployees" min="0">
+        </div>
+        <div class="form-group">
+          <label for="employee">Employés clés (séparés par des virgules)</label>
+          <input type="text" id="employee" name="employee" placeholder="Ex. John Doe, Jane Smith">
+        </div>
+        <div class="form-group">
+          <label for="parentOrganization">Organisation mère</label>
+          <input type="text" id="parentOrganization" name="parentOrganization" placeholder="Ex. Groupe Zatchouli">
+        </div>
+        <div class="form-group">
+          <label for="subOrganization">Sous-organisations (séparées par des virgules)</label>
+          <input type="text" id="subOrganization" name="subOrganization" placeholder="Ex. Zatchouli Paris, Zatchouli Lyon">
+        </div>
+        <div class="form-group">
+          <label for="department">Départements (séparés par des virgules)</label>
+          <input type="text" id="department" name="department" placeholder="Ex. Marketing, Ventes">
+        </div>
+        <div class="form-group">
+          <label for="owns">Propriétés (séparées par des virgules)</label>
+          <input type="text" id="owns" name="owns" placeholder="Ex. Boutique Annecy, Boutique Paris">
+        </div>
+        <div class="form-group">
+          <label for="brand">Marques (séparées par des virgules)</label>
+          <input type="text" id="brand" name="brand" placeholder="Ex. Zatchouli Soins, Zatchouli Beauté">
+        </div>
+        <div class="form-group">
+          <label for="identifier">Identifiant unique</label>
+          <input type="text" id="identifier" name="identifier">
+        </div>
+        <div class="form-group">
+          <label for="awards">Récompenses (séparées par des virgules)</label>
+          <input type="text" id="awards" name="awards" placeholder="Ex. Meilleur Institut 2023">
+        </div>
+        <div class="form-group">
+          <label for="memberOf">Membre de (séparés par des virgules)</label>
+          <input type="text" id="memberOf" name="memberOf" placeholder="Ex. Chambre de Commerce">
+        </div>
+      </details>
+
+      <!-- Horaires d’Ouverture -->
+      <details>
+        <summary>Horaires d’Ouverture</summary>
+        <div class="form-group">
+          <label for="openingHours">Horaires généraux (séparés par des virgules)</label>
+          <input type="text" id="openingHours" name="openingHours" placeholder="Ex. Lun-Ven 9h-18h, Sam 10h-14h">
+        </div>
+        <div class="form-group">
+          <label for="openingHoursSpecification">Horaires spécifiques (par jour)</label>
+          <textarea id="openingHoursSpecification" name="openingHoursSpecification" placeholder="Ex. Monday: 9h-18h, Tuesday: 9h-18h"></textarea>
+        </div>
+      </details>
+
+      <!-- Localisation Géographique -->
+      <details>
+        <summary>Localisation Géographique</summary>
+        <div class="form-group">
+          <label for="latitude">Latitude</label>
+          <input type="number" id="latitude" name="latitude" step="any" placeholder="Ex. 45.8992">
+        </div>
+        <div class="form-group">
+          <label for="longitude">Longitude</label>
+          <input type="number" id="longitude" name="longitude" step="any" placeholder="Ex. 6.1294">
+        </div>
+        <div class="form-group">
+          <label for="googleMaps">Lien Google Maps</label>
+          <input type="url" id="googleMaps" name="googleMaps" placeholder="Ex. https://maps.google.com/...">
+        </div>
+        <div class="form-group">
+          <label for="imageMaps">Image de la carte</label>
+          <input type="file" id="imageMaps" name="imageMaps" accept="image/*" aria-label="Choisir une image">
+        </div>
+        <div class="form-group">
+          <label for="hasMap">Lien vers une carte</label>
+          <input type="url" id="hasMap" name="hasMap" placeholder="Ex. https://example.com/map">
+        </div>
+        <div class="form-group">
+          <label for="areaServed">Zone desservie (séparées par des virgules)</label>
+          <input type="text" id="areaServed" name="areaServed" placeholder="Ex. Annecy, Lyon">
+        </div>
+      </details>
+
+      <!-- Services et Offres -->
+      <details>
+        <summary>Services et Offres</summary>
+        <div class="form-group">
+          <label for="services">Services proposés (séparés par des virgules)</label>
+          <input type="text" id="services" name="services" placeholder="Ex. Soins visage, Soins corps">
+        </div>
+        <div class="form-group">
+          <label for="priceRange">Fourchette de prix</label>
+          <input type="text" id="priceRange" name="priceRange" placeholder="Ex. 50€-150€">
+        </div>
+        <div class="form-group">
+          <label for="servesCuisine">Cuisine servie (si applicable)</label>
+          <input type="text" id="servesCuisine" name="servesCuisine" placeholder="Ex. Cuisine française">
+        </div>
+        <div class="form-group">
+          <label for="menu">Menu (si applicable)</label>
+          <input type="url" id="menu" name="menu" placeholder="Ex. https://exemple.com/menu">
+        </div>
+        <div class="form-group">
+          <label for="currenciesAccepted">Devises acceptées (séparées par des virgules)</label>
+          <input type="text" id="currenciesAccepted" name="currenciesAccepted" placeholder="Ex. EUR, USD">
+        </div>
+        <div class="form-group">
+          <label for="paymentAccepted">Modes de paiement acceptés (séparés par des virgules)</label>
+          <input type="text" id="paymentAccepted" name="paymentAccepted" placeholder="Ex. Carte bancaire, Espèces">
+        </div>
+        <div class="form-group">
+          <label for="acceptsReservations">Accepte les réservations</label>
+          <select id="acceptsReservations" name="acceptsReservations">
+            <option value="">Sélectionner</option>
+            <option value="true">Oui</option>
+            <option value="false">Non</option>
+          </select>
+        </div>
+      </details>
+
+      <!-- Points de Contact -->
+      <details>
+        <summary>Points de Contact</summary>
+        <div class="form-group">
+          <label for="contactPoint">Points de contact (JSON format)</label>
+          <textarea id="contactPoint" name="contactPoint" placeholder='Ex. [{"contactType": "Support", "telephone": "+33 6 12 34 56 78", "email": "support@exemple.com", "hoursAvailable": "Lun-Ven 9h-18h"}]'></textarea>
+        </div>
+      </details>
+
+      <!-- Évaluations et Avis -->
+      <details>
+        <summary>Évaluations et Avis</summary>
+        <div class="form-group">
+          <label for="aggregateRating">Note moyenne (JSON format)</label>
+          <input type="text" id="aggregateRating" name="aggregateRating" placeholder='Ex. {"ratingValue": 4.5, "reviewCount": 120}'>
+        </div>
+        <div class="form-group">
+          <label for="review">Avis (JSON format)</label>
+          <textarea id="review" name="review" placeholder='Ex. [{"author": "John Doe", "reviewBody": "Excellent service !", "reviewRating": 5}]'></textarea>
+        </div>
+      </details>
+
+      <!-- Informations sur le Site -->
+      <details>
+        <summary>Informations sur le Site</summary>
+        <div class="form-group">
+          <label for="defaultTitle">Titre par défaut (métadonnées)</label>
+          <input type="text" id="defaultTitle" name="defaultTitle" placeholder="Ex. MS Belle à Croquer - Institut de beauté">
+        </div>
+        <div class="form-group">
+          <label for="defaultDescription">Description par défaut (métadonnées)</label>
+          <textarea id="defaultDescription" name="defaultDescription" placeholder="Ex. Découvrez nos soins de beauté..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="defaultKeywords">Mots-clés par défaut (séparés par des virgules)</label>
+          <input type="text" id="defaultKeywords" name="defaultKeywords" placeholder="Ex. beauté, soins visage, Annecy">
+        </div>
+        <div class="form-group">
+          <label for="defaultAuthor">Auteur par défaut</label>
+          <input type="text" id="defaultAuthor" name="defaultAuthor" placeholder="Ex. Zatchouli Team">
+        </div>
+        <div class="form-group">
+          <label for="defaultOgImage">Image OG par défaut</label>
+          <input type="file" id="defaultOgImage" name="defaultOgImage" accept="image/*" aria-label="Choisir une image">
+        </div>
+        <div class="form-group">
+          <label for="defaultCanonicalUrl">URL canonique par défaut</label>
+          <input type="url" id="defaultCanonicalUrl" name="defaultCanonicalUrl" placeholder="Ex. https://www.exemple.com">
+        </div>
+        <div class="form-group">
+          <label for="defaultPrefetchUrls">URLs à précharger (séparées par des virgules)</label>
+          <input type="text" id="defaultPrefetchUrls" name="defaultPrefetchUrls" placeholder="Ex. https://cdn.exemple.com/style.css">
+        </div>
+        <div class="form-group">
+          <label for="defaultCssFiles">Fichiers CSS par défaut (séparés par des virgules)</label>
+          <input type="text" id="defaultCssFiles" name="defaultCssFiles" placeholder="Ex. style.css, custom.css">
+        </div>
+        <div class="form-group">
+          <label for="defaultJsFiles">Fichiers JS par défaut (séparés par des virgules)</label>
+          <input type="text" id="defaultJsFiles" name="defaultJsFiles" placeholder="Ex. script.js, custom.js">
+        </div>
+        <div class="form-group">
+          <label for="defaultLang">Langue par défaut</label>
+          <select id="defaultLang" name="defaultLang">
+            <option value="">Sélectionner</option>
+            <option value="fr">Français</option>
+            <option value="en">Anglais</option>
+            <option value="es">Espagnol</option>
+          </select>
+        </div>
+      </details>
+
+      <!-- Informations sur le Logo -->
+      <details>
+        <summary>Informations sur le Logo</summary>
+        <div class="form-group">
+          <label for="logoUrl">URL du logo</label>
+          <input type="url" id="logoUrl" name="logoUrl" placeholder="Ex. https://exemple.com/logo.png">
+        </div>
+        <div class="form-group">
+          <label for="logoAlt">Texte alternatif du logo</label>
+          <input type="text" id="logoAlt" name="logoAlt" placeholder="Ex. Logo de MS Belle à Croquer">
+        </div>
+        <div class="form-group">
+          <label for="logoSizes">Tailles du logo (JSON format)</label>
+          <textarea id="logoSizes" name="logoSizes" placeholder='Ex. {"default": {"width": 200, "height": 50}, "sm": {"width": 150, "height": 38}}'></textarea>
+        </div>
+      </details>
+
+      <!-- Informations sur le Développeur et l’Hébergeur -->
+      <details>
+        <summary>Développeur et Hébergeur</summary>
+        <div class="form-group">
+          <label for="siteDev">Développeur du site</label>
+          <input type="text" id="siteDev" name="siteDev" placeholder="Ex. Zatchouli Dev Team">
+        </div>
+        <div class="form-group">
+          <label for="siteDevUrl">URL du développeur</label>
+          <input type="url" id="siteDevUrl" name="siteDevUrl" placeholder="Ex. https://zatchouli.fr">
+        </div>
+        <div class="form-group">
+          <label for="siteDevEmail">Email du développeur</label>
+          <input type="email" id="siteDevEmail" name="siteDevEmail" placeholder="Ex. dev@zatchouli.fr">
+        </div>
+        <div class="form-group">
+          <label for="siteHostName">Nom de l’hébergeur</label>
+          <input type="text" id="siteHostName" name="siteHostName" placeholder="Ex. OVH">
+        </div>
+        <div class="form-group">
+          <label for="siteHostAddress">Adresse de l’hébergeur</label>
+          <input type="text" id="siteHostAddress" name="siteHostAddress" placeholder="Ex. 2 Rue Kellermann, 59100 Roubaix">
+        </div>
+        <div class="form-group">
+          <label for="siteHoststring">String de l’hébergeur</label>
+          <input type="text" id="siteHoststring" name="siteHoststring" placeholder="Ex. OVH SAS">
+        </div>
+        <div class="form-group">
+          <label for="siteHostContact">Contact de l’hébergeur</label>
+          <input type="text" id="siteHostContact" name="siteHostContact" placeholder="Ex. support@ovh.com">
+        </div>
+      </details>
+
+      <!-- Informations sur le Médiateur -->
+      <details>
+        <summary>Médiateur</summary>
+        <div class="form-group">
+          <label for="siteMediateurName">Nom du médiateur</label>
+          <input type="text" id="siteMediateurName" name="siteMediateurName" placeholder="Ex. Médiateur de Zatchouli">
+        </div>
+        <div class="form-group">
+          <label for="siteMediateurAdresse">Adresse du médiateur</label>
+          <input type="text" id="siteMediateurAdresse" name="siteMediateurAdresse" placeholder="Ex. 123 Rue du Médiateur, 75001 Paris">
+        </div>
+        <div class="form-group">
+          <label for="siteMediateurUrl">URL du médiateur</label>
+          <input type="url" id="siteMediateurUrl" name="siteMediateurUrl" placeholder="Ex. https://mediateur.fr">
+        </div>
+        <div class="form-group">
+          <label for="siteMediateurContact">Contact du médiateur</label>
+          <input type="text" id="siteMediateurContact" name="siteMediateurContact" placeholder="Ex. contact@mediateur.fr">
+        </div>
+      </details>
+
+      <!-- Statistiques et Navigation -->
+      <details>
+        <summary>Statistiques et Navigation</summary>
+        <div class="form-group">
+          <label for="stats">Statistiques (JSON format)</label>
+          <textarea id="stats" name="stats" placeholder='Ex. [{"icon": "users", "number": "500", "desc": "Clients satisfaits"}]'></textarea>
+        </div>
+        <div class="form-group">
+          <label for="navLinks">Liens de navigation (JSON format)</label>
+          <textarea id="navLinks" name="navLinks" placeholder='Ex. [{"name": "Accueil", "url": "/accueil"}, {"name": "Services", "url": "/services"}]'></textarea>
+        </div>
+        <div class="form-group">
+          <label for="navLinksSecondary">Liens secondaires (JSON format)</label>
+          <textarea id="navLinksSecondary" name="navLinksSecondary" placeholder='Ex. [{"name": "Mentions légales", "url": "/mentions"}]'></textarea>
+        </div>
+        <div class="form-group">
+          <label for="footerText">Texte du pied de page</label>
+          <input type="text" id="footerText" name="footerText" placeholder="Ex. © 2023 MS Belle à Croquer">
+        </div>
+      </details>
+
+      <div id="feedback" class="feedback"></div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn">Suivant</button>
+        <button type="reset" class="btn secondary">Réinitialiser</button>
+      </div>
+    </form>
+  </section>
+
+  
+</body>
+</Landing>
+<script is:inline>
+    const form = document.getElementById('organization-form');
+    const feedback = document.getElementById('feedback');
+    const progress = form.querySelector('progress');
+    const testModeBtn = document.getElementById('test-mode-btn');
+
+    // Jeu de données de test
+    const testData = {
+      name: "MS Belle à Croquer",
+      alternateName: "Zatchouli, MBC",
+      description: "Institut de beauté à Annecy offrant des soins personnalisés pour le visage et le corps.",
+      logo: "", // À tester avec un fichier
+      image: "", // À tester avec un fichier
+      email: "contact@msbelleacroquer.fr",
+      defaultEmail: "info@msbelleacroquer.fr",
+      telephone: "+33 6 12 34 56 78",
+      defaultPhone: "+33 6 12 34 56 78",
+      faxNumber: "+33 1 23 45 67 89",
+      url: "https://www.msbelleacroquer.fr",
+      siteUrl: "https://www.msbelleacroquer.fr",
+      streetAddress: "12 Rue de la Paix",
+      addressLocality: "Annecy",
+      addressRegion: "Auvergne-Rhône-Alpes",
+      postalCode: "74000",
+      addressCountry: "FR",
+      defaultAddress: "12 Rue de la Paix, 74000 Annecy, France",
+      facebook: "https://facebook.com/msbelleacroquer",
+      instagram: "https://instagram.com/msbelleacroquer",
+      twitter: "https://twitter.com/msbelleacroquer",
+      sameAs: "https://linkedin.com/company/msbelleacroquer, https://pinterest.com/msbelleacroquer",
+      legalName: "MS Belle à Croquer SAS",
+      taxID: "FR123456789",
+      vatID: "FR82123456789",
+      leiCode: "1234567890AB12345678",
+      duns: "12-345-6789",
+      isicV4: "9609",
+      naics: "812113",
+      founder: "Marie Dupont, Sophie Martin",
+      foundingDate: "2020-01-15",
+      foundingLocation: "Annecy, France",
+      dissolutionDate: "N/A",
+      numberOfEmployees: 10,
+      employee: "Marie Dupont, Sophie Martin",
+      parentOrganization: "Groupe Zatchouli",
+      subOrganization: "Zatchouli Paris, Zatchouli Lyon",
+      department: "Marketing, Ventes",
+      owns: "Boutique Annecy, Boutique Paris",
+      brand: "Zatchouli Soins, Zatchouli Beauté",
+      identifier: "ORG-12345",
+      slogan: "Bien-être et beauté",
+      awards: "Meilleur Institut 2023",
+      memberOf: "Chambre de Commerce",
+      openingHours: "Lun-Ven 9h-18h, Sam 10h-14h",
+      openingHoursSpecification: "Monday: 9h-18h, Tuesday: 9h-18h",
+      latitude: 45.8992,
+      longitude: 6.1294,
+      googleMaps: "https://maps.google.com/?q=45.8992,6.1294",
+      imageMaps: "", // À tester avec un fichier
+      hasMap: "https://example.com/map",
+      areaServed: "Annecy, Lyon",
+      services: "Soins visage, Soins corps",
+      priceRange: "50€-150€",
+      servesCuisine: "Cuisine française",
+      menu: "https://msbelleacroquer.fr/menu",
+      currenciesAccepted: "EUR, USD",
+      paymentAccepted: "Carte bancaire, Espèces",
+      acceptsReservations: "true",
+      contactPoint: '[{"contactType": "Support", "telephone": "+33 6 12 34 56 78", "email": "support@msbelleacroquer.fr", "hoursAvailable": "Lun-Ven 9h-18h"}]',
+      aggregateRating: '{"ratingValue": 4.5, "reviewCount": 120}',
+      review: '[{"author": "John Doe", "reviewBody": "Excellent service !", "reviewRating": 5}]',
+      defaultTitle: "MS Belle à Croquer - Institut de beauté",
+      defaultDescription: "Découvrez nos soins de beauté personnalisés à Annecy.",
+      defaultKeywords: "beauté, soins visage, Annecy",
+      defaultAuthor: "Zatchouli Team",
+      defaultOgImage: "", // À tester avec un fichier
+      defaultCanonicalUrl: "https://www.msbelleacroquer.fr",
+      defaultPrefetchUrls: "https://cdn.msbelleacroquer.fr/style.css",
+      defaultCssFiles: "style.css, custom.css",
+      defaultJsFiles: "script.js, custom.js",
+      defaultLang: "fr",
+      logoUrl: "https://msbelleacroquer.fr/logo.png",
+      logoAlt: "Logo de MS Belle à Croquer",
+      logoSizes: '{"default": {"width": 200, "height": 50}, "sm": {"width": 150, "height": 38}}',
+      stats: '[{"icon": "users", "number": "500", "desc": "Clients satisfaits"}]',
+      navLinks: '[{"name": "Accueil", "url": "/accueil"}, {"name": "Services", "url": "/services"}]',
+      navLinksSecondary: '[{"name": "Mentions légales", "url": "/mentions"}]',
+      footerText: "© 2023 MS Belle à Croquer",
+      siteDev: "Zatchouli Dev Team",
+      siteDevUrl: "https://zatchouli.fr",
+      siteDevEmail: "dev@zatchouli.fr",
+      siteHostName: "OVH",
+      siteHostAddress: "2 Rue Kellermann, 59100 Roubaix",
+      siteHoststring: "OVH SAS",
+      siteHostContact: "support@ovh.com",
+      siteMediateurName: "Médiateur de Zatchouli",
+      siteMediateurAdresse: "123 Rue du Médiateur, 75001 Paris",
+      siteMediateurUrl: "https://mediateur.fr",
+      siteMediateurContact: "contact@mediateur.fr"
+    };
+
+    // Activer le mode test
+    testModeBtn.addEventListener('click', () => {
+      document.getElementById('name').value = testData.name;
+      document.getElementById('alternateName').value = testData.alternateName;
+      document.getElementById('description').value = testData.description;
+      document.getElementById('email').value = testData.email;
+      document.getElementById('defaultEmail').value = testData.defaultEmail;
+      document.getElementById('telephone').value = testData.telephone;
+      document.getElementById('defaultPhone').value = testData.defaultPhone;
+      document.getElementById('faxNumber').value = testData.faxNumber;
+      document.getElementById('url').value = testData.url;
+      document.getElementById('siteUrl').value = testData.siteUrl;
+      document.getElementById('streetAddress').value = testData.streetAddress;
+      document.getElementById('addressLocality').value = testData.addressLocality;
+      document.getElementById('addressRegion').value = testData.addressRegion;
+      document.getElementById('postalCode').value = testData.postalCode;
+      document.getElementById('addressCountry').value = testData.addressCountry;
+      document.getElementById('defaultAddress').value = testData.defaultAddress;
+      document.getElementById('facebook').value = testData.facebook;
+      document.getElementById('instagram').value = testData.instagram;
+      document.getElementById('twitter').value = testData.twitter;
+      document.getElementById('sameAs').value = testData.sameAs;
+      document.getElementById('legalName').value = testData.legalName;
+      document.getElementById('taxID').value = testData.taxID;
+      document.getElementById('vatID').value = testData.vatID;
+      document.getElementById('leiCode').value = testData.leiCode;
+      document.getElementById('duns').value = testData.duns;
+      document.getElementById('isicV4').value = testData.isicV4;
+      document.getElementById('naics').value = testData.naics;
+      document.getElementById('founder').value = testData.founder;
+      document.getElementById('foundingDate').value = testData.foundingDate;
+      document.getElementById('foundingLocation').value = testData.foundingLocation;
+      document.getElementById('dissolutionDate').value = testData.dissolutionDate;
+      document.getElementById('numberOfEmployees').value = testData.numberOfEmployees;
+      document.getElementById('employee').value = testData.employee;
+      document.getElementById('parentOrganization').value = testData.parentOrganization;
+      document.getElementById('subOrganization').value = testData.subOrganization;
+      document.getElementById('department').value = testData.department;
+      document.getElementById('owns').value = testData.owns;
+      document.getElementById('brand').value = testData.brand;
+      document.getElementById('identifier').value = testData.identifier;
+      document.getElementById('slogan').value = testData.slogan;
+      document.getElementById('awards').value = testData.awards;
+      document.getElementById('memberOf').value = testData.memberOf;
+      document.getElementById('openingHours').value = testData.openingHours;
+      document.getElementById('openingHoursSpecification').value = testData.openingHoursSpecification;
+      document.getElementById('latitude').value = testData.latitude;
+      document.getElementById('longitude').value = testData.longitude;
+      document.getElementById('googleMaps').value = testData.googleMaps;
+      document.getElementById('hasMap').value = testData.hasMap;
+      document.getElementById('areaServed').value = testData.areaServed;
+      document.getElementById('services').value = testData.services;
+      document.getElementById('priceRange').value = testData.priceRange;
+      document.getElementById('servesCuisine').value = testData.servesCuisine;
+      document.getElementById('menu').value = testData.menu;
+      document.getElementById('currenciesAccepted').value = testData.currenciesAccepted;
+      document.getElementById('paymentAccepted').value = testData.paymentAccepted;
+      document.getElementById('acceptsReservations').value = testData.acceptsReservations;
+      document.getElementById('contactPoint').value = testData.contactPoint;
+      document.getElementById('aggregateRating').value = testData.aggregateRating;
+      document.getElementById('review').value = testData.review;
+      document.getElementById('defaultTitle').value = testData.defaultTitle;
+      document.getElementById('defaultDescription').value = testData.defaultDescription;
+      document.getElementById('defaultKeywords').value = testData.defaultKeywords;
+      document.getElementById('defaultAuthor').value = testData.defaultAuthor;
+      document.getElementById('defaultCanonicalUrl').value = testData.defaultCanonicalUrl;
+      document.getElementById('defaultPrefetchUrls').value = testData.defaultPrefetchUrls;
+      document.getElementById('defaultCssFiles').value = testData.defaultCssFiles;
+      document.getElementById('defaultJsFiles').value = testData.defaultJsFiles;
+      document.getElementById('defaultLang').value = testData.defaultLang;
+      document.getElementById('logoUrl').value = testData.logoUrl;
+      document.getElementById('logoAlt').value = testData.logoAlt;
+      document.getElementById('logoSizes').value = testData.logoSizes;
+      document.getElementById('stats').value = testData.stats;
+      document.getElementById('navLinks').value = testData.navLinks;
+      document.getElementById('navLinksSecondary').value = testData.navLinksSecondary;
+      document.getElementById('footerText').value = testData.footerText;
+      document.getElementById('siteDev').value = testData.siteDev;
+      document.getElementById('siteDevUrl').value = testData.siteDevUrl;
+      document.getElementById('siteDevEmail').value = testData.siteDevEmail;
+      document.getElementById('siteHostName').value = testData.siteHostName;
+      document.getElementById('siteHostAddress').value = testData.siteHostAddress;
+      document.getElementById('siteHoststring').value = testData.siteHoststring;
+      document.getElementById('siteHostContact').value = testData.siteHostContact;
+      document.getElementById('siteMediateurName').value = testData.siteMediateurName;
+      document.getElementById('siteMediateurAdresse').value = testData.siteMediateurAdresse;
+      document.getElementById('siteMediateurUrl').value = testData.siteMediateurUrl;
+      document.getElementById('siteMediateurContact').value = testData.siteMediateurContact;
+
+      feedback.textContent = 'Mode test activé avec les données fictives.';
+      feedback.className = 'feedback success';
+    });
+
+      form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Gérer les champs multiples (séparés par des virgules)
+    ['alternateName', 'sameAs', 'founder', 'employee', 'subOrganization', 'department', 'owns', 'brand', 'awards', 'memberOf', 'areaServed', 'services', 'currenciesAccepted', 'paymentAccepted', 'defaultKeywords', 'defaultCssFiles', 'defaultJsFiles'].forEach(field => {
+      if (data[field]) data[field] = data[field].split(',').map(item => item.trim());
+    });
+
+    // Parser les champs JSON
+    ['contactPoint', 'aggregateRating', 'review', 'logoSizes', 'stats', 'navLinks', 'navLinksSecondary'].forEach(field => {
+      if (data[field]) data[field] = JSON.parse(data[field] || '[]');
+    });
+
+    localStorage.setItem('identity_organization', JSON.stringify(data));
+    feedback.textContent = 'Informations enregistrées ! Passage à l’étape suivante.';
+    feedback.className = 'feedback success';
+    window.location.href = '/genepy/customize'; // Redirection vers l'étape 2
+  });
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const requiredFields = form.querySelectorAll('[required]');
+      let isValid = true;
+
+      requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+          isValid = false;
+          field.parentElement.classList.add('error');
+        } else {
+          field.parentElement.classList.remove('error');
+        }
+      });
+
+      if (isValid) {
+        feedback.textContent = 'Informations enregistrées avec succès !';
+        feedback.className = 'feedback success';
+        progress.value = 50;
+      } else {
+        feedback.textContent = 'Veuillez remplir tous les champs obligatoires.';
+        feedback.className = 'feedback error';
+      }
+    });
+
+    form.addEventListener('reset', () => {
+      feedback.textContent = '';
+      feedback.className = 'feedback';
+      progress.value = 25;
+      form.querySelectorAll('.form-group').forEach(group => {
+        group.classList.remove('error');
+      });
+    });
+
+    form.addEventListener('input', (e) => {
+      if (e.target.required && e.target.value.trim()) {
+        e.target.parentElement.classList.remove('error');
+      }
+    });
+  </script>

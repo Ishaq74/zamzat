@@ -1,0 +1,53 @@
+---
+export const prerender = false;
+import Layout from '@layouts/Layout.astro';
+import Grid from "@components/Elements/Grid.astro";
+import QueryLoop from '@components/Elements/QueryLoop.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const categories = await getCollection('recipecategories');
+  return categories.map(category => ({
+    params: { slug: category.id },
+    props: { category },
+  }));
+}
+
+const { category } = Astro.props;
+
+console.log('category', category);
+
+if (!category) {
+  return Astro.redirect('/404');
+}
+
+const { name, description, image } = category.data;
+const pageTitle = `Recettes de ${name}`;
+const pageDescription = description || 'Découvrez nos recettes';
+const pageKeywords = name;
+const pageOgImage = image;
+const pageLang = 'fr';
+const pageRobots = "noindex, nofollow";
+---
+
+<Layout 
+  title={pageTitle} 
+  description={pageDescription} 
+  keywords={pageKeywords} 
+  ogImage={pageOgImage} 
+  lang={pageLang} 
+  robots={pageRobots}
+>
+  <Grid 
+    tag="section" 
+    textAlign="center" 
+    backgroundColor="bg-blue-200" 
+    align="center" 
+    gap="gap-0"
+  >
+    <h1>Catégorie de Recettes : {name}</h1>
+    <p>{description}</p>
+  </Grid>
+  <QueryLoop collection="recipes" limit={4} />
+  <QueryLoop collection="recipecategories" siblingsContent={true} limit={4} />
+</Layout>

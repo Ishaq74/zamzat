@@ -1,0 +1,4 @@
+---
+name: Poulet
+slug: poulet
+---

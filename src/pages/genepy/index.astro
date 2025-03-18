@@ -1,0 +1,440 @@
+---
+import { getCollection } from 'astro:content';
+import Landing from '@layouts/Landing.astro';
+import Grid from '@components/Elements/Grid.astro';
+import Link from '@components/Elements/Link.astro';
+import Button from '@components/Elements/Button.astro';
+import { Image } from 'astro:assets';
+import Gallery from '@components/Medias/Gallery.astro';
+import ProductCard from '@components/Products/ProductCard.astro';
+import PostCard from '@components/Blog/BlogCard.astro';
+import ReviewCard from '@components/Reviews/ReviewCard.astro';
+import PersonCard from '@components/Blog/BlogCard.astro';
+import { Icon } from 'astro-icon/components';
+
+const organizationEntries = await getCollection('organizations');
+const organizationData = organizationEntries[0]?.data;
+
+const pageTitle = `Créer un site Internet`;
+const pageDescription = 'Commencer par définir son identité';
+const pageKeywords = "créer un site internet, zatchouli";
+const pageOgImage = "/images/logo-msbc.png";
+const pageLang = 'fr';
+const pageRobots = "index, follow";
+---
+<Landing
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+<body class="bg-gray-50 text-gray-900 font-sans leading-relaxed grid grid-rows-[auto,1fr,auto] min-h-screen overflow-x-hidden">
+  <!-- Sticky Navigation -->
+  <Grid tag="nav" class="sticky top-0 bg-gradient-to-r from-gray-900 to-black text-white shadow-xl z-50" yPadding="py-4"  cols="1" xAlign="space-between">
+    <div class="flex justify-between items-center max-w-7xl mx-auto w-full">
+      <div class="flex gap-4 items-center">
+        {organizationData?.logo && (
+          <Image src={organizationData.logo} alt={organizationData.logoAlt || "Logo MS Belle à Croquer"} class="w-12 h-12 transition-transform duration-300 hover:scale-105" width={organizationData.logoSizes?.default?.width || 48} height={organizationData.logoSizes?.default?.height || 48} />
+        )}
+        <span class="text-2xl font-bold">{organizationData?.name || "MS Belle à Croquer"}</span>
+      </div>
+      <Grid cols="3" gap="gap-6" xAlign="center" class="flex-wrap">
+        <label for="identity-toggle" class="cursor-pointer bg-gray-800 rounded-full hover:bg-gray-600 transition-all duration-300 flex items-center gap-2"  >
+          <Icon name="mdi:home-city" class="w-5 h-5" /> Identité
+        </label>
+        <label for="design-toggle" class="cursor-pointer bg-gray-800 rounded-full hover:bg-gray-600 transition-all duration-300 flex items-center gap-2"  >
+          <Icon name="mdi:brush" class="w-5 h-5" /> Design
+        </label>
+        <label for="content-toggle" class="cursor-pointer bg-gray-800 rounded-full hover:bg-gray-600 transition-all duration-300 flex items-center gap-2"  >
+          <Icon name="mdi:content-paste" class="w-5 h-5" /> Contenu
+        </label>
+      </Grid>
+    </div>
+  </Grid>
+
+  <!-- Main Content -->
+  <Grid tag="main" class="max-w-7xl mx-auto" yPadding="py-16" xPadding="px-6 md:px-16" cols="1" gap="gap-20">
+    <!-- 1. Identité (Entreprise + Fondateur + Site) -->
+    <input type="radio" id="identity-toggle" name="toggle" hidden checked>
+    <section class="toggle-content space-y-20">
+      <Grid class="text-center" yPadding="py-12" xPadding="px-0">
+        <h1 class="text-6xl font-extrabold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">Identité</h1>
+        <p class="text-xl text-gray-600 mt-4 max-w-3xl mx-auto">Tout ce qui définit MS Belle à Croquer : notre histoire, notre vision, et notre essence.</p>
+      </Grid>
+      <!-- Entreprise -->
+      <Grid class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500" yPadding="py-12" xPadding="px-8 md:px-12" borderRadius="rounded-2xl">
+        <h2 class="text-4xl font-semibold mb-8 text-center text-gray-800">L’Entreprise</h2>
+        <Grid cols="1 md:2" gap="gap-10" xAlign="center" yAlign="center">
+          <div class="space-y-6 text-center md:text-left">
+            <h3 class="text-2xl font-semibold text-gray-800">{organizationData?.name || "MS Belle à Croquer"}</h3>
+            {organizationData?.description && <p class="text-lg text-gray-600 leading-relaxed">{organizationData.description}</p>}
+            {organizationData?.foundingDate && <p class="text-gray-500">Fondée le : <span class="font-medium">{new Date(organizationData.foundingDate).toLocaleDateString("fr-FR")}</span></p>}
+            {organizationData?.legalName && <p class="text-gray-500">Nom légal : <span class="font-medium">{organizationData.legalName}</span></p>}
+            {organizationData?.numberOfEmployees && <p class="text-gray-500">Équipe : <span class="font-medium">{organizationData.numberOfEmployees} membres</span></p>}
+            {organizationData?.slogan && <p class="text-xl text-gray-700 italic mt-4">"{organizationData.slogan}"</p>}
+          </div>
+          <div class="flex flex-col gap-6 items-center">
+            {organizationData?.logo && (
+              <Image src={organizationData.logo} alt={organizationData.logoAlt || "Logo"} class="w-48 h-auto transition-transform duration-500 hover:scale-105" width={organizationData.logoSizes?.default?.width || 192} height={organizationData.logoSizes?.default?.height || 38} />
+            )}
+            {organizationData?.address && (
+              <div class="text-center text-gray-600">
+                <p>{organizationData.address.streetAddress}</p>
+                <p>{organizationData.address.postalCode} {organizationData.address.addressLocality}, {organizationData.address.addressCountry}</p>
+                {organizationData.googleMaps && <Link href={organizationData.googleMaps} style="link" class="mt-2 inline-flex items-center gap-2 hover:text-black">Google Maps <Icon name="mdi:map-marker" class="w-5 h-5" /></Link>}
+              </div>
+            )}
+          </div>
+        </Grid>
+        {organizationData?.stats && (
+          <Grid cols="1 md:3" gap="gap-8" xAlign="center" class="mt-10">
+            {organizationData.stats.map((stat, index) => (
+              <div class="bg-gray-50 rounded-xl shadow-md transition-all duration-300 hover:bg-gray-100">
+                <Image src={stat.icon} alt="Stat Icon" class="mx-auto w-12" width="48" height="48" />
+                <p class="text-3xl font-bold mt-4 text-gray-800">{stat.number}</p>
+                <p class="text-gray-600">{stat.desc}</p>
+              </div>
+            ))}
+          </Grid>
+        )}
+      </Grid>
+      <!-- Fondateur -->
+      <Grid class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500" yPadding="py-12" xPadding="px-8 md:px-12" borderRadius="rounded-2xl">
+        <h2 class="text-4xl font-semibold mb-8 text-center text-gray-800">Le Fondateur</h2>
+        <Grid cols="1 md:2" gap="gap-10" xAlign="center" yAlign="center">
+          <div class="relative group">
+            <Image src="/images/marie-sophie.jpg" alt="Marie-Sophie Dupont" class="w-64 h-64 object-cover rounded-full shadow-md transition-all duration-500 group-hover:scale-105 group-hover:shadow-xl" width="256" height="256" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-4">
+              <span class="text-white text-lg font-medium">{organizationData?.founder || "Marie-Sophie Dupont"}</span>
+            </div>
+          </div>
+          <div class="space-y-6 text-center md:text-left">
+            <h3 class="text-2xl font-semibold text-gray-800">{organizationData?.founder || "Marie-Sophie Dupont"}</h3>
+            <p class="text-lg text-gray-600 leading-relaxed">Esthéticienne passionnée avec plus de 15 ans d’expérience, {organizationData?.founder || "Marie-Sophie Dupont"} a fondé MS Belle à Croquer pour offrir des soins personnalisés et une expérience unique à Annecy.</p>
+            {organizationData?.foundingDate && <p class="text-gray-500">Fondation : <span class="font-medium">{new Date(organizationData.foundingDate).toLocaleDateString("fr-FR")}</span></p>}
+            <p class="text-xl text-gray-700 italic">"Ma vision est de sublimer chaque client avec des soins qui allient expertise et cœur."</p>
+            {organizationData?.sameAs && (
+              <div class="flex gap-4 justify-center md:justify-start mt-4">
+                {organizationData.sameAs.map((social, index) => (
+                  <Link href={social} style="link" class="text-gray-600 hover:text-black transition-all duration-300">
+                    <Icon name={`mdi:${social.includes("instagram") ? "instagram" : social.includes("facebook") ? "facebook" : "web"}`} class="w-6 h-6" />
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </Grid>
+      </Grid>
+      <!-- Site -->
+      <Grid class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500" yPadding="py-12" xPadding="px-8 md:px-12" borderRadius="rounded-2xl">
+        <h2 class="text-4xl font-semibold mb-8 text-center text-gray-800">Le Site</h2>
+        <Grid cols="1" gap="gap-8" xAlign="center" textAlign="center">
+          <div class="space-y-6">
+            <h3 class="text-2xl font-semibold text-gray-800">{organizationData?.url || "https://msbelleacroquer-annecy.fr"}</h3>
+            {organizationData?.defaultDescription && <p class="text-lg text-gray-600 leading-relaxed">{organizationData.defaultDescription}</p>}
+            {organizationData?.siteDev && (
+              <p class="text-gray-500">Développé par : <Link href={organizationData.siteDevUrl || "#"} style="link" class="font-medium hover:text-black">{organizationData.siteDev}</Link></p>
+            )}
+            {organizationData?.siteHostName && (
+              <p class="text-gray-500">Hébergé par : <span class="font-medium">{organizationData.siteHostName}</span> - {organizationData.siteHostAddress || "Non spécifié"}</p>
+            )}
+            <div class="mt-6 flex justify-center gap-6">
+              <Button style="primary" class="hover:bg-gray-800 transition-all duration-300">Visiter le Site</Button>
+              {organizationData?.siteDevEmail && (
+                <Link href={`mailto:${organizationData.siteDevEmail}`}><Button style="outline" class="hover:bg-gray-100 transition-all duration-300"   icon={{ name: "mdi:email", side: "left" }}>Contacter le Développeur</Button></Link>
+              )}
+            </div>
+          </div>
+        </Grid>
+      </Grid>
+    </section>
+
+    <!-- 2. Design Système (Style Guide + UI + Atomic Design) -->
+    <input type="radio" id="design-toggle" name="toggle" hidden>
+    <section class="toggle-content space-y-20">
+      <Grid class="text-center" yPadding="py-16" xPadding="px-0">
+        <h1 class="text-6xl font-extrabold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">Design Système</h1>
+        <p class="text-xl text-gray-600 mt-4 max-w-3xl mx-auto">Un système de design basé sur Tailwind CSS 4, structuré selon les principes d’Atomic Design.</p>
+      </Grid>
+      <!-- Style Guide -->
+      <Grid class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500" yPadding="py-12" xPadding="px-8 md:px-12" borderRadius="rounded-2xl">
+        <h2 class="text-4xl font-semibold mb-10 text-center text-gray-800">Style Guide</h2>
+        <Grid class="space-y-16">
+          <div>
+            <h3 class="text-3xl font-semibold mb-6 text-gray-800">Couleurs</h3>
+            <Grid cols="2 md:4" gap="gap-8" xAlign="center">
+              <div class="text-center group">
+                <div class="w-24 h-24 bg-gray-900 rounded-full mx-auto shadow-md transition-all duration-500 group-hover:scale-105"></div>
+                <p class="text-gray-600 mt-4 font-medium">Noir profond - #1A202C</p>
+              </div>
+              <div class="text-center group">
+                <div class="w-24 h-24 bg-gray-300 rounded-full mx-auto shadow-md transition-all duration-500 group-hover:scale-105"></div>
+                <p class="text-gray-600 mt-4 font-medium">Gris clair - #D1D5DB</p>
+              </div>
+              <div class="text-center group">
+                <div class="w-24 h-24 bg-gray-600 rounded-full mx-auto shadow-md transition-all duration-500 group-hover:scale-105"></div>
+                <p class="text-gray-600 mt-4 font-medium">Gris moyen - #4B5563</p>
+              </div>
+              <div class="text-center group">
+                <div class="w-24 h-24 bg-gray-50 rounded-full mx-auto shadow-md border transition-all duration-500 group-hover:scale-105"></div>
+                <p class="text-gray-600 mt-4 font-medium">Blanc cassé - #F9FAFB</p>
+              </div>
+            </Grid>
+          </div>
+          <div>
+            <h3 class="text-3xl font-semibold mb-6 text-gray-800">Typographie</h3>
+            <div class="space-y-6 text-center">
+              <p class="text-5xl font-extrabold text-gray-800">H1 - 48px / 800</p>
+              <p class="text-3xl font-semibold text-gray-700">H2 - 30px / 600</p>
+              <p class="text-xl font-medium text-gray-600">H3 - 24px / 500</p>
+              <p class="text-base text-gray-600">P - 16px / 400</p>
+              <p class="text-sm text-gray-500">Small - 14px / 400</p>
+            </div>
+            <p class="text-gray-600 mt-4 text-center">Police : Inter (Sans-serif) | Line-height : 1.6</p>
+          </div>
+          <div>
+            <h3 class="text-3xl font-semibold mb-6 text-gray-800">Icônes (MDI)</h3>
+            <Grid cols="2 md:4" gap="gap-8" xAlign="center">
+              <div class="text-center group">
+                <Icon name="mdi:home-city" class="w-10 h-10 text-gray-700 transition-transform duration-500 group-hover:scale-125 group-hover:text-gray-900" />
+                <p class="text-gray-600 mt-4 font-medium">Accueil</p>
+              </div>
+              <div class="text-center group">
+                <Icon name="mdi:email" class="w-10 h-10 text-gray-700 transition-transform duration-500 group-hover:scale-125 group-hover:text-gray-900" />
+                <p class="text-gray-600 mt-4 font-medium">Email</p>
+              </div>
+              <div class="text-center group">
+                <Icon name="mdi:star" class="w-10 h-10 text-gray-700 transition-transform duration-500 group-hover:scale-125 group-hover:text-gray-900" />
+                <p class="text-gray-600 mt-4 font-medium">Étoile</p>
+              </div>
+              <div class="text-center group">
+                <Icon name="mdi:calendar" class="w-10 h-10 text-gray-700 transition-transform duration-500 group-hover:scale-125 group-hover:text-gray-900" />
+                <p class="text-gray-600 mt-4 font-medium">Calendrier</p>
+              </div>
+            </Grid>
+          </div>
+        </Grid>
+      </Grid>
+      <!-- Composants UI -->
+      <Grid class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500" yPadding="py-12" xPadding="px-8 md:px-12" borderRadius="rounded-2xl">
+        <h2 class="text-4xl font-semibold mb-10 text-center text-gray-800">Composants UI</h2>
+        <Grid class="space-y-16">
+          <div>
+            <h3 class="text-3xl font-semibold mb-6 text-gray-800">Boutons</h3>
+            <Grid cols="2 md:5" gap="gap-8" xAlign="center">
+              <Button style="primary" class="hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 transition-all duration-300"  >Primaire</Button>
+              <Button style="secondary" class="hover:bg-gray-400 focus:ring-2 focus:ring-gray-500 transition-all duration-300"  >Secondaire</Button>
+              <Button style="outline" class="hover:bg-gray-100 focus:ring-2 focus:ring-gray-300 transition-all duration-300"  >Outline</Button>
+              <Button style="primary" disabled class="opacity-50 cursor-not-allowed"  >Désactivé</Button>
+              <Button style="primary" icon={{ name: "mdi:check", side: "left" }} class="hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 transition-all duration-300"  >Avec Icône</Button>
+            </Grid>
+          </div>
+          <div>
+            <h3 class="text-3xl font-semibold mb-6 text-gray-800">Formulaires</h3>
+            <form class="space-y-6 max-w-lg mx-auto">
+              <input class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 hover:border-gray-500 transition-all duration-300" placeholder="Nom" required />
+              <input class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 hover:border-gray-500 bg-gray-100" placeholder="Email" disabled />
+              <textarea class="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 hover:border-gray-500 transition-all duration-300" placeholder="Message" rows="4" required></textarea>
+              <Button type="submit" style="primary" class="w-full hover:bg-gray-800 focus:ring-2 focus:ring-gray-900 transition-all duration-300"  >Envoyer</Button>
+            </form>
+          </div>
+          <div>
+            <h3 class="text-3xl font-semibold mb-6 text-gray-800">Cartes</h3>
+          </div>
+        </Grid>
+      </Grid>
+      <!-- Atomic Design -->
+      <Grid class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500" yPadding="py-12" xPadding="px-8 md:px-12" borderRadius="rounded-2xl">
+        <h2 class="text-4xl font-semibold mb-10 text-center text-gray-800">Atomic Design</h2>
+        <Grid class="space-y-16">
+          <div>
+            <h3 class="text-3xl font-semibold mb-6 text-gray-800">Atomes</h3>
+            <Grid cols="1 md:3" gap="gap-8" xAlign="center">
+              <div class="space-y-4 text-center">
+                <div class="w-16 h-16 bg-gray-900 rounded-full mx-auto shadow-md"></div>
+                <p class="text-gray-600 font-medium">Couleur (Noir)</p>
+              </div>
+              <div class="space-y-4 text-center">
+                <p class="text-2xl font-semibold text-gray-800">Texte</p>
+                <p class="text-gray-600 font-medium">Typographie (H3)</p>
+              </div>
+              <div class="space-y-4 text-center">
+                <Icon name="mdi:star" class="w-10 h-10 text-gray-700 mx-auto" />
+                <p class="text-gray-600 font-medium">Icône (MDI)</p>
+              </div>
+            </Grid>
+          </div>
+          <div>
+            <h3 class="text-3xl font-semibold mb-6 text-gray-800">Molécules</h3>
+            <Grid cols="1 md:3" gap="gap-8" xAlign="center">
+              <Button style="primary" class="hover:bg-gray-800 transition-all duration-300"  >Bouton</Button>
+              <div class="space-y-2">
+                <input class="p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 transition-all duration-300" placeholder="Input" />
+                <p class="text-gray-600 font-medium">Champ de saisie</p>
+              </div>
+              <div class="flex gap-2 items-center">
+                <Icon name="mdi:check" class="w-6 h-6 text-gray-700" />
+                <span class="text-gray-600 font-medium">Icône + Texte</span>
+              </div>
+            </Grid>
+          </div>
+          <div>
+            <h3 class="text-3xl font-semibold mb-6 text-gray-800">Organismes</h3>
+            <Grid cols="1" gap="gap-8" xAlign="center">
+              <div class="bg-gray-50 rounded-lg shadow-md" >
+                <h4 class="text-xl font-semibold text-gray-800">Carte Produit</h4>
+                <p class="text-gray-600 mt-2">{organizationData?.services?.[0] || "Soin Visage"} - 80€</p>
+                <Button style="primary" class="mt-4 hover:bg-gray-800 transition-all duration-300" >Réserver</Button>
+              </div>
+            </Grid>
+          </div>
+        </Grid>
+      </Grid>
+    </section>
+
+    <!-- 3. Contenu (Types de Posts) -->
+    <input type="radio" id="content-toggle" name="toggle" hidden>
+    <section class="toggle-content space-y-20">
+      <Grid class="text-center" yPadding="py-16" xPadding="px-0">
+        <h1 class="text-6xl font-extrabold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">Contenu</h1>
+        <p class="text-xl text-gray-600 mt-4 max-w-3xl mx-auto">Tous les types de contenu disponibles sur le site.</p>
+      </Grid>
+      <!-- Navigation -->
+      <Grid class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500" yPadding="py-12" xPadding="px-8 md:px-12" borderRadius="rounded-2xl">
+        <h2 class="text-4xl font-semibold mb-10 text-center text-gray-800">Navigation</h2>
+        <Grid cols="1 md:4" gap="gap-8" xAlign="center">
+          {organizationData?.navLinks?.map(link => (
+            <Link href={link.url} style="link" class="flex items-center gap-2 text-lg hover:text-black transition-all duration-300">
+              {link.icon && <Icon name={link.icon} class="w-6 h-6" />}
+              {link.name}
+            </Link>
+          ))}
+        </Grid>
+      </Grid>
+      <Grid
+  id="example-grid"
+  tag="section"
+  cols="2"
+  gap="gap-6"
+  yPadding="py-8"
+  xPadding="px-8"
+  backgroundColor="bg-gray-100"
+  border
+  borderColor="border-gray-300"
+  borderRadius="rounded-lg"
+  boxShadow="shadow-md"
+  animate="animate-fade-in"
+  hoverAnimate="hover\:scale-105"
+>
+  <div class="col-span-1">
+    <h2>Schéma Architectural</h2>
+    <pre>
++-----------------------------------------------------+
+|                       Grid                         |
+|  +-------------------+ +-------------------+       |
+|  |      Col 1        | |      Col 2        |       |
+|  |                   | |                   |       |
+|  |  +-------------+  | |  +-------------+  |       |
+|  |  |   Item 1    |  | |  |   Item 2    |  |       |
+|  |  +-------------+  | |  +-------------+  |       |
+|  |                   | |                   |       |
+|  +-------------------+ +-------------------+       |
++-----------------------------------------------------+
+    </pre>
+  </div>
+  <div class="col-span-1">
+    <h2>Carte d'Identité</h2>
+    <ul>
+      <li><strong>Nom du Composant</strong>: Grid</li>
+      <li><strong>Type</strong>: Composant de mise en page</li>
+      <li><strong>Props</strong>:
+        <ul>
+          <li><strong>id</strong>: Identifiant unique pour le composant. (Optionnel, par défaut: "")</li>
+          <li><strong>tag</strong>: Type de balise HTML à utiliser pour le composant. (Optionnel, par défaut: "div")</li>
+          <li><strong>cols</strong>: Nombre de colonnes dans la grille. (Optionnel, par défaut: "")</li>
+          <li><strong>autoFit</strong>: Utilise `grid-cols-auto-fit` si `true`. (Optionnel, par défaut: false)</li>
+          <li><strong>autoFill</strong>: Utilise `grid-cols-auto-fill` si `true`. (Optionnel, par défaut: false)</li>
+          <li><strong>overflowHidden</strong>: Applique `overflow-hidden` si `true`. (Optionnel, par défaut: true)</li>
+          <li><strong>gap</strong>: Espace entre les éléments de la grille. (Optionnel, par défaut: "gap-4 md\:gap-8")</li>
+          <li><strong>animate</strong>: Animation lors de l'apparition. (Optionnel, par défaut: "")</li>
+          <li><strong>hoverAnimate</strong>: Animation sur hover. (Optionnel, par défaut: "")</li>
+          <li><strong>focusAnimate</strong>: Animation sur focus. (Optionnel, par défaut: "")</li>
+          <li><strong>activeAnimate</strong>: Animation sur active. (Optionnel, par défaut: "")</li>
+          <li><strong>disabled</strong>: Applique les styles de désactivation si `true`. (Optionnel, par défaut: false)</li>
+          <li><strong>hidden</strong>: Masque le composant si `true`. (Optionnel, par défaut: false)</li>
+          <li><strong>zIndex</strong>: Valeur de `z-index` pour le composant. (Optionnel, par défaut: "")</li>
+          <li><strong>xAlign</strong>: Alignement horizontal des éléments. (Optionnel, par défaut: "normal")</li>
+          <li><strong>yAlign</strong>: Alignement vertical des éléments. (Optionnel, par défaut: "top")</li>
+          <li><strong>align</strong>: Alignement central des éléments. (Optionnel, par défaut: undefined)</li>
+          <li><strong>textAlign</strong>: Alignement du texte. (Optionnel, par défaut: "left")</li>
+          <li><strong>yPadding</strong>: Padding vertical. (Optionnel, par défaut: "")</li>
+          <li><strong>xPadding</strong>: Padding horizontal. (Optionnel, par défaut: "")</li>
+          <li><strong>xmargin</strong>: Marge horizontale. (Optionnel, par défaut: "")</li>
+          <li><strong>ymargin</strong>: Marge verticale. (Optionnel, par défaut: "")</li>
+          <li><strong>customClasses</strong>: Classes CSS personnalisées. (Optionnel, par défaut: "")</li>
+          <li><strong>backgroundColor</strong>: Couleur de fond. (Optionnel, par défaut: "bg-transparent")</li>
+          <li><strong>backgroundImage</strong>: Image de fond. (Optionnel, par défaut: "")</li>
+          <li><strong>transitionDuration</strong>: Durée de la transition. (Optionnel, par défaut: "duration-300")</li>
+          <li><strong>transitionTiming</strong>: Timing de la transition. (Optionnel, par défaut: "ease-in-out")</li>
+          <li><strong>border</strong>: Applique une bordure si `true`. (Optionnel, par défaut: false)</li>
+          <li><strong>borderType</strong>: Type de bordure. (Optionnel, par défaut: "border1")</li>
+          <li><strong>borderColor</strong>: Couleur de la bordure. (Optionnel, par défaut: "")</li>
+          <li><strong>borderWidth</strong>: Largeur de la bordure. (Optionnel, par défaut: "")</li>
+          <li><strong>borderStyle</strong>: Style de la bordure. (Optionnel, par défaut: "")</li>
+          <li><strong>borderRadius</strong>: Rayon de la bordure. (Optionnel, par défaut: "")</li>
+          <li><strong>boxShadow</strong>: Ombre de la boîte. (Optionnel, par défaut: "")</li>
+          <li><strong>hFull</strong>: Applique `h-full` si `true`. (Optionnel, par défaut: true)</li>
+          <li><strong>wFull</strong>: Applique `w-full` si `true`. (Optionnel, par défaut: true)</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</Grid>
+      <!-- Types de Posts -->
+      <Grid class="space-y-16">
+        <Grid class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500" yPadding="py-12" xPadding="px-8 md:px-12" borderRadius="rounded-2xl">
+          <h2 class="text-4xl font-semibold mb-10 text-center text-gray-800">Types de Posts</h2>
+          <Grid cols="1 md:3" gap="gap-8" xAlign="center">
+            <PostCard entry={{ data: { title: "Nouveau Soin Lancé", description: "Découvrez notre soin visage éclat.", slug: "nouveau-soin", pubdate: new Date() } }} />
+            <ReviewCard entry={{ data: { reviewbody: "Soin visage incroyable !", rating: 5, datepublished: new Date(), userid: "sophie" } }} />
+            <!-- Ajouter autres types : Comment, Service, LocalBusiness, etc. -->
+          </Grid>
+        </Grid>
+      </Grid>
+    </section>
+  </Grid>
+</body>
+</Landing>
+
+<style>
+  /* Tailwind CSS 4-like Design System */
+  :root {
+    --color-primary: #1A202C; /* Noir profond */
+    --color-secondary: #D1D5DB; /* Gris clair */
+    --color-accent: #4B5563; /* Gris moyen */
+    --color-background: #F9FAFB; /* Blanc cassé */
+    --font-family: 'Inter', sans-serif;
+    --transition: all 0.3s ease-in-out;
+  }
+  body { font-family: var(--font-family); background-color: var(--color-background); }
+  .toggle-content { display: none; }
+  input[type="radio"]:checked + .toggle-content { display: block; }
+  h1 { font-size: 3rem; font-weight: 800; line-height: 1.1; }
+  h2 { font-size: 2.25rem; font-weight: 600; line-height: 1.2; }
+  h3 { font-size: 1.5rem; font-weight: 500; line-height: 1.3; }
+  p { font-size: 1rem; line-height: 1.6; }
+  .animate-fade-in { animation: fadeIn 1s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .animate-slide-up { animation: slideUp 1s ease-out; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+  .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
+  .rounded-2xl { border-radius: 1rem; }
+  .bg-gradient-to-r { background-image: linear-gradient(to right, var(--tw-gradient-stops)); }
+  .bg-clip-text { -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .transition-all { transition: var(--transition); }
+  .hover\:scale-105:hover { transform: scale(1.05); }
+  .focus\:ring-2:focus { outline: none; ring-width: 2px; ring-offset-width: 2px; ring-color: var(--ring-color); }
+</style>

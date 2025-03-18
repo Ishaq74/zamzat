@@ -1,0 +1,352 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import ProductCard from './ProductCard.astro';
+
+interface Props {
+  collection: 'airfryers';
+  initialFilters?: {
+    category?: string;
+    brand?: string;
+    priceRange?: { min: number; max: number };
+    availability?: 'in_stock' | 'out_of_stock' | 'pre_order';
+    features?: string[];
+    capacity?: string;
+    wattage?: string;
+  };
+  initialSearch?: string;
+  sort?: { field: keyof CollectionEntry<'airfryers'>['data']; order: 'asc' | 'desc' };
+  limit?: number;
+}
+
+const {
+  collection,
+  initialFilters = {},
+  initialSearch = '',
+  sort,
+  limit
+} = Astro.props;
+
+let products: CollectionEntry<'airfryers'>[] = await getCollection(collection);
+console.log("Nombre total de produits:", products.length);
+
+// Obtenir toutes les valeurs uniques pour les filtres
+const allCategories: string[] = [...new Set(products.map(p => p.data.category))];
+const allBrands: string[] = [...new Set(products.map(p => p.data.brand))];
+const allFeatures: string[] = [...new Set(products.flatMap(p => p.data.features || []))];
+const priceRange: { min: number; max: number } = {
+  min: Math.min(...products.map(p => p.data.price)),
+  max: Math.max(...products.map(p => p.data.price))
+};
+
+function matchesFilters(product: CollectionEntry<'airfryers'>, filters: Props['initialFilters']): boolean {
+  return Object.entries(filters as { [key: string]: string | string[] | { min: number; max: number; } }).every(([key, value]) => {
+    if (!value) return true; // Ignorer les filtres vides
+    switch (key) {
+      case 'category':
+      case 'brand':
+      case 'availability':
+      case 'capacity':
+      case 'wattage':
+        return product.data[key] === value;
+      case 'priceRange':
+        if (typeof value === 'object' && 'min' in value && 'max' in value) {
+          return product.data.price >= value.min && product.data.price <= value.max;
+        } else {
+          return true;
+        }
+      case 'features':
+        if (Array.isArray(value)) {
+          return value.every(feature => product.data.features?.includes(feature));
+        } else {
+          return true;
+        }
+    }
+  });
+}
+
+// Appliquer les filtres initiaux
+products = products.filter(product => matchesFilters(product, initialFilters));
+console.log("Nombre de produits après filtres initiaux:", products.length);
+
+// Appliquer la recherche initiale
+if (initialSearch) {
+  const searchLower = initialSearch.toLowerCase();
+  products = products.filter(product =>
+    product.data.name.toLowerCase().includes(searchLower) ||
+    product.data.description.toLowerCase().includes(searchLower)
+  );
+  console.log("Nombre de produits après recherche initiale:", products.length);
+}
+
+// Appliquer le tri
+if (sort) {
+  products.sort((a, b) => {
+    const aValue = a.data[sort.field];
+    const bValue = b.data[sort.field];
+    if (aValue < bValue) return sort.order === 'asc' ? -1 : 1;
+    if (aValue > bValue) return sort.order === 'asc' ? 1 : -1;
+    return 0;
+  });
+}
+
+// Appliquer la limite
+if (limit) {
+  products = products.slice(0, limit);
+  console.log("Nombre de produits après limite:", products.length);
+}
+---
+
+<div class="product-filter p-6 bg-gray-50 rounded-lg shadow-lg flex flex-col md:flex-row">
+  <!-- Formulaire regroupant tous les filtres -->
+  <form id="filter-form" class="filters md:w-1/4 space-y-6">
+    <!-- Search Input -->
+    <div>
+      <input type="text" id="search" placeholder="Rechercher..." value={initialSearch}
+        class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400" />
+    </div>
+
+    <!-- Category Select -->
+    <div>
+      <select id="category" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">Toutes les catégories</option>
+        {allCategories.map(category => (
+          <option value={category} selected={category === initialFilters.category}>{category}</option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Brand Select -->
+    <div>
+      <select id="brand" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">Toutes les marques</option>
+        {allBrands.map(brand => (
+          <option value={brand} selected={brand === initialFilters.brand}>{brand}</option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Price Range as input range -->
+    <div class="flex space-x-4">
+      <div class="flex-1">
+        <label for="min-price" class="block text-sm font-medium text-gray-700">
+          Prix min: <span id="min-price-label">{initialFilters.priceRange?.min || priceRange.min}</span>
+        </label>
+        <input type="range" id="min-price" value={initialFilters.priceRange?.min || priceRange.min} min={priceRange.min} max={priceRange.max}
+          class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div class="flex-1">
+        <label for="max-price" class="block text-sm font-medium text-gray-700">
+          Prix max: <span id="max-price-label">{initialFilters.priceRange?.max || priceRange.max}</span>
+        </label>
+        <input type="range" id="max-price" value={initialFilters.priceRange?.max || priceRange.max} min={priceRange.min} max={priceRange.max}
+          class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+    </div>
+
+    <!-- Features Filters -->
+    <div class="features space-y-2">
+      <div class="text-sm font-medium text-gray-700">Caractéristiques:</div>
+      <div class="space-y-1">
+        {allFeatures.map(feature => (
+          <label class="flex items-center space-x-2">
+            <input type="checkbox" value={feature} checked={initialFilters.features?.includes(feature)}
+              class="h-4 w-4 border-gray-300 rounded focus:ring-2 focus:ring-blue-500" />
+            <span class="text-sm text-gray-700">{feature}</span>
+          </label>
+        ))}
+      </div>
+    </div>
+
+    <!-- Reset Button -->
+    <div>
+      <button type="button" id="reset-filters" class="w-full p-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        Réinitialiser
+      </button>
+    </div>
+  </form>
+
+  <!-- Product Grid -->
+  <div id="product-grid" class="product-grid p-8 md:w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
+    {products.map(product => (
+      <ProductCard entry={product} />
+    ))}
+  </div>
+
+  <!-- No Results Message -->
+  <div id="no-results-message" class="no-results-message text-center text-gray-700 mt-8" style="display: none;">
+    Aucun produit ne correspond à votre recherche.
+  </div>
+</div>
+
+<script is:inline define:vars={{ products, initialFilters, initialSearch, priceRange }}>
+    const filterForm = document.getElementById('filter-form');
+    const searchInput = document.getElementById('search');
+    const categorySelect = document.getElementById('category');
+    const brandSelect = document.getElementById('brand');
+    const minPriceInput = document.getElementById('min-price');
+    const maxPriceInput = document.getElementById('max-price');
+    const minPriceLabel = document.getElementById('min-price-label');
+    const maxPriceLabel = document.getElementById('max-price-label');
+    const featureCheckboxes = document.querySelectorAll('.features input[type="checkbox"]');
+    const resetButton = document.getElementById('reset-filters');
+    const noResultsMessage = document.getElementById('no-results-message');
+    const productGrid = document.getElementById('product-grid');
+  
+    function applyFilters() {
+      const filters = {
+        search: searchInput.value.toLowerCase(),
+        category: categorySelect.value,
+        brand: brandSelect.value,
+        priceRange: {
+          min: Number(minPriceInput.value),
+          max: Number(maxPriceInput.value)
+        },
+        features: Array.from(featureCheckboxes)
+          .filter(cb => cb.checked)
+          .map(cb => cb.value)
+      };
+  
+      console.log("Applying filters with values:", filters);
+  
+      const filteredProducts = products.filter(product => {
+        const matchesSearch = filters.search === '' ||
+          product.data.name.toLowerCase().includes(filters.search) ||
+          product.data.description.toLowerCase().includes(filters.search);
+        const matchesCategory = filters.category === '' || product.data.category === filters.category;
+        const matchesBrand = filters.brand === '' || product.data.brand === filters.brand;
+        const matchesPrice = product.data.price >= filters.priceRange.min && product.data.price <= filters.priceRange.max;
+        const matchesFeatures = filters.features.length === 0 || filters.features.every(f => product.data.features.includes(f));
+        return matchesSearch && matchesCategory && matchesBrand && matchesPrice && matchesFeatures;
+      });
+  
+      console.log("Number of filtered products:", filteredProducts.length);
+      renderProducts(filteredProducts);
+    }
+  
+    function renderProducts(productsToRender) {
+  // Met à jour le contenu du grid avec les produits filtrés
+  productGrid.innerHTML = productsToRender.map(product => {
+    const productContent = `
+      <article class="bg-white border border-gray-200 p-6 rounded-md shadow-md hover:shadow-xl transition-shadow h-full">
+        <a href="/airfryers/${product.id}">
+          <!-- Image du produit -->
+          <div class="relative">
+            <img src="${product.data.image}" alt="${product.data.name}" class="w-full h-48 object-contain rounded-md" />
+            ${product.data.gallery ? `<div class="absolute top-0 right-0 bg-gray-800 text-white text-xs p-2 rounded-l-md">Gallery</div>` : ''}
+          </div>
+
+          <!-- Informations principales -->
+          <div class="mt-4">
+            <h3 class="font-semibold text-lg text-gray-800">${product.data.name}</h3>
+            <p class="text-gray-600 text-sm">${product.data.description}</p>
+            <p class="mt-2 text-gray-800 font-semibold">${product.data.price} ${product.data.currency}</p>
+          </div>
+
+          <!-- Disponibilité -->
+          <div class="mt-2">
+            <span class="inline-block text-xs font-semibold px-3 py-1 rounded-full ${product.data.availability === 'in_stock' ? 'bg-green-200 text-green-800' : product.data.availability === 'out_of_stock' ? 'bg-red-200 text-red-800' : 'bg-yellow-200 text-yellow-800'}">
+              ${product.data.availability === 'in_stock' ? 'In Stock' : product.data.availability === 'out_of_stock' ? 'Out of Stock' : 'Pre-order'}
+            </span>
+          </div>
+
+          <!-- Efficacité énergétique (barre de progression) -->
+          ${product.data.energyEfficiency ? `
+            <div class="mt-4">
+              <p class="text-sm font-semibold">Energy Efficiency:</p>
+              <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                <div class="bg-green-500 h-2 rounded-full" style="width: ${product.data.energyEfficiency}%"></div>
+              </div>
+              <span class="text-xs text-gray-600 mt-1">${product.data.energyEfficiency}% Efficient</span>
+            </div>
+          ` : ''}
+
+          <!-- Comparaison visuelle des caractéristiques -->
+          <div class="mt-4 grid grid-cols-2 gap-4">
+            <div class="flex justify-between">
+              <span class="text-sm">Capacity:</span><span class="font-semibold">${product.data.capacity}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-sm">Wattage:</span><span class="font-semibold">${product.data.wattage}</span>
+            </div>
+          </div>
+
+          <!-- Fonctionnalités avec icônes -->
+          <div class="mt-2 flex flex-wrap gap-2">
+            ${product.data.features ? product.data.features.map(feature => `
+              <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center">
+                <Icon name="mdi:check-circle" size="14" class="mr-1" />
+                ${feature}
+              </span>
+            `).join('') : ''}
+          </div>
+
+          <!-- Évaluations -->
+          ${product.data.rating && product.data.reviewCount ? `
+            <div class="flex items-center mt-3 mb-5">
+              <div class="flex items-center space-x-1 rtl:space-x-reverse">
+                ${Array.from({ length: 5 }).map((_, i) =>
+                  i < Math.round(product.data.rating || 5)
+                    ? `<Icon name="mdi:star" size="20" class="text-yellow-300" />`
+                    : `<Icon name="mdi:star" size="20" class="text-gray-600" />`
+                ).join('')}
+              </div>
+              <span class="text-xs text-gray-600 ml-2">(${product.data.reviewCount} reviews)</span>
+            </div>
+          ` : ''}
+
+          <!-- Bouton d'appel à l'action -->
+          <div class="mt-4 flex justify-between items-center">
+            ${product.data.amazonLink ? `
+              <a href="${product.data.amazonLink}" class="px-4 py-2 bg-blue-500 text-white rounded-md text-sm" target="_blank">Buy on Amazon</a>
+            ` : ''}
+          </div>
+        </a>
+      </article>
+    `;
+
+    return productContent;
+  }).join('');
+
+  // Affiche ou cache le message de "Aucun résultat"
+  noResultsMessage.style.display = productsToRender.length === 0 ? 'block' : 'none';
+}
+  
+    // Déclenchement dynamique sur chaque changement
+    searchInput.addEventListener('input', applyFilters);
+    categorySelect.addEventListener('change', applyFilters);
+    brandSelect.addEventListener('change', applyFilters);
+    minPriceInput.addEventListener('input', () => {
+      minPriceLabel.innerText = minPriceInput.value;
+      applyFilters();
+    });
+    maxPriceInput.addEventListener('input', () => {
+      maxPriceLabel.innerText = maxPriceInput.value;
+      applyFilters();
+    });
+    featureCheckboxes.forEach(cb => cb.addEventListener('change', applyFilters));
+  
+    resetButton.addEventListener('click', () => {
+      filterForm.reset();
+  
+      // Mettre à jour manuellement les labels de prix
+      minPriceLabel.innerText = priceRange.min;
+      maxPriceLabel.innerText = priceRange.max;
+  
+      // Réinitialiser les valeurs des champs spécifiques
+      searchInput.value = '';
+      categorySelect.value = '';
+      brandSelect.value = '';
+      minPriceInput.value = priceRange.min;
+      maxPriceInput.value = priceRange.max;
+  
+      // Désélectionner toutes les cases à cocher pour les caractéristiques
+      featureCheckboxes.forEach(cb => cb.checked = false);
+  
+      // Appliquer les filtres après réinitialisation
+      applyFilters();
+    });
+  
+    // Appliquer les filtres initiaux dès le début
+    applyFilters();
+  </script>
+  

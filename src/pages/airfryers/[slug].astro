@@ -1,0 +1,210 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
+import QueryLoop from '@components/Elements/QueryLoop.astro';
+import { getEntry, getCollection } from 'astro:content';
+
+const { slug } = Astro.params;
+
+console.log('Slug demandé pour airfryers :', slug);
+
+const airfryers = await getCollection('airfryers');
+
+console.log('Nombre d\'airfryers chargés :', airfryers.length);
+console.log('Slugs disponibles dans airfryers :', airfryers.map(a => a.data.slug));
+
+const airfryer = airfryers.find((item) => item.data.slug === slug);
+
+if (!airfryer) {
+  console.log('Aucun airfryer trouvé pour le slug :', slug);
+  return Astro.redirect('/404');
+}
+
+const { id, data: entryData } = airfryer;
+
+const categoryData = entryData.category ? await getEntry('productcategories', entryData.category) : null;
+
+// Récupérer les avis liés à cet airfryer
+const allReviews = await getCollection('reviews');
+const relatedReviews = allReviews.filter(review => review.data.airfryerid === id);
+
+// Calculer rating et reviewcount
+let finalRating = entryData.rating; // Valeur par défaut depuis airfryers
+let finalReviewCount = entryData.reviewcount || 0; // Valeur par défaut depuis airfryers
+
+if (relatedReviews.length > 0) {
+  // S’il y a des avis, calculer la moyenne du rating et le nombre d’avis depuis reviews
+  const totalRating = relatedReviews.reduce((sum, review) => sum + review.data.rating, 0);
+  finalRating = totalRating / relatedReviews.length;
+  finalReviewCount = relatedReviews.length;
+}
+
+console.log('Airfryer trouvé :', entryData);
+console.log('Catégorie :', categoryData);
+console.log('Avis liés (via airfryerid) :', relatedReviews);
+console.log('Rating final :', finalRating);
+console.log('Nombre d\'avis final :', finalReviewCount);
+
+const pageTitle = entryData.name;
+const pageDescription = entryData.description || `Découvrez ${entryData.name} de ${entryData.brand}.`;
+const pageKeywords = `airfryer, ${entryData.brand}, friteuse à air`;
+const pageOgImage = entryData.image || '/default-og-image.jpg';
+const pageLang = 'fr';
+const pageRobots = 'index, follow';
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+  <article class="bg-white p-8 rounded-lg shadow-md max-w-4xl mx-auto">
+    <header class="flex flex-col lg:flex-row gap-6 mb-8">
+      <div class="flex-shrink-0 w-full lg:w-1/3">
+        {entryData.image && (
+          <img
+            src={entryData.image}
+            alt={entryData.name}
+            class="w-full h-64 object-cover rounded-lg shadow-lg"
+          />
+        )}
+      </div>
+      <div class="w-full lg:w-2/3">
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">{entryData.name}</h1>
+        {entryData.description && <p class="text-lg text-gray-600">{entryData.description}</p>}
+        {categoryData && (
+          <div class="mt-2">
+            <span class="text-sm text-gray-600">Catégorie : </span>
+            <a href={`/airfryers/${categoryData.data.slug}`} class="text-sm text-blue-600 hover:underline">
+              {categoryData.data.name}
+            </a>
+          </div>
+        )}
+        <p class="mt-4 text-2xl font-semibold text-gray-800">{entryData.price} €</p>
+        {finalRating && finalReviewCount > 0 && (
+          <div class="flex items-center mt-4">
+            <div class="flex items-center space-x-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                i < Math.round(finalRating) ? (
+                  <Icon name="mdi:star" size={24} class="text-yellow-400" />
+                ) : (
+                  <Icon name="mdi:star" size={24} class="text-gray-400" />
+                )
+              ))}
+            </div>
+            <span class="ml-2 text-sm text-gray-600">({finalReviewCount} avis)</span>
+          </div>
+        )}
+        <div class="mt-4">
+          <span
+            class={`inline-block text-xs font-semibold px-3 py-1 rounded-full ${
+              entryData.availability === 'in_stock'
+                ? 'bg-green-200 text-green-800'
+                : entryData.availability === 'out_of_stock'
+                ? 'bg-red-200 text-red-800'
+                : 'bg-yellow-200 text-yellow-800'
+            }`}
+          >
+            {entryData.availability === 'in_stock'
+              ? 'En stock'
+              : entryData.availability === 'out_of_stock'
+              ? 'Rupture de stock'
+              : 'Précommande'}
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <section class="mt-10">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Détails du produit</h2>
+      <div class="grid grid-cols-2 gap-6">
+        <div class="flex justify-between">
+          <span class="text-gray-600">Marque :</span>
+          <span class="font-semibold">{entryData.brand}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Capacité :</span>
+          <span class="font-semibold">{entryData.capacity || 'N/A'}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Puissance :</span>
+          <span class="font-semibold">{entryData.wattage || 'N/A'}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Dimensions :</span>
+          <span class="font-semibold">{entryData.dimensions || 'N/A'}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Poids :</span>
+          <span class="font-semibold">{entryData.weight || 'N/A'}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Couleur :</span>
+          <span class="font-semibold">{entryData.color || 'N/A'}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-8">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Spécifications</h2>
+      <div class="space-y-4">
+        <div class="flex justify-between">
+          <span class="text-gray-600">Voltage :</span>
+          <span class="font-semibold">{entryData.voltage || 'N/A'}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Matériau :</span>
+          <span class="font-semibold">{entryData.material || 'N/A'}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Niveau sonore :</span>
+          <span class="font-semibold">{entryData.noiselevel || 'N/A'}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Efficacité énergétique :</span>
+          <span class="font-semibold">{entryData.energyEfficiency || 'N/A'}</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-600">Garantie :</span>
+          <span class="font-semibold">{entryData.warranty || 'N/A'}</span>
+        </div>
+      </div>
+    </section>
+
+    {relatedReviews.length > 0 && (
+      <section class="mt-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-4">Avis clients</h2>
+        <ul class="space-y-4">
+          {relatedReviews.map(review => (
+            <li class="border p-4 rounded-lg">
+              <div class="flex items-center mb-2">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  i < review.data.rating ? (
+                    <Icon name="mdi:star" size={20} class="text-yellow-400" />
+                  ) : (
+                    <Icon name="mdi:star" size={20} class="text-gray-400" />
+                  )
+                ))}
+                <span class="ml-2 text-sm text-gray-600">{review.data.datepublished}</span>
+              </div>
+              <p class="text-gray-700">{review.data.reviewbody}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+  </article>
+
+  <section class="mt-12 max-w-4xl mx-auto p-4">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Produits similaires</h2>
+    <QueryLoop
+      collection="airfryers"
+      relatedContent={true}
+      limit={4}
+      currentId={id}
+    />
+  </section>
+</Layout>

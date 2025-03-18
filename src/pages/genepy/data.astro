@@ -1,0 +1,930 @@
+---
+import { getCollection } from 'astro:content';
+import Landing from '@layouts/Landing.astro';
+
+const organizationEntries = await getCollection('organizations');
+const organizationData = organizationEntries[0]?.data;
+
+const pageTitle = `Créer un site Internet - Étape 3 : Collections de Données`;
+const pageDescription = 'Définir ses collections et types de publications';
+---
+
+<Landing title={pageTitle} description={pageDescription}>
+  <body>
+    <section class="container">
+      <h1>Gérer Vos Données</h1>
+      <p>Activez ou créez des schémas pour structurer votre site avec des toggles modernes.</p>
+
+      <div class="button-group">
+        <button class="btn primary" onclick="openNewSchemaModal()">Ajouter un nouveau schéma</button>
+        <button class="btn secondary" onclick="selectAllSchemas()">Tout sélectionner</button>
+        <button class="btn secondary" onclick="deselectAllSchemas()">Tout désélectionner</button>
+        <button class="btn primary" onclick="goToLayout()">Passer au layout</button>
+      </div>
+      
+      <div class="schema-list" id="schema-list"></div>
+
+      <!-- Modal pour ajouter un nouveau schéma -->
+      <div id="new-schema-modal" class="modal">
+        <div class="modal-content">
+          <h3>Ajouter un nouveau schéma</h3>
+          <div class="form-group">
+            <label for="new-schema-name">Nom du schéma</label>
+            <input type="text" id="new-schema-name" class="input-text" placeholder="Ex. : Portfolio">
+          </div>
+          <div class="form-group">
+            <label for="new-schema-icon">Icône</label>
+            <input type="text" id="new-schema-icon" class="input-text" placeholder="Ex. : 📁">
+          </div>
+          <button class="btn primary" onclick="addNewSchema()">Ajouter</button>
+          <button class="btn secondary" onclick="closeModal('new-schema')">Fermer</button>
+        </div>
+      </div>
+
+      <!-- Modal pour modifier la structure -->
+      <div id="structure-modal" class="modal">
+        <div class="modal-content">
+          <h3>Modifier la structure de <span id="current-schema-name"></span></h3>
+          <h4>Ajouter une nouvelle table</h4>
+          <div class="form-group">
+            <label for="new-table-name">Nom de la table</label>
+            <input type="text" id="new-table-name" class="input-text" placeholder="Ex. : Produits">
+            <button class="btn primary" onclick="addTable()">Ajouter la table</button>
+          </div>
+          <hr>
+          <h4>Ajouter un champ à une table</h4>
+          <div class="form-group">
+            <label for="field-table">Table cible</label>
+            <select id="field-table" class="input-select"></select>
+          </div>
+          <div class="form-group">
+            <label for="new-field-name">Nom du champ</label>
+            <input type="text" id="new-field-name" class="input-text" placeholder="Ex. : Prix">
+          </div>
+          <div class="form-group">
+            <label for="new-field-type">Type</label>
+            <select id="new-field-type" class="input-select">
+              <option value="string">Texte</option>
+              <option value="number">Nombre</option>
+              <option value="boolean">Booléen</option>
+              <option value="date">Date</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="new-field-autoincrement">Autoincrement</label>
+            <input type="checkbox" id="new-field-autoincrement">
+          </div>
+          <div class="form-group">
+            <label for="new-field-null">Peut être NULL</label>
+            <input type="checkbox" id="new-field-null">
+          </div>
+          <button class="btn primary" onclick="addField()">Ajouter le champ</button>
+          <hr>
+          <h4>Ajouter une relation</h4>
+          <div class="form-group">
+            <label for="relation-table1">Table 1</label>
+            <select id="relation-table1" class="input-select"></select>
+          </div>
+          <div class="form-group">
+            <label for="relation-type">Type de relation</label>
+            <select id="relation-type" class="input-select">
+              <option value="1:1">1:1 (Un à Un)</option>
+              <option value="1:N">1:N (Un à Plusieurs)</option>
+              <option value="N:N">N:N (Plusieurs à Plusieurs)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="relation-table2">Table 2</label>
+            <select id="relation-table2" class="input-select"></select>
+          </div>
+          <button class="btn primary" onclick="addRelation()">Ajouter la relation</button>
+          <hr>
+          <h4>Relations existantes</h4>
+          <ul id="existing-relations"></ul>
+          <button class="btn secondary" onclick="closeModal('structure')">Fermer</button>
+        </div>
+      </div>
+
+      <!-- Modal pour ajouter une catégorie -->
+      <div id="category-modal" class="modal">
+        <div class="modal-content">
+          <h3>Ajouter une catégorie pour <span id="current-schema-name"></span></h3>
+          <div class="form-group">
+            <label for="category-name">Nom de la catégorie</label>
+            <input type="text" id="category-name" class="input-text" placeholder="Ex. : Électronique">
+          </div>
+          <div class="form-group">
+            <label for="category-color">Couleur</label>
+            <input type="color" id="category-color" class="input-color" value="#34c759">
+          </div>
+          <button class="btn primary" onclick="addCategory()">Ajouter</button>
+          <button class="btn secondary" onclick="closeModal('category')">Fermer</button>
+        </div>
+      </div>
+
+      <!-- Feedback utilisateur -->
+      <div id="feedback" class="feedback"></div>
+    </section>
+  </body>
+</Landing>
+
+<style is:inline>
+  :root {
+    --color-primary: #007bff;
+    --color-toggle-on: #34c759;
+    --color-toggle-off: #ccc;
+    --color-background: #f8f9fa;
+    --spacing-md: 20px;
+    --border-radius: 12px;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-md);
+  }
+
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .schema-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+  }
+
+  .schema-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+  }
+
+  .schema-card:hover {
+    transform: translateY(-5px);
+  }
+
+  .toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+
+  .toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-toggle-off);
+    border-radius: 34px;
+    transition: var(--transition);
+    cursor: pointer;
+  }
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    border-radius: 50%;
+    transition: var(--transition);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  input:checked + .slider {
+    background-color: var(--color-toggle-on);
+  }
+
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
+
+  input:disabled + .slider {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .schema-details {
+    display: none;
+    flex-direction: row;
+    gap: var(--spacing-md);
+    margin-top: 20px;
+  }
+
+  .schema-details.active {
+    display: flex;
+  }
+
+  .details-left, .details-right {
+    flex: 1;
+    background: var(--color-background);
+    padding: 15px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+  }
+
+  .card {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+  }
+
+  .card:hover {
+    transform: scale(1.02);
+  }
+
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+  }
+
+  .modal.active {
+    display: block;
+  }
+
+  .modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+    margin: 100px auto;
+    box-shadow: var(--shadow);
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .input-select, .input-text, .input-color {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+
+  .btn.primary {
+    background: var(--color-primary);
+    color: white;
+  }
+
+  .btn.secondary {
+    background: #e9ecef;
+    color: #333;
+  }
+
+  .btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  .feedback {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    display: none;
+    animation: fadeInOut 3s ease;
+  }
+
+  .feedback.success {
+    background: var(--color-toggle-on);
+  }
+
+  .feedback.error {
+    background: #dc3545;
+  }
+
+  .feedback.info {
+    background: #17a2b8;
+  }
+
+  @keyframes fadeInOut {
+    0% { opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  .table-schema {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+
+  .table-schema th, .table-schema td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  .table-schema th {
+    background-color: #f2f2f2;
+  }
+</style>
+
+<script is:inline>
+  const schemaList = [
+    {
+      name: 'Vitrine',
+      icon: '🏪',
+      active: true,
+      tables: [
+        { name: 'Pages', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Titre', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Contenu', type: 'string', autoIncrement: false, nullable: true }
+        ] },
+        { name: 'Sections', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Nom', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Ordre', type: 'number', autoIncrement: false, nullable: false }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: false,
+      cardDescription: 'Schéma de base pour une vitrine statique'
+    },
+    {
+      name: 'Boutique',
+      icon: '🛒',
+      active: false,
+      tables: [
+        { name: 'Produits', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Nom', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Prix', type: 'number', autoIncrement: false, nullable: false },
+          { name: 'Stock', type: 'number', autoIncrement: false, nullable: false }
+        ] },
+        { name: 'Commandes', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Client', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Date', type: 'date', autoIncrement: false, nullable: false },
+          { name: 'Total', type: 'number', autoIncrement: false, nullable: false }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: 'Schéma pour une boutique en ligne'
+    },
+    {
+      name: 'Blog',
+      icon: '📝',
+      active: false,
+      tables: [
+        { name: 'Articles', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Titre', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Contenu', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Date', type: 'date', autoIncrement: false, nullable: false }
+        ] },
+        { name: 'Commentaires', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Contenu', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Auteur', type: 'string', autoIncrement: false, nullable: false }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: 'Schéma pour un blog avec articles et commentaires'
+    },
+    {
+      name: 'Portfolio',
+      icon: '📸',
+      active: false,
+      tables: [
+        { name: 'Projets', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Nom', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Description', type: 'string', autoIncrement: false, nullable: true },
+          { name: 'Image', type: 'string', autoIncrement: false, nullable: true }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: 'Schéma pour un portfolio de projets'
+    },
+    {
+      name: 'Événements',
+      icon: '📅',
+      active: false,
+      tables: [
+        { name: 'Événements', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Titre', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Date', type: 'date', autoIncrement: false, nullable: false },
+          { name: 'Lieu', type: 'string', autoIncrement: false, nullable: true }
+        ] },
+        { name: 'Participants', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Nom', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Email', type: 'string', autoIncrement: false, nullable: true }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: 'Schéma pour gérer des événements'
+    },
+    {
+      name: 'Galerie',
+      icon: '🖼️',
+      active: false,
+      tables: [
+        { name: 'Images', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Titre', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'URL', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Date', type: 'date', autoIncrement: false, nullable: true }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: 'Schéma pour une galerie d\'images'
+    },
+    {
+      name: 'Annuaire',
+      icon: '📇',
+      active: false,
+      tables: [
+        { name: 'Contacts', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Nom', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Email', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Téléphone', type: 'string', autoIncrement: false, nullable: true }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: 'Schéma pour un annuaire de contacts'
+    },
+    {
+      name: 'FAQ',
+      icon: '❓',
+      active: false,
+      tables: [
+        { name: 'Questions', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Question', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Réponse', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Ordre', type: 'number', autoIncrement: false, nullable: true }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: 'Schéma pour une FAQ'
+    },
+    {
+      name: 'Témoignages',
+      icon: '💬',
+      active: false,
+      tables: [
+        { name: 'Témoignages', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Auteur', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Commentaire', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Date', type: 'date', autoIncrement: false, nullable: true }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: 'Schéma pour des témoignages clients'
+    },
+    {
+      name: 'Avis',
+      icon: '⭐',
+      active: false,
+      tables: [
+        { name: 'Avis', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Auteur', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Note', type: 'number', autoIncrement: false, nullable: false },
+          { name: 'Commentaire', type: 'string', autoIncrement: false, nullable: true }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: 'Schéma pour gérer des avis utilisateurs'
+    },
+    {
+      name: 'Commentaires',
+      icon: '💭',
+      active: false,
+      tables: [
+        { name: 'Commentaires', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Contenu', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Auteur', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Date', type: 'date', autoIncrement: false, nullable: true }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: 'Schéma pour des commentaires indépendants'
+    },
+    {
+      name: 'Services',
+      icon: '🛠️',
+      active: false,
+      tables: [
+        { name: 'Services', fields: [
+          { name: 'ID', type: 'number', autoIncrement: true, nullable: false },
+          { name: 'Nom', type: 'string', autoIncrement: false, nullable: false },
+          { name: 'Description', type: 'string', autoIncrement: false, nullable: true },
+          { name: 'Prix', type: 'number', autoIncrement: false, nullable: true }
+        ] }
+      ],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: 'Schéma pour présenter des services'
+    }
+  ];
+
+  let currentSchemaIndex = null;
+
+  function showFeedback(message, type = 'success') {
+    const feedback = document.getElementById('feedback');
+    feedback.textContent = message;
+    feedback.className = `feedback ${type}`;
+    feedback.style.display = 'block';
+    setTimeout(() => feedback.style.display = 'none', 3000);
+  }
+
+  function generateCard(table) {
+    let content = '';
+    table.fields.forEach(field => {
+      if (field.name === 'ID' && field.autoIncrement) {
+        content += `<p><strong>${field.name}:</strong> 123</p>`;
+      } else if (field.type === 'string') {
+        content += `<p><strong>${field.name}:</strong> Exemple de ${field.name.toLowerCase()}</p>`;
+      } else if (field.type === 'number') {
+        content += `<p><strong>${field.name}:</strong> ${field.name === 'Prix' ? '49.99' : field.name === 'Note' ? '4' : '10'}</p>`;
+      } else if (field.type === 'boolean') {
+        content += `<p><strong>${field.name}:</strong> ${Math.random() > 0.5 ? 'Oui' : 'Non'}</p>`;
+      } else if (field.type === 'date') {
+        content += `<p><strong>${field.name}:</strong> ${new Date().toLocaleDateString()}</p>`;
+      }
+    });
+    return `<div class="card"><h4>${table.name}</h4>${content}</div>`;
+  }
+
+  function renderSchemaList() {
+    const schemaSection = document.getElementById('schema-list');
+    if (!schemaSection) {
+      console.error('Element #schema-list non trouvé');
+      return;
+    }
+    schemaSection.innerHTML = '';
+    schemaList.forEach((schema, index) => {
+      const div = document.createElement('div');
+      div.className = 'schema-card';
+      div.innerHTML = `
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <h3>${schema.icon} ${schema.name}</h3>
+          <label class="toggle">
+            <input type="checkbox" id="toggle-${index}" ${schema.active ? 'checked' : ''} ${!schema.canModify ? 'disabled' : ''}>
+            <span class="slider"></span>
+          </label>
+        </div>
+        ${schema.canModify ? `
+          <div class="schema-details ${schema.active ? 'active' : ''}" id="details-${index}">
+            <div class="details-left">
+              <h4>Tables</h4>
+              <table class="table-schema">
+                <thead>
+                  <tr>
+                    <th>Table</th>
+                    <th>Champs</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${schema.tables.map(table => `
+                    <tr>
+                      <td>${table.name}</td>
+                      <td>${table.fields.map(f => `${f.name} [${f.type}${f.autoIncrement ? ', AI' : ''}${f.nullable ? ', NULL' : ''}]`).join(', ')}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+              <h4>Relations</h4>
+              <ul>${schema.relations.length > 0 ? schema.relations.map(r => `<li>${r.table1} ${r.type} ${r.table2}</li>`).join('') : '<li>Aucune relation</li>'}</ul>
+              <button class="btn primary" onclick="openStructureModal(${index})">Modifier la structure</button>
+              <button class="btn primary" onclick="openCategoryModal(${index})">Ajouter une catégorie</button>
+            </div>
+            <div class="details-right">
+              <h4>Exemple de cards</h4>
+              ${schema.tables.map(table => generateCard(table)).join('')}
+              <h4>Catégories</h4>
+              <ul>${schema.categories.length > 0 ? schema.categories.map(cat => `<li class="card" style="background: ${cat.color}20;">${cat.name}</li>`).join('') : '<li>Aucune catégorie</li>'}</ul>
+            </div>
+          </div>
+        ` : ''}
+      `;
+      schemaSection.appendChild(div);
+
+      const toggle = div.querySelector(`#toggle-${index}`);
+      const details = div.querySelector(`#details-${index}`);
+
+      if (toggle) {
+        toggle.addEventListener('change', () => {
+          if (schema.canModify) {
+            schema.active = toggle.checked;
+            if (details) {
+              details.classList.toggle('active', toggle.checked);
+            }
+            showFeedback(`${schema.name} ${toggle.checked ? 'activé' : 'désactivé'}`, 'success');
+          } else {
+            toggle.checked = true;
+            showFeedback('Le schéma Vitrine ne peut pas être désactivé', 'error');
+          }
+        });
+      }
+    });
+  }
+
+  function selectAllSchemas() {
+    let modified = false;
+    schemaList.forEach(schema => {
+      if (schema.canModify && !schema.active) {
+        schema.active = true;
+        modified = true;
+      }
+    });
+    if (modified) {
+      renderSchemaList();
+      showFeedback('Tous les schémas modifiables ont été activés', 'success');
+    } else {
+      showFeedback('Aucun schéma modifiable à activer', 'info');
+    }
+  }
+
+  function deselectAllSchemas() {
+    let modified = false;
+    schemaList.forEach(schema => {
+      if (schema.canModify && schema.active) {
+        schema.active = false;
+        modified = true;
+      }
+    });
+    if (modified) {
+      renderSchemaList();
+      showFeedback('Tous les schémas modifiables ont été désactivés', 'success');
+    } else {
+      showFeedback('Aucun schéma modifiable à désactiver', 'info');
+    }
+  }
+
+  function openNewSchemaModal() {
+    const modal = document.getElementById('new-schema-modal');
+    if (modal) modal.classList.add('active');
+    else showFeedback('Erreur : Modal introuvable', 'error');
+  }
+
+  function addNewSchema() {
+    const name = document.getElementById('new-schema-name')?.value.trim();
+    const icon = document.getElementById('new-schema-icon')?.value.trim() || '📁';
+    if (!name) {
+      showFeedback('Veuillez entrer un nom pour le schéma', 'error');
+      return;
+    }
+    if (schemaList.some(s => s.name.toLowerCase() === name.toLowerCase())) {
+      showFeedback(`Le schéma "${name}" existe déjà`, 'error');
+      return;
+    }
+    schemaList.push({
+      name,
+      icon,
+      active: true,
+      tables: [{ name: 'Default', fields: [{ name: 'ID', type: 'number', autoIncrement: true, nullable: false }] }],
+      relations: [],
+      categories: [],
+      canModify: true,
+      cardDescription: `Schéma personnalisé : ${name}`
+    });
+    showFeedback(`Schéma "${name}" ajouté`, 'success');
+    closeModal('new-schema');
+    renderSchemaList();
+  }
+
+  function openStructureModal(index) {
+    if (index < 0 || index >= schemaList.length) {
+      showFeedback('Index de schéma invalide', 'error');
+      return;
+    }
+    currentSchemaIndex = index;
+    const schema = schemaList[index];
+    const currentSchemaName = document.getElementById('current-schema-name');
+    if (currentSchemaName) currentSchemaName.textContent = schema.name;
+
+    const fieldTableSelect = document.getElementById('field-table');
+    const table1Select = document.getElementById('relation-table1');
+    const table2Select = document.getElementById('relation-table2');
+    const existingRelations = document.getElementById('existing-relations');
+
+    if (!fieldTableSelect || !table1Select || !table2Select || !existingRelations) {
+      showFeedback('Erreur : Éléments de modal manquants', 'error');
+      return;
+    }
+
+    fieldTableSelect.innerHTML = schema.tables.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+    table1Select.innerHTML = schema.tables.map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+    table2Select.innerHTML = schemaList.filter(s => s.active).flatMap(s => s.tables).map(t => `<option value="${t.name}">${t.name}</option>`).join('');
+    existingRelations.innerHTML = schema.relations.length > 0
+      ? schema.relations.map(r => `<li>${r.table1} ${r.type} ${r.table2}</li>`).join('')
+      : '<li>Aucune relation définie</li>';
+
+    document.getElementById('structure-modal')?.classList.add('active');
+  }
+
+  function addTable() {
+    if (currentSchemaIndex === null || currentSchemaIndex >= schemaList.length) {
+      showFeedback('Erreur : Aucun schéma sélectionné', 'error');
+      return;
+    }
+    const schema = schemaList[currentSchemaIndex];
+    const name = document.getElementById('new-table-name')?.value.trim();
+    if (!name) {
+      showFeedback('Veuillez entrer un nom pour la table', 'error');
+      return;
+    }
+    if (schema.tables.some(t => t.name.toLowerCase() === name.toLowerCase())) {
+      showFeedback(`La table "${name}" existe déjà`, 'error');
+      return;
+    }
+    schema.tables.push({ name, fields: [{ name: 'ID', type: 'number', autoIncrement: true, nullable: false }] });
+    showFeedback(`Table "${name}" ajoutée à ${schema.name}`, 'success');
+    closeModal('structure');
+    renderSchemaList();
+  }
+
+  function addField() {
+    if (currentSchemaIndex === null || currentSchemaIndex >= schemaList.length) {
+      showFeedback('Erreur : Aucun schéma sélectionné', 'error');
+      return;
+    }
+    const schema = schemaList[currentSchemaIndex];
+    const tableName = document.getElementById('field-table')?.value;
+    const name = document.getElementById('new-field-name')?.value.trim();
+    const type = document.getElementById('new-field-type')?.value;
+    const autoIncrement = document.getElementById('new-field-autoincrement')?.checked;
+    const nullable = document.getElementById('new-field-null')?.checked;
+
+    if (!name || !tableName || !type) {
+      showFeedback('Veuillez remplir tous les champs requis', 'error');
+      return;
+    }
+    const table = schema.tables.find(t => t.name === tableName);
+    if (!table) {
+      showFeedback('Table introuvable', 'error');
+      return;
+    }
+    if (table.fields.some(f => f.name.toLowerCase() === name.toLowerCase())) {
+      showFeedback(`Le champ "${name}" existe déjà dans la table "${tableName}"`, 'error');
+      return;
+    }
+    table.fields.push({ name, type, autoIncrement, nullable });
+    showFeedback(`Champ "${name}" ajouté à ${tableName} dans ${schema.name}`, 'success');
+    closeModal('structure');
+    renderSchemaList();
+  }
+
+  function addRelation() {
+    if (currentSchemaIndex === null || currentSchemaIndex >= schemaList.length) {
+      showFeedback('Erreur : Aucun schéma sélectionné', 'error');
+      return;
+    }
+    const schema = schemaList[currentSchemaIndex];
+    const table1 = document.getElementById('relation-table1')?.value;
+    const type = document.getElementById('relation-type')?.value;
+    const table2 = document.getElementById('relation-table2')?.value;
+
+    if (!table1 || !table2 || !type) {
+      showFeedback('Veuillez remplir tous les champs de relation', 'error');
+      return;
+    }
+    if (table1 === table2) {
+      showFeedback('Les tables doivent être différentes', 'error');
+      return;
+    }
+    if (schema.relations.some(r => r.table1 === table1 && r.table2 === table2 && r.type === type)) {
+      showFeedback('Cette relation existe déjà', 'error');
+      return;
+    }
+    schema.relations.push({ table1, type, table2 });
+    showFeedback(`Relation ${table1} ${type} ${table2} ajoutée`, 'success');
+    closeModal('structure');
+    renderSchemaList();
+  }
+
+  function openCategoryModal(index) {
+    if (index < 0 || index >= schemaList.length) {
+      showFeedback('Index de schéma invalide', 'error');
+      return;
+    }
+    currentSchemaIndex = index;
+    const schemaNameSpan = document.getElementById('current-schema-name');
+    if (schemaNameSpan) schemaNameSpan.textContent = schemaList[index].name;
+    document.getElementById('category-modal')?.classList.add('active');
+  }
+
+  function addCategory() {
+    if (currentSchemaIndex === null || currentSchemaIndex >= schemaList.length) {
+      showFeedback('Erreur : Aucun schéma sélectionné', 'error');
+      return;
+    }
+    const schema = schemaList[currentSchemaIndex];
+    const name = document.getElementById('category-name')?.value.trim();
+    const color = document.getElementById('category-color')?.value;
+
+    if (!name) {
+      showFeedback('Veuillez entrer un nom pour la catégorie', 'error');
+      return;
+    }
+    if (schema.categories.some(cat => cat.name.toLowerCase() === name.toLowerCase())) {
+      showFeedback(`La catégorie "${name}" existe déjà dans ${schema.name}`, 'error');
+      return;
+    }
+    schema.categories.push({ name, color });
+    document.getElementById('category-name').value = '';
+    showFeedback(`Catégorie "${name}" ajoutée à ${schema.name}`, 'success');
+    closeModal('category');
+    renderSchemaList();
+  }
+
+  function closeModal(modalId) {
+    const modal = document.getElementById(`${modalId}-modal`);
+    if (modal) modal.classList.remove('active');
+  }
+
+  function goToLayout() {
+  const activeSchemas = schemaList.filter(s => s.active);
+  if (activeSchemas.length === 0) {
+    showFeedback('Veuillez activer au moins un schéma avant de continuer', 'error');
+    return;
+  }
+  localStorage.setItem('data_organization', JSON.stringify(schemaList)); // Tout enregistrer
+  localStorage.setItem('activedata_organization', JSON.stringify(activeSchemas)); // Schémas actifs pour Layouts
+  window.location.href = '/genepy/layouts';
+}
+
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      renderSchemaList();
+    } catch (error) {
+      console.error('Erreur lors du rendu initial :', error);
+      showFeedback('Une erreur est survenue lors du chargement', 'error');
+    }
+  });
+</script>

@@ -1,0 +1,38 @@
+---
+import BlogCard from '@components/Blog/BlogCard.astro';
+import Filter from '@components/Elements/Filter.astro';
+import ProductCard from '@components/Products/ProductCard.astro';
+import RecipeCard from '@components/Recipes/RecipeCard.astro';
+import Layout from '@layouts/Layout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+
+const airfryers = await getCollection('airfryers');
+---
+
+<Layout 
+  title="Toutes les Recettes au AirFryer" 
+  description="Toutes les recettes de cuisine au airfryer" 
+  keywords="recettes, cuisine, airfryer" 
+  lang="fr"
+  robots="noindex, nofollow">
+
+  <Filter 
+  collection="recipes"
+  filters={[
+    { type: 'search', name: 'name', label: 'Recherche par nom' },
+    { 
+      type: 'select', 
+      name: 'category', 
+      label: 'Catégorie', 
+			reference: {
+			  collection: 'recipecategories', 
+			  valueField: 'id', 
+			  labelField: 'name'
+			}
+    },
+  ]}
+  CardComponent={RecipeCard}
+/>
+</Layout>
+
+

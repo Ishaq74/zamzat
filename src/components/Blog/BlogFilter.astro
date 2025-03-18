@@ -1,0 +1,215 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import FormattedDate from '@components/FormattedDate.astro';
+
+interface Props {
+  collection: 'blog';
+  initialFilters?: {
+    category?: string;
+    search?: string;
+    dateRange?: { start: string; end: string };
+  };
+  limit?: number;
+}
+
+const {
+  collection,
+  initialFilters = {},
+  limit
+} = Astro.props;
+
+let blogPosts: CollectionEntry<'blog'>[] = await getCollection(collection);
+console.log("Nombre total d'articles de blog:", blogPosts.length);
+
+// Obtenir toutes les valeurs uniques pour les filtres
+const allCategories: string[] = [...new Set(blogPosts.map(post => post.data.category))];
+
+// Fonction pour appliquer les filtres
+function matchesFilters(post: CollectionEntry<'blog'>, filters: Props['initialFilters']): boolean {
+  return Object.entries(filters as { [key: string]: string | { start: string; end: string } }).every(([key, value]) => {
+    if (!value) return true; // Ignorer les filtres vides
+    switch (key) {
+      case 'category':
+        return post.data.category === value;
+      case 'search':
+        return post.data.title.toLowerCase().includes(value.toLowerCase()) || post.data.description.toLowerCase().includes(value.toLowerCase());
+      case 'dateRange':
+        if (value && 'start' in value && 'end' in value) {
+          const postDate = new Date(post.data.pubDate).getTime();
+          const startDate = new Date(value.start).getTime();
+          const endDate = new Date(value.end).getTime();
+          return postDate >= startDate && postDate <= endDate;
+        }
+        return true;
+      default:
+        return true;
+    }
+  });
+}
+
+// Appliquer les filtres initiaux
+blogPosts = blogPosts.filter(post => matchesFilters(post, initialFilters));
+console.log("Nombre d'articles après filtres initiaux:", blogPosts.length);
+
+// Appliquer la limite
+if (limit) {
+  blogPosts = blogPosts.slice(0, limit);
+  console.log("Nombre d'articles après limite:", blogPosts.length);
+}
+
+---
+
+<div class="blog-filter p-6 bg-gray-50 rounded-lg shadow-lg flex flex-col md:flex-row">
+  <!-- Formulaire regroupant tous les filtres -->
+  <form id="filter-form" class="filters md:w-1/4 space-y-6">
+    <!-- Search Input -->
+    <div>
+      <input type="text" id="search" placeholder="Rechercher..." value={initialFilters.search || ''}
+        class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-400" />
+    </div>
+
+    <!-- Category Select -->
+    <div>
+      <select id="category" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="">Toutes les catégories</option>
+        {allCategories.map(category => (
+          <option value={category} selected={category === initialFilters.category}>{category}</option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Date Range -->
+    <div class="flex space-x-4">
+      <div class="flex-1">
+        <label for="start-date" class="block text-sm font-medium text-gray-700">Date de début:</label>
+        <input type="date" id="start-date" value={initialFilters.dateRange?.start || ''}
+          class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div class="flex-1">
+        <label for="end-date" class="block text-sm font-medium text-gray-700">Date de fin:</label>
+        <input type="date" id="end-date" value={initialFilters.dateRange?.end || ''}
+          class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+    </div>
+
+    <!-- Reset Button -->
+    <div>
+      <button type="button" id="reset-filters" class="w-full p-3 bg-gray-600 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        Réinitialiser
+      </button>
+    </div>
+  </form>
+
+  <!-- Blog Grid -->
+  <div id="blog-grid" class="blog-grid p-8 md:w-3/4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6">
+    {blogPosts.map(post => (
+      <div class="rounded overflow-hidden shadow-lg flex flex-col h-full bg-white">
+        <div class="relative">
+          <a href={`/blog/${post.id}/`}>
+            <img class="w-full" src={post.data.heroImage} alt={post.data.title} />
+            <div class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
+          </a>
+          <a href="#!">
+            <div class="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
+              {post.data.category}
+            </div>
+          </a>
+        </div>
+        <div class="px-6 py-4 mb-auto bg-white">
+          <a href={`/blog/${post.id}/`} class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out mb-2">{post.data.title}</a>
+          <p class="text-gray-500 text-sm">{post.data.description}</p>
+        </div>
+        <div class="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
+          <span class="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
+            <Icon name="clock" size={15} />
+            <span class="ml-1"><FormattedDate date={post.data.pubDate} /></span>
+          </span>
+          <span class="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
+            <Icon name="comment" size={15} />
+            <span class="ml-1">4 Commentaires</span>
+          </span>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script is:inline define:vars={{ blogPosts, initialFilters }}>
+  const filterForm = document.getElementById('filter-form');
+  const searchInput = document.getElementById('search');
+  const categorySelect = document.getElementById('category');
+  const startDateInput = document.getElementById('start-date');
+  const endDateInput = document.getElementById('end-date');
+  const resetButton = document.getElementById('reset-filters');
+  const blogGrid = document.getElementById('blog-grid');
+
+  function applyFilters() {
+    const filters = {
+      search: searchInput.value.toLowerCase(),
+      category: categorySelect.value,
+      dateRange: {
+        start: startDateInput.value,
+        end: endDateInput.value
+      }
+    };
+
+    console.log("Applying filters with values:", filters);
+
+    const filteredPosts = blogPosts.filter(post => {
+      const matchesSearch = filters.search === '' || 
+        post.data.title.toLowerCase().includes(filters.search) || 
+        post.data.description.toLowerCase().includes(filters.search);
+      const matchesCategory = filters.category === '' || post.data.category === filters.category;
+      const matchesDate = (!filters.dateRange.start || new Date(post.data.pubDate) >= new Date(filters.dateRange.start)) &&
+                          (!filters.dateRange.end || new Date(post.data.pubDate) <= new Date(filters.dateRange.end));
+      return matchesSearch && matchesCategory && matchesDate;
+    });
+
+    renderPosts(filteredPosts);
+  }
+
+  function renderPosts(postsToRender) {
+    blogGrid.innerHTML = postsToRender.map(post => `
+      <div class="rounded overflow-hidden shadow-lg flex flex-col h-full bg-white">
+        <div class="relative"><a href="/blog/${post.id}/">
+            <img class="w-full" src="${post.data.heroImage}" alt="${post.data.title}" />
+            <div class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
+        </a>
+        <a href="#!">
+            <div class="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
+            ${post.data.category}
+            </div>
+        </a></div>
+        <div class="px-6 py-4 mb-auto bg-white">
+            <a href="/blog/${post.id}/" class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out mb-2">${post.data.title}</a>
+            <p class="text-gray-500 text-sm">${post.data.description}</p>
+        </div>
+        <div class="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
+            <span class="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
+                <Icon name="clock" size={15} />
+                <span class="ml-1"><FormattedDate date={post.data.pubDate} /></span>
+            </span>
+            <span class="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
+                <Icon name="comment" size={15} />
+                <span class="ml-1">4 Commentaires</span>
+            </span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Déclenchement dynamique sur chaque changement
+  searchInput.addEventListener('input', applyFilters);
+  categorySelect.addEventListener('change', applyFilters);
+  startDateInput.addEventListener('input', applyFilters);
+  endDateInput.addEventListener('input', applyFilters);
+
+  resetButton.addEventListener('click', () => {
+    filterForm.reset();
+    applyFilters();
+  });
+
+  // Appliquer les filtres initiaux dès le début
+  applyFilters();
+</script>

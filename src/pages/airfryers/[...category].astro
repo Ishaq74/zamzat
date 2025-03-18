@@ -1,0 +1,86 @@
+---
+export const prerender = false;
+import Layout from '@layouts/Layout.astro';
+import Grid from "@components/Elements/Grid.astro";
+import QueryLoop from '@components/Elements/QueryLoop.astro';
+import { getCollection, getEntry } from 'astro:content';
+
+const { slug } = Astro.params;
+
+console.log('Slug demandé pour productcategories :', slug);
+
+const productCategories = await getCollection('productcategories');
+
+console.log('Nombre de catégories chargées :', productCategories.length);
+console.log('Slugs disponibles dans productcategories :', productCategories.map(c => c.data.slug));
+
+const category = productCategories.find((category) => category.data.slug === slug);
+
+if (!category) {
+  console.log('Aucune catégorie trouvée pour le slug :', slug);
+  return Astro.redirect("/404");
+}
+
+const { id, data: categorydata } = category;
+
+console.log('Catégorie trouvée :', categorydata);
+
+const pageTitle = `Produits de ${categorydata.name}`;
+const pageDescription = categorydata.description || `Découvrez tous les produits de la catégorie ${categorydata.name} pour friteuses à air.`;
+const pageKeywords = `${categorydata.name}, airfryer, friteuse à air`;
+const pageOgImage = categorydata.image || '/default-og-image.jpg';
+const pageLang = 'fr';
+const pageRobots = 'index, follow'; // Changé à "index, follow" sauf si noindex est intentionnel
+---
+
+<Layout 
+  title={pageTitle} 
+  description={pageDescription} 
+  keywords={pageKeywords} 
+  ogImage={pageOgImage} 
+  lang={pageLang} 
+  robots={pageRobots}
+>
+  <!-- Section Hero avec image d'arrière-plan dynamique -->
+  <Grid 
+    tag="section" 
+    textAlign="center" 
+    backgroundColor="bg-blue-200" 
+    align="center" 
+    gap="gap-0" 
+    class="py-12"
+  >
+    <h1 class="text-4xl font-bold text-gray-800 mb-4">Catégorie : {categorydata.name}</h1>
+    {categorydata.description && <p class="text-lg text-gray-600 max-w-2xl mx-auto">{categorydata.description}</p>}
+    {categorydata.image && (
+      <img 
+        src={categorydata.image} 
+        alt={categorydata.name} 
+        class="mt-6 w-full max-w-md mx-auto rounded-lg shadow-lg" 
+      />
+    )}
+  </Grid>
+
+  <!-- Airfryers de cette catégorie -->
+  <section class="max-w-4xl mx-auto p-4 mt-8">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Friteuses à air dans cette catégorie</h2>
+    <QueryLoop 
+      collection="airfryers" 
+      categoryFilter={id} 
+      columns={2} 
+      limit={8} 
+    />
+  </section>
+
+  <!-- Catégories similaires -->
+  <section class="max-w-4xl mx-auto p-4 mt-8">
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Catégories similaires</h2>
+    <QueryLoop 
+      collection="productcategories" 
+      siblingsContent={true} 
+      currentId={id} 
+      columns={2} 
+      limit={4} 
+    />
+  </section>
+</Layout>

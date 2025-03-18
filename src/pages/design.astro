@@ -1,0 +1,56 @@
+---
+export const prerender = false;
+import Layout from '@layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
+import Grid from '@components/Elements/Grid.astro';
+import QueryLoop from '@components/Elements/QueryLoop.astro';
+
+const pageTitle = `À propos de CommentCuireAuAirFryer`;
+const pageDescription = 'Découvrez l’histoire de CommentCuireAuAirFryer.fr et comment il peut vous aider à utiliser votre AirFryer au quotidien.';
+const pageKeywords = "cuisine, recettes, friteuse à air, cuire à l'air chaud, air fryer, airfryer";
+const pageOgImage = "";
+const pageLang = 'fr';
+const pageRobots = "index, follow";
+
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+
+<!-- Section Hero avec image d'arrière-plan dynamique -->
+<Grid tag="section" textAlign="center" backgroundColor="bg-blue-200" align="center" gap="gap-0">
+    <h1>Mix de tout</h1>
+</Grid>
+
+<Grid tag="section" align="center" gap="gap-0">
+    <h2>Les Produits</h2>
+<QueryLoop collection="airfryers" columns={3} />
+</Grid>
+
+<Grid tag="section" align="center" gap="gap-0">
+    <h2>Les Avis</h2>
+<QueryLoop collection="reviews" columns={2} />
+</Grid>
+
+<Grid tag="section" align="center" gap="gap-0">
+    <h2>Les Recettes</h2>
+<QueryLoop collection="recipes" columns={3} />
+</Grid>
+
+<Grid tag="section" align="center" gap="gap-0">
+    <h2>Les Articles</h2>
+<QueryLoop collection="blog" columns={3} />
+</Grid>
+
+<Grid tag="section" align="center" gap="gap-0">
+    <h2>Les Utilisateurs</h2>
+<QueryLoop collection="profiles" columns={3} />
+</Grid>
+
+</Layout>

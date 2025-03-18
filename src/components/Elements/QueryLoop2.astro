@@ -1,0 +1,200 @@
+---
+import { supabase } from '@lib/supabase'; // Importation de ton client Supabase
+import AirfryersCard from '@components/Products/ProductCard.astro';
+import ProductCategoriesCard from '@components/Products/CategoryCard.astro';
+import RecipesCard from '@components/Recipes/RecipeCard.astro';
+import RecipeCategoriesCard from '@components/Recipes/CategoryCard.astro';
+import ReviewsCard from '@components/Recipes/ReviewCard.astro';
+import BlogCard from '@components/Blog/BlogCard.astro';
+import UserCard from '@components/Users/UserCard.astro';
+import Grid from './Grid.astro';
+
+// Définition des composants de cartes pour chaque collection
+const CardComponents = {
+  airfryers: AirfryersCard,
+  productCategories: ProductCategoriesCard,
+  recipes: RecipesCard,
+  recipeCategories: RecipeCategoriesCard,
+  reviews: ReviewsCard,
+  blog: BlogCard,
+  users: UserCard,
+};
+
+// Définition des props attendues
+interface Props {
+  collection: keyof typeof CardComponents;
+  filters?: Record<string, any>;
+  sort?: { field: string; order: 'asc' | 'desc' };
+  limit?: number;
+  references?: string[];
+  categoryFilter?: string | string[];
+  currentId?: string;
+  relatedContent?: boolean;
+  siblingsContent?: boolean;
+  relatedTo?: {
+    collection: string;
+    id: string;
+  };
+  columns?: number;
+}
+
+const {
+  collection,
+  filters = {},
+  sort,
+  limit,
+  references = [],
+  categoryFilter,
+  currentId,
+  relatedContent = false,
+  relatedTo,
+  siblingsContent = false,
+  columns = 3,
+} = Astro.props;
+
+const field = sort?.field || 'id';  // Utiliser 'id' comme champ de tri par défaut
+const order = sort?.order || 'asc'; // Utiliser 'asc' comme ordre de tri par défaut
+
+// Fonction de log de performance
+function logPerformance(label: string, startTime: number, endTime: number, length: number) {
+  const executionTime = endTime - startTime;
+  console.log(`[Performance] ${label} - Time: ${executionTime.toFixed(2)}ms | Length: ${length}`);
+}
+
+// 1. Début du processus
+const startTotalTime = performance.now();
+console.log('[START] Process Started');
+
+// 2. Récupération des données depuis Supabase
+const startEntriesFetch = performance.now();
+let { data: entries, error } = await supabase
+  .from(collection) // On récupère la table en fonction du nom de la collection
+  .select('*') // Sélectionner toutes les colonnes
+  .order(field, { ascending: order === 'asc' })
+  .limit(limit); // Appliquer la limite si nécessaire
+
+if (error) {
+  console.error('Erreur de récupération des données:', error.message);
+  return;
+}
+const endEntriesFetch = performance.now();
+logPerformance('Fetching entries from Supabase', startEntriesFetch, endEntriesFetch, entries.length);
+
+// 3. Fonction de filtrage des catégories
+function checkCategory(entry: { category: string }, categoryFilter: string | string[]) {
+  const entryCategory = entry.category;
+  if (!entryCategory) {
+    return false;
+  }
+
+  const categoryArray = Array.isArray(categoryFilter) ? categoryFilter : [categoryFilter];
+  return categoryArray.includes(entryCategory);
+}
+
+// 4. Filtrage des entrées selon les critères donnés
+const startFiltering = performance.now();
+entries = entries.filter(entry => {
+  console.log("Filtering entry:", entry.id);
+
+  // Filtrage par ID courant
+  if (entry.id === currentId) {
+    return false;
+  }
+
+  // Filtrage lié au contenu
+  if (relatedContent && currentId) {
+    return checkCategory(entry, currentId); // Assumer que currentId représente une catégorie dans ce cas
+  }
+
+  // Contenu frère
+  if (siblingsContent) {
+    return true;
+  }
+
+  // Filtrage par catégorie si spécifié
+  if (categoryFilter) {
+    return checkCategory(entry, categoryFilter);
+  }
+
+  // Filtrage dynamique en fonction des filtres passés
+  for (let key in filters) {
+    if (filters.hasOwnProperty(key)) {
+      const filterValue = filters[key];
+      const entryValue = entry[key];
+      if (entryValue !== filterValue) {
+        return false;
+      }
+    }
+  }
+
+  return true;
+});
+const endFiltering = performance.now();
+logPerformance('Filtering entries', startFiltering, endFiltering, entries.length);
+
+// 5. Randomiser uniquement pour relatedContent
+if (relatedContent) {
+  entries = entries.sort(() => Math.random() - 0.5);
+}
+
+// 6. Résolution des références pour chaque entrée
+const startResolvingReferences = performance.now();
+const resolvedEntries = await Promise.all(
+  entries.map(async (entry) => {
+    const resolvedReferences: Record<string, any> = {};
+    for (const ref of references) {
+      const refData = entry[ref];
+      // Résolution des références
+      if (Array.isArray(refData)) {
+        // Si la référence est une liste d'IDs, on effectue une requête pour chaque ID
+        resolvedReferences[ref] = await Promise.all(
+          refData.map(async (id) => {
+            const { data, error } = await supabase
+              .from(ref) // Référence à la table correspondante
+              .select('*') // Récupérer tous les champs ou spécifier certains champs comme 'name'
+              .eq('id', id); // Filtrer par ID
+            if (error) {
+              console.error(`Erreur de récupération pour ${ref} avec ID ${id}:`, error.message);
+              return null; // Si une erreur survient, on retourne null
+            }
+            return data[0]; // Retourner la première entrée (ou les données en cas de succès)
+          })
+        );
+      } else {
+        // Si la référence est un seul ID, on effectue une requête pour cet ID
+        const { data, error } = await supabase
+          .from(ref)
+          .select('*') // Récupérer tous les champs ou spécifier certains champs comme 'name'
+          .eq('id', refData); // Filtrer par l'ID
+        if (error) {
+          console.error(`Erreur de récupération pour ${ref} avec ID ${refData}:`, error.message);
+          resolvedReferences[ref] = null;
+        } else {
+          resolvedReferences[ref] = data[0]; // Ajouter l'objet de données
+        }
+      }
+    }
+    return { ...entry, resolvedReferences };
+  })
+);
+const endResolvingReferences = performance.now();
+logPerformance('Resolving references', startResolvingReferences, endResolvingReferences, resolvedEntries.length);
+// 7. Sélection du composant approprié pour la carte
+const startCardComponentSelection = performance.now();
+const CardComponent = CardComponents[collection];
+const endCardComponentSelection = performance.now();
+logPerformance('Selecting Card Component', startCardComponentSelection, endCardComponentSelection, resolvedEntries.length);
+
+// 8. Synthèse générale
+const endTotalTime = performance.now();
+const totalExecutionTime = endTotalTime - startTotalTime;
+console.log(`[FINAL PERFORMANCE] Total execution time: ${totalExecutionTime.toFixed(2)}ms`);
+console.log(`[FINAL PERFORMANCE] Entries processed: ${resolvedEntries.length} entries`);
+---
+
+<Grid tag="section" cols={columns}>
+  {console.log("Rendu des entrées:", resolvedEntries.length)}
+  {resolvedEntries.map((entry: any) => (
+    <CardComponent entry={entry} {...entry.resolvedReferences} />
+  ))}
+</Grid>

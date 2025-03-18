@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+@theme {
+    /* Font sizes */
+    --text-h1: calc(2rem + 1.5vw);
+    --text-h2: calc(1.5rem + 1.5vw);
+    --text-h3: calc(1.325rem + 0.9vw);
+    --text-h4: calc(1.225rem + 0.6vw);
+    --text-h5: calc(1.175rem + 0.4vw);
+    --text-h6: calc(1.150rem + 0.2vw);
+    --text-body: 1.25rem;
+    --text-small: 0.875rem;
+
+    /* Colors */
+    --color-primary: #EBC686;
+    --color-primary-light: #F5D7A4;
+    --color-primary-dark: #D9A75F;
+
+    --color-secondary: #D7B375;
+    --color-secondary-light: #E9C89A;
+    --color-secondary-dark: #B7965D;
+
+    --color-accent: #C17C74;
+    --color-accent-light: #D9948D;
+    --color-accent-dark: #A6665F;
+
+    /* Spacings */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+
+    /* Borders */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm: rgba(0, 0, 0, 0.2) 0px 0px 14px 0px;
+    --shadow-md: 10px -10px 0px #b59662, 0 0 10px rgba(255, 255, 255, 1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Custom styles */
+@layer utilities {
+  textarea {
+    @apply w-full text-base;
+  }
+  input {
+    @apply text-base;
+  }
+  table {
+    @apply w-full;
+  }
+  code {
+    @apply px-2 py-1 bg-gray-200 rounded;
+  }
+  pre {
+    @apply p-6 rounded-lg;
+  }
+  pre > code {
+    all: unset;
+  }
+  blockquote {
+    @apply border-l-4 border-accent pl-5 m-0 text-lg;
+  }
+  hr {
+    @apply border-none border-t border-gray-200;
+  }
+}
+
+/* Typographie */
+@layer components {
+  h1 { @apply text-[var(--text-h1)] leading-tight; }
+  h2 { @apply text-[var(--text-h2)] leading-tight; }
+  h3 { @apply text-[var(--text-h3)] leading-tight; }
+  h4 { @apply text-[var(--text-h4)] leading-tight; }
+  h5 { @apply text-[var(--text-h5)] leading-tight; }
+  h6 { @apply text-[var(--text-h6)] leading-tight; }
+  p { @apply text-[var(--text-body)]; }
+
+  /* Responsive text wrap */
+  h1, h2, h3, h4, h5, h6, p {
+    @apply break-words;
+  }
+}
+
+/* Boutons */
+@layer components {
+  .btn {
+    @apply font-bold py-2 px-4 rounded-md transition-all duration-200 ease-in-out transform focus:outline-none shadow-lg;
+  }
+  .btn-primary {
+    @apply bg-[var(--color-primary)] text-white border border-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] hover:scale-95 hover:shadow-inner focus:ring-2 focus:ring-[var(--color-primary)];
+  }
+  .btn-secondary {
+    @apply bg-[var(--color-secondary)] text-white border border-[var(--color-secondary-dark)] hover:bg-[var(--color-secondary-dark)] hover:scale-95 hover:shadow-inner focus:ring-2 focus:ring-[var(--color-secondary)];
+  }
+  .btn-accent {
+    @apply bg-[var(--color-accent)] text-white border border-[var(--color-accent-dark)] hover:bg-[var(--color-accent-dark)] hover:scale-95 hover:shadow-inner focus:ring-2 focus:ring-[var(--color-accent)];
+  }
+  .btn-outline {
+    @apply bg-transparent text-[var(--color-primary)] border-2 border-[var(--color-primary)] hover:bg-[var(--color-primary)] hover:scale-95 hover:shadow-inner focus:ring-2 focus:ring-[var(--color-primary)];
+  }
+}
+
+/* Liens */
+@layer components {
+  .link {
+    @apply underline font-medium;
+  }
+  .link-primary { @apply text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] focus:ring-2 focus:ring-[var(--color-primary)]; }
+  .link-secondary { @apply text-[var(--color-secondary)] hover:text-[var(--color-secondary-dark)] focus:ring-2 focus:ring-[var(--color-secondary)]; }
+  .link-accent { @apply text-[var(--color-accent)] hover:text-[var(--color-accent-dark)] focus:ring-2 focus:ring-[var(--color-accent)]; }
+}
+
+@layer components {
+  .grid-auto-fit {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+  }
+  .grid-auto-fill {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+  }
+  .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+  .grid-cols-5 { grid-template-columns: repeat(5, 1fr); }
+  .grid-cols-6 { grid-template-columns: repeat(6, 1fr); }
+
+  @media screen and (max-width: 768px) {
+    .grid-auto-fit {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+    }
+    .grid-auto-fill {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+    }
+    .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .grid-cols-3, 
+    .grid-cols-4,
+    .grid-cols-5,
+    .grid-cols-6 { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media screen and (max-width: 500px) {
+    .grid-auto-fit {
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+    }
+    .grid-auto-fill {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--spacing-md);
+    }
+    .grid-cols-2,
+    .grid-cols-3,
+    .grid-cols-4,
+    .grid-cols-5,
+    .grid-cols-6 { grid-template-columns: 1fr; }
+  }
+}
+
+
+/* Form styles */
+@layer components {
+  form {
+    @apply max-w-2xl mx-auto;
+  }
+
+  form input {
+    @apply p-2 mb-2 border border-gray-300 rounded text-base;
+  }
+
+  form button {
+    @apply p-2 bg-green-500 text-white border-none rounded text-base cursor-pointer;
+  }
+}

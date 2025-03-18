@@ -1,0 +1,22 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "compilerOptions": {
+    "types": ["astro-font"],
+    "strictNullChecks": true,
+    "allowJs": true,
+    "baseUrl": ".",
+    "paths": {
+      "@fonts/*": ["src/fonts/*"],
+      "@components/*": ["src/components/*"],
+      "@Elements/*": ["src/components/Elements/*"],
+      "@styles/*": ["src/styles/*"],
+      "@layouts/*": ["src/layouts/*"],
+      "@partials/*": ["src/partials/*"],
+      "@scripts/*": ["src/scripts/*"],
+      "@lib/*": ["src/lib/*"],
+      "@utils/*": ["src/utils/*"]
+    }
+  },
+  "include": [".astro/types.d.ts", "**/*"],
+  "exclude": ["dist"],
+}

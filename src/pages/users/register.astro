@@ -1,0 +1,69 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Grid from "@components/Elements/Grid.astro";
+import Link from '@components/Elements/Link.astro';
+
+const pageTitle = "Inscription";
+const pageDescription = "Page d'inscription du site.";
+const pageKeywords = "blog, astro, cms, site web";
+const pageOgImage = "./images/og-home.jpg";
+const pageLang = "fr";
+const pageRobots = "noindex, nofollow";
+
+const error = Astro.url.searchParams.get("error") || "";
+const success = Astro.url.searchParams.get("success") || "";
+console.log(import.meta.env.SMTP_HOST);
+---
+
+<Layout title={pageTitle} description={pageDescription} keywords={pageKeywords} ogImage={pageOgImage} lang={pageLang} robots={pageRobots}>
+  <Grid tag="section" textAlign="center" backgroundColor="bg-blue-200" align="center" gap="gap-0">
+    <h1>Inscription</h1>
+  </Grid>
+  
+  <Grid tag="section" align="center" gap="gap-4">
+    <form id="registerForm" class="grid grid-cols-1 gap-4">
+      <input type="text" name="name" placeholder="Nom" required />
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Mot de passe" required />
+      <select name="role" required>
+        <option value="user">Utilisateur</option>
+        <option value="admin">Administrateur</option>
+      </select>
+      <button type="submit">S'inscrire</button>
+    </form>
+
+    {error && <p style="color:red;">{error}</p>}
+    {success && <p style="color:green;">{success}</p>}
+
+    <p><Link href="/users/login">Se connecter</Link></p>
+  </Grid>
+</Layout>
+
+<script is:inline>
+  const form = document.getElementById("registerForm");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault(); // Empêche le rechargement de la page
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        window.location.href = `/users/register?success=Vérification envoyée, vérifiez votre email`;
+      } else {
+        window.location.href = `/users/register?error=${result.message}`;
+      }
+    } catch (error) {
+      window.location.href = "/users/register?error=Erreur serveur, réessayez plus tard.";
+    }
+  });
+</script>

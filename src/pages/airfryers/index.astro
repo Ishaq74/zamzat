@@ -1,0 +1,52 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Grid from '@components/Elements/Grid.astro';
+import { getCollection } from 'astro:content';
+import QueryLoop from '@components/Elements/QueryLoop.astro';
+import ProductFilter from '@components/Products/ProductFilter.astro';
+
+// Liste des marques disponibles pour le filtrage dynamique
+const airfryers = await getCollection('airfryers');
+const brands = Array.from(new Set(airfryers.map(product => product.data.brand)));
+
+
+---
+
+<Layout 
+  title="Catalogue des Airfryers" 
+  description="Découvrez notre collection d'Airfryers, avec des options de tri et filtrage." 
+  lang="fr"
+>
+
+  <!-- Liste des Catégories de Produits -->
+  <Grid tag="section">
+    <QueryLoop collection="productcategories" limit={4} columns={4}/>
+  </Grid>
+
+  <!-- Section des filtres -->
+  <section class="mt-12">
+    <h2 class="text-3xl font-bold text-center mb-8">Filtrer par Marque</h2>
+    <div class="flex justify-center gap-4">
+      {brands.map(brand => (
+        <a 
+          href={`?brand=${brand}&page=1`} 
+          class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+        >
+          {brand}
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <section class="mt-12">
+    <ProductFilter
+    collection="airfryers"
+  />
+  </section>
+
+  <!-- Liste des produits -->
+<Grid tag="section">
+  <QueryLoop collection="airfryers" sort={{ field: 'price', order: 'asc' }}/>
+</Grid>
+
+</Layout>

@@ -1,0 +1,90 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Grid from "@components/Elements/Grid.astro";
+import Link from '@components/Elements/Link.astro';
+import Button from '@components/Elements/Button.astro';
+
+const pageTitle = "Connexion";
+const pageDescription = "Page de connexion du site.";
+const pageKeywords = "blog, astro, cms, site web";
+const pageOgImage = "./images/og-home.jpg";
+const pageLang = "fr";
+const pageRobots = "noindex, nofollow";
+---
+
+<Layout title={pageTitle} description={pageDescription} keywords={pageKeywords} ogImage={pageOgImage} lang={pageLang} robots={pageRobots}>
+  <Grid tag="section" textAlign="center" backgroundColor="bg-blue-200" align="center" gap="gap-0">
+    <h1>Connexion</h1>
+  </Grid>
+  <Grid tag="section" align="center" gap="gap-4">
+    <p>Pas encore de compte ?</p>
+    <Link isButtonStyle style="primary" href="/register">Créer un compte</Link>
+
+    <form id="login-form" class="grid grid-cols-1 gap-2">
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" required />
+
+      <label for="password">Mot de passe</label>
+      <input type="password" name="password" id="password" required />
+
+      <button type="submit">Se connecter</button>
+      <Button id="google-login" type="submit" style="secondary" icon={{ name: "mdi:google", side: "left" }}>Avec Google</Button>
+
+      <p id="error-message" class="text-red-500 hidden"></p>
+      <p id="success-message" class="text-green-500 hidden"></p>
+    </form>
+  </Grid>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const form = document.getElementById("login-form");
+      const errorMessage = document.getElementById("error-message");
+      const successMessage = document.getElementById("success-message");
+      const googleLoginBtn = document.getElementById("google-login");
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        errorMessage.textContent = "";
+        errorMessage.classList.add("hidden");
+        successMessage.textContent = "";
+        successMessage.classList.add("hidden");
+
+        const formData = new FormData(form);
+
+        const response = await fetch("/api/auth/signin", {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          errorMessage.textContent = result.error;
+          errorMessage.classList.remove("hidden");
+        } else {
+          successMessage.textContent = result.success;
+          successMessage.classList.remove("hidden");
+          setTimeout(() => {
+            window.location.href = "/dashboard";
+          }, 1500);
+        }
+      });
+
+      googleLoginBtn.addEventListener("click", async () => {
+        const response = await fetch("/api/auth/signin", {
+          method: "POST",
+          body: new URLSearchParams({ provider: "google" }),
+        });
+
+        const result = await response.json();
+
+        if (result.redirect) {
+          window.location.href = result.redirect;
+        } else {
+          errorMessage.textContent = result.error;
+          errorMessage.classList.remove("hidden");
+        }
+      });
+    });
+  </script>
+</Layout>

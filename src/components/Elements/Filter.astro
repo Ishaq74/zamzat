@@ -1,0 +1,259 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+
+interface FilterOption {
+  type: 'search' | 'select' | 'checkbox' | 'range';
+  name: string;
+  label: string;
+  options?: string[];
+  min?: number;
+  max?: number;
+  reference?: {
+    collection: string;
+    valueField: string;
+    labelField: string;
+  };
+}
+
+interface Props {
+  collection: string;
+  filters: FilterOption[];
+  CardComponent: any;
+}
+
+const { collection, filters, CardComponent } = Astro.props;
+const items = await getCollection(collection);
+
+// Trouver automatiquement le min et max du prix
+let minPrice = Infinity;
+let maxPrice = -Infinity;
+
+items.forEach((item) => {
+  const price = parseFloat(item.data.price);
+  if (!isNaN(price)) {
+    if (price < minPrice) minPrice = price;
+    if (price > maxPrice) maxPrice = price;
+  }
+});
+
+// Mise à jour automatique du filtre "price"
+filters.forEach((filter) => {
+  if (filter.type === 'range' && filter.name === 'price') {
+    filter.min = minPrice;
+    filter.max = maxPrice;
+  }
+});
+
+// Fonction pour obtenir les valeurs uniques d'un champ
+async function getUniqueValues(filter: FilterOption) {
+  const values = new Set();
+  for (const item of items) {
+    let value = item.data[filter.name];
+
+    if (filter.reference) {
+      const refEntry = await getEntry(filter.reference.collection, value);
+      value = refEntry.data[filter.reference.labelField];
+    }
+
+    if (Array.isArray(value)) {
+      value.forEach(v => values.add(v));
+    } else {
+      values.add(value);
+    }
+  }
+  return Array.from(values);
+}
+
+// Préparer les options pour les selects et checkboxes
+const filterOptions = await Promise.all(
+  filters
+    .filter(f => f.type === 'select' || f.type === 'checkbox')
+    .map(async f => ({ filter: f, options: await getUniqueValues(f) }))
+);
+
+// Préparer les données des items avec les références résolues
+const itemsData = await Promise.all(items.map(async (item) => {
+  const data = { ...item.data };
+  for (const filter of filters) {
+    if (filter.reference) {
+      if (Array.isArray(data[filter.name])) {
+        data[`${filter.name}Labels`] = await Promise.all(data[filter.name].map(async (refId) => {
+          const refEntry = await getEntry(filter.reference.collection, refId);
+          return refEntry.data[filter.reference.labelField];
+        }));
+      } else {
+        const refEntry = await getEntry(filter.reference.collection, data[filter.name]);
+        data[`${filter.name}Label`] = refEntry.data[filter.reference.labelField];
+      }
+    }
+  }
+  return { id: item.id, data };
+}));
+---
+<div class="filter-container flex flex-col md:flex-row">
+    <aside class="filter-sidebar w-full md:w-1/4 p-4 bg-gray-100">
+      <h2 class="text-xl font-bold mb-4">Filtres</h2>
+      <form id="filter-form">
+        {filters.map((filter) => (
+          <div class="mb-4">
+            <label for={filter.name} class="block text-sm font-medium text-gray-700">{filter.label}</label>
+            {filter.type === 'search' && (
+              <input 
+                type="text" 
+                id={filter.name} 
+                name={filter.name} 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
+                placeholder="Rechercher..."
+              />
+            )}
+            {filter.type === 'select' && (
+              <select 
+                id={filter.name} 
+                name={filter.name} 
+                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+              >
+                <option value="">Tous</option>
+                {filterOptions.find(fo => fo.filter.name === filter.name)?.options.map((option) => (
+                  <option value={option}>{option}</option>
+                ))}
+              </select>
+            )}
+            {filter.type === 'checkbox' && (
+              <div class="mt-1 space-y-2">
+                {filterOptions.find(fo => fo.filter.name === filter.name)?.options.map((option) => (
+                  <label class="inline-flex items-center">
+                    <input type="checkbox" name={filter.name} value={option} class="rounded border-gray-300 text-indigo-600 shadow-sm">
+                    <span class="ml-2">{option}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+            {filter.type === 'range' && (
+            <div class="mt-1 flex space-x-2">
+                <input 
+                type="range" 
+                id="${filter.name}-min" 
+                name="${filter.name}-min" 
+                min={filter.min} 
+                max={filter.max} 
+                value={filter.min} 
+                class="w-full"
+                onchange="updateRangeValue('${filter.name}', 'min')"
+                />
+                <span id={`${filter.name}-min-label`}>{filter.min}</span>
+
+                <input 
+                type="range" 
+                id="${filter.name}-max" 
+                name="${filter.name}-max" 
+                min={filter.min} 
+                max={filter.max} 
+                value={filter.max} 
+                class="w-full"
+                onchange="updateRangeValue('${filter.name}', 'max')"
+                />
+                <span id={`${filter.name}-max-label`}>{filter.max}</span>
+            </div>
+            )}
+          </div>
+        ))}
+        <button type="reset" class="w-full bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300 transition">Réinitialiser</button>
+      </form>
+    </aside>
+  
+    <main class="w-full md:w-3/4 p-4">
+      <div id="no-results-message" class="text-center text-lg text-red-500 hidden">
+        Aucun résultat ne correspond à votre recherche.
+      </div>
+      <div id="results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {itemsData.map((item) => (
+          <div class="item" data-item={JSON.stringify(item.data)}>
+            <CardComponent entry={item} />
+          </div>
+        ))}
+      </div>
+    </main>
+  </div>  
+
+<script  type="module" define:vars={{ filters, itemsData }}>
+
+    document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('filter-form');
+  const results = document.getElementById('results');
+  const noResultsMessage = document.getElementById('no-results-message');
+  const items = Array.from(results.getElementsByClassName('item'));
+
+  // Fonction pour mettre à jour les valeurs des curseurs
+  function updateRangeValue(filterName, rangeType) {
+    const minRange = document.getElementById(`${filterName}-min`);
+    const maxRange = document.getElementById(`${filterName}-max`);
+    const minLabel = document.getElementById(`${filterName}-min-label`);
+    const maxLabel = document.getElementById(`${filterName}-max-label`);
+
+    // Mise à jour des labels min/max en fonction du curseur modifié
+    if (rangeType === 'min') {
+      minLabel.innerText = minRange.value + '€';  // Affichage de la valeur du min
+    } else if (rangeType === 'max') {
+      maxLabel.innerText = maxRange.value + '€';  // Affichage de la valeur du max
+    }
+
+    // Filtrage des résultats
+    filterItems(); // Assure-toi que cette fonction est définie ailleurs dans ton script
+  }
+
+  // Fonction de filtrage des items
+  function filterItems() {
+    const formData = new FormData(form);
+    const filterValues = Object.fromEntries(formData);
+
+    let visibleCount = 0;
+
+    items.forEach((itemElement, index) => {
+      const itemData = itemsData[index].data; // Utilisation correcte des données de itemsData
+      const visible = filters.every(filter => {
+        const filterValue = filterValues[filter.name];
+        if (!filterValue) return true;
+
+        let itemValue = itemData[filter.name];
+        if (filter.reference) {
+          itemValue = itemData[`${filter.name}Label`] || itemData[`${filter.name}Labels`];
+        }
+
+        switch (filter.type) {
+          case 'search':
+            return itemValue.toString().toLowerCase().includes(filterValue.toLowerCase());
+          case 'select':
+            return itemValue === filterValue;
+          case 'checkbox':
+            const checkedValues = formData.getAll(filter.name);
+            return checkedValues.length === 0 || checkedValues.some(v => 
+              Array.isArray(itemValue) ? itemValue.includes(v) : itemValue === v
+            );
+          case 'range':
+            const min = filterValues[`${filter.name}-min`] ? parseFloat(filterValues[`${filter.name}-min`]) : filter.min;
+            const max = filterValues[`${filter.name}-max`] ? parseFloat(filterValues[`${filter.name}-max`]) : filter.max;
+            const value = parseFloat(itemValue);
+
+            return (!isNaN(min) && value >= min) && (!isNaN(max) && value <= max);
+          default:
+            return true;
+        }
+      });
+
+      itemElement.style.display = visible ? '' : 'none';
+      if (visible) visibleCount++;
+    });
+
+    noResultsMessage.style.display = visibleCount === 0 ? 'block' : 'none';
+  }
+
+  form.addEventListener('input', filterItems);
+  form.addEventListener('reset', () => {
+    setTimeout(filterItems, 0);
+  });
+
+  // Initialisation du filtrage
+  filterItems();
+});
+
+</script>

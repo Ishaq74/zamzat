@@ -1,0 +1,245 @@
+---
+type GridProps = {
+  id?: string;
+  tag?: "div" | "section" | "span" | "nav" | "main" | "header" | "footer" | "article" ;
+  cols?: string;
+  autoFit?: boolean;
+  autoFill?: boolean;
+  overflowHidden?: boolean;
+
+  gap?: string;
+  animate?: string; // Animation lors de l'apparition
+  hoverAnimate?: string; // Animation sur hover
+  focusAnimate?: string;
+  activeAnimate?: string;
+
+  disabled?: boolean;
+  hidden?: boolean;
+
+  zIndex?: string;
+
+  xAlign?:
+    | "left"
+    | "center"
+    | "right"
+    | "space-between"
+    | "space-around"
+    | "space-evenly"
+    | "normal";
+  yAlign?: "top" | "center" | "bottom" | "stretch";
+  align?: "center";
+
+  textAlign?: "left" | "center" | "right";
+
+  yPadding?: string; 
+  xPadding?: string;
+
+  xmargin?: string;
+  ymargin?: string;
+
+  customClasses?: string;
+  backgroundColor?: string;
+  backgroundImage?: string;
+
+  transitionDuration?: string; // Durée de la transition
+  transitionTiming?: string; // Timing de la transition
+
+  border?: boolean; 
+  borderType?: "border1" | "border2" | "border3"; 
+  borderColor?: string; 
+  borderWidth?: string; 
+  borderStyle?: string; 
+
+  borderRadius?: string;
+  boxShadow?: string;
+
+  hFull?: boolean; 
+  wFull?: boolean; 
+
+};
+
+const {
+  id = "",
+  tag = "div",
+  cols = "",
+  autoFit = false,
+  autoFill = false,
+  overflowHidden = true,
+
+  gap = "gap-4 md:gap-8",
+  animate = "", // Animation d'apparition
+  hoverAnimate = "", // Animation sur hover
+  focusAnimate = "",
+  activeAnimate = "",
+
+  disabled = false,
+  hidden = false,
+
+  zIndex = "",
+
+  align,
+  xAlign = "normal",
+  yAlign = "top",
+
+  textAlign = "left",
+
+  yPadding = "",
+  xPadding = "",
+  xmargin = "",
+  ymargin = "",
+
+  customClasses = "",
+  backgroundColor = "bg-transparent",
+  backgroundImage = "",
+
+  transitionDuration = "duration-300", // Valeur par défaut
+  transitionTiming = "ease-in-out", // Valeur par défaut
+
+  border = false,
+  borderType = "border1",
+  borderColor = "",
+  borderWidth = "",
+  borderStyle = "",
+
+  borderRadius = "",
+  boxShadow = "",
+
+  hFull = true,
+  wFull = true,
+
+}: GridProps = Astro.props;
+
+const backgroundClass = backgroundColor ? `${backgroundColor}` : "bg-white";
+
+const backgroundImageClass = backgroundImage ? `bg-[url('${backgroundImage}')]` : "";
+
+
+const gridTemplateCols = autoFit
+  ? "grid-cols-auto-fit"
+  : autoFill
+    ? "grid-cols-auto-fill"
+    : (cols && !isNaN(parseInt(cols)) && parseInt(cols) > 1) 
+      ? `grid-cols-${cols}`
+      : "grid-cols-1";
+
+const colsClass = cols && !isNaN(parseInt(cols)) ? `grid-cols-${parseInt(cols)}` : "grid-cols-1";
+
+const heightClass = hFull ? "h-full" : "h-auto";
+const widthClass = wFull ? "w-full" : "";
+const overflowClass = overflowHidden ? "overflow-hidden" : ""; 
+
+const justifyContentClass = (() => {
+  if (align === "center") {
+    return "place-items-center";
+  }
+  switch (xAlign) {
+    case "center":
+      return "justify-items-center";
+    case "right":
+      return "justify-end";
+    case "space-between":
+      return "justify-between";
+    case "space-around":
+      return "justify-around";
+    case "space-evenly":
+      return "justify-evenly";
+    default:
+      return "normal";
+  }
+})();
+
+const alignItemsClass = (() => {
+  if (align === "center") {
+    return "items-center";
+  }
+  switch (yAlign) {
+    case "center":
+      return "items-center";
+    case "bottom":
+      return "items-end";
+    case "stretch":
+      return "items-stretch";
+    default:
+      return "items-start";
+  }
+})();
+
+const borderClass = border
+  ? borderType === "border2"
+    ? "border-2"
+    : borderType === "border3"
+      ? "border-4"
+      : "border"
+  : "";
+
+const yPaddingClass = yPadding ? `${yPadding}` : "py-4 md:py-10";
+const xPaddingClass = xPadding ? `${xPadding}` : "px-4 md:px-10";
+const ymarginClass = ymargin ? `${ymargin}` : "mx-0";
+const xmarginClass = xmargin ? `${xmargin}` : "my-0"; 
+
+const classes = [
+  "grid",
+  colsClass,
+  justifyContentClass,
+  alignItemsClass,
+  `text-${textAlign}`,
+  gap,
+  overflowClass,
+  yPaddingClass,
+  xPaddingClass,
+  ymarginClass,
+  xmarginClass,
+  heightClass,
+  widthClass,
+  backgroundClass,
+  backgroundImageClass,
+  borderRadius,
+  boxShadow,
+  animate,
+  hoverAnimate ? `hover:${hoverAnimate}` : "",
+  focusAnimate ? `focus:${focusAnimate}` : "",
+  activeAnimate ? `active:${activeAnimate}` : "",
+  disabled ? "disabled:opacity-50 disabled:cursor-not-allowed" : "",
+  hidden ? "hidden" : "",
+  zIndex ? `z-${zIndex}` : "",
+  borderClass,
+  borderColor ? `${borderColor}` : "",
+  borderWidth ? `${borderWidth}` : "",
+  borderStyle ? `${borderStyle}` : "",
+  customClasses,
+]
+  .filter(Boolean)
+  .join(" ");
+
+---
+
+{tag === "span" ? (
+  <span id={id} class={`${classes} transition ${transitionDuration} ${transitionTiming}`}>
+    <slot />
+  </span>
+) : tag === "section" ? (
+  <section id={id} class={`${classes} transition ${transitionDuration} ${transitionTiming}`}>
+    <slot />
+  </section>
+) : tag === "nav" ? (
+  <nav id={id} class={`${classes} transition ${transitionDuration} ${transitionTiming}`}>
+    <slot />
+  </nav>
+) : tag === "main" ? (
+  <main id={id} class={`${classes} transition ${transitionDuration} ${transitionTiming}`}>
+    <slot />
+  </main>
+) : tag === "header" ? (
+  <header id={id} class={`${classes} transition ${transitionDuration} ${transitionTiming}`}>
+    <slot />
+  </header>
+) : tag === "footer" ? (
+  <footer id={id} class={`${classes} transition ${transitionDuration} ${transitionTiming}`}>
+    <slot />  
+  </footer>
+) : (
+  <div id={id} class={`${classes} transition ${transitionDuration} ${transitionTiming}`}>
+    <slot />
+  </div>
+)}
+

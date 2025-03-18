@@ -1,0 +1,44 @@
+---
+import CrudTable from './CrudTable.astro';
+
+const collectionNames = [
+  'profiles',
+  'recipes',
+  'productcategories',
+  'airfryers',
+  'blogcategories',
+  'blog',
+  'recipecategories',
+  'ingredients',
+  'tags',
+  'reviews',
+  'likes',
+  'comments',
+  'gallery',
+  'productTags'
+];
+console.log('Tables disponibles dans Dashboard:', collectionNames);
+
+const url = new URL(Astro.request.url);
+const selectedTable = url.searchParams.get('table') || collectionNames[0];
+console.log('Table sélectionnée dans Dashboard:', selectedTable);
+---
+
+<div class="flex flex-col lg:flex-row min-h-screen bg-gray-50">
+  <aside class="w-full lg:w-64 bg-gray-800 text-white p-6 shadow-lg lg:fixed lg:h-full">
+    <h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+    <nav>
+      {collectionNames.map(table => (
+        <a 
+          href={`/admin/dashboard?table=${table}`} 
+          class={`block py-3 px-4 rounded-md mb-2 capitalize transition-colors ${selectedTable === table ? 'bg-gray-700' : 'hover:bg-gray-700'}`}
+        >
+          {table}
+        </a>
+      ))}
+    </nav>
+  </aside>
+  <main class="flex-1 p-6 lg:ml-64">
+    <CrudTable table={selectedTable} />
+  </main>
+</div>

@@ -1,0 +1,469 @@
+---
+import { getCollection } from 'astro:content';
+import Landing from '@layouts/Landing.astro';
+import Grid from '@components/Elements/Grid.astro';
+import Link from '@components/Elements/Link.astro';
+import Button from '@components/Elements/Button.astro';
+import { Image } from 'astro:assets';
+import Gallery from '@components/Medias/Gallery.astro';
+import ProductCard from '@components/Products/ProductCard.astro';
+import PostCard from '@components/Blog/BlogCard.astro';
+import ReviewCard from '@components/Reviews/ReviewCard.astro';
+import PersonCard from '@components/Blog/BlogCard.astro';
+import { Icon } from 'astro-icon/components';
+
+const organizationEntries = await getCollection('organizations');
+const organizationData = organizationEntries[0]?.data;
+
+const pageTitle = `MS Belle à Croquer - Institut de beauté à Annecy`;
+const pageDescription = 'Découvrez nos soins de beauté personnalisés pour un bien-être optimal';
+const pageKeywords = "beauté, soins visage, soins corps, épilation, maquillage, Annecy";
+const pageOgImage = "/images/logo-msbc.png";
+const pageLang = 'fr';
+const pageRobots = "index, follow";
+---
+<Landing
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f9fafb;
+      color: #1a202c;
+    }
+    h1 { font-size: 2.5rem; font-weight: 800; margin-bottom: 10px; }
+    h2 { font-size: 2rem; font-weight: 600; margin-bottom: 15px; }
+    h3 { font-size: 1.5rem; font-weight: 500; margin-bottom: 10px; }
+    p { font-size: 1rem; line-height: 1.6; }
+    details summary {
+      cursor: pointer;
+      font-weight: bold;
+      padding: 15px;
+      background: #e0e0e0;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+    details[open] summary { background: #d1d5db; }
+    .grid-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 20px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    }
+    .sticky-experiment {
+      position: sticky;
+      top: 20px;
+      z-index: 10;
+      transition: all 0.3s ease;
+    }
+    .example-box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+      border: 1px solid #e0e0e0;
+    }
+    .example-box img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .example-box button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .example-box button:hover { transform: scale(1.05); }
+    .example-box button:first-child { background: #1a202c; color: #fff; }
+    .example-box button:first-child:hover { background: #4b5563; }
+    .example-box button:last-child { background: #d1d5db; color: #1a202c; }
+    .example-box button:last-child:hover { background: #a0aec0; }
+    .identity-box {
+      padding: 20px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    .identity-table {
+      width: 100%;
+      border-collapse: collapse;
+      transition: all 0.3s ease;
+    }
+    .identity-table th, .identity-table td {
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+      text-align: left;
+      vertical-align: top;
+    }
+    .identity-table th {
+      background: #2d3748;
+      color: #fff;
+      font-weight: 600;
+    }
+    .identity-table tr:nth-child(even) { background: #f9f9f9; }
+    .identity-table input, .identity-table select {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .identity-table input:focus, .identity-table select:focus {
+      border-color: #4b5563;
+      box-shadow: 0 0 5px rgba(75, 85, 99, 0.3);
+      outline: none;
+    }
+    @media (max-width: 768px) {
+      .grid-container { grid-template-columns: 1fr; }
+      .sticky-experiment { position: static; }
+      .identity-table { display: block; }
+      .identity-table thead { display: none; }
+      .identity-table tr { display: block; margin-bottom: 15px; border: 1px solid #e0e0e0; border-radius: 8px; }
+      .identity-table td {
+        display: block;
+        border: none;
+        padding: 10px;
+      }
+      .identity-table td:before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section>
+    <h1>Docs</h1>
+    <p>Bienvenue dans la documentation interactive de notre design système ! Explorez nos composants pour créer des interfaces magnifiques et fonctionnelles.</p>
+
+    <h2>Les Composants</h2>
+    <p>Cliquez sur un composant pour découvrir ses possibilités et tester ses options en temps réel.</p>
+
+    <!-- Toggle pour Grid -->
+    <details>
+      <summary>Grid - Composant de grille flexible</summary>
+      <div style="padding: 20px;">
+        <h3>Composant <code>Grid</code></h3>
+        <p>Le composant <code>Grid</code> organise le contenu en colonnes personnalisables. Testez ses options ci-dessous et voyez le résultat en direct !</p>
+
+        <div class="grid-container">
+          <!-- Exemples interactifs en sticky -->
+          <div class="sticky-experiment is-sticky sticky top-0">
+            <div class="example-box" id="example-grid-text">
+              <h3>Titre de la Grille</h3>
+              <p>Ceci est un exemple interactif de grille avec du texte et des boutons. Modifiez les options à droite pour voir les changements !</p>
+              <div class="flex gap-4 mt-4">
+                <button>Bouton 1</button>
+                <button>Bouton 2</button>
+              </div>
+            </div>
+            <div class="example-box" id="example-grid-image">
+              <img src="https://via.placeholder.com/300x200" alt="Placeholder Image">
+            </div>
+          </div>
+
+          <!-- Carte d’identité avec formulaire intégré -->
+          <div class="identity-box">
+            <h3>Carte d’Identité</h3>
+            <p>Modifiez les options dans le tableau pour voir les grilles changer en temps réel :</p>
+            <table class="identity-table">
+              <thead>
+                <tr>
+                  <th>Option</th>
+                  <th>Obligatoire ?</th>
+                  <th>Par défaut</th>
+                  <th>Modifier</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td data-label="Option">id</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">Texte (ex. "ma-grille")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">tag</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">"div"</td>
+                  <td data-label="Modifier">"div", "section", "nav", etc.</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">cols</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">"" (1)</td>
+                  <td data-label="Modifier"><input type="number" id="cols-input" value="1" min="1" max="12"></td>
+                </tr>
+                <tr>
+                  <td data-label="Option">autoFit</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">false</td>
+                  <td data-label="Modifier">true, false</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">autoFill</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">false</td>
+                  <td data-label="Modifier">true, false</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">overflowHidden</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">true</td>
+                  <td data-label="Modifier">true, false</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">gap</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">"gap-4 md:gap-8"</td>
+                  <td data-label="Modifier">
+                    <select id="gap-input">
+                      <option value="gap-4 md:gap-8" selected>Normal</option>
+                      <option value="gap-2">Petit</option>
+                      <option value="gap-6">Grand</option>
+                      <option value="gap-12">Très grand</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td data-label="Option">animate</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">Classe Tailwind (ex. "animate-fade-in")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">hoverAnimate</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">Classe Tailwind (ex. "hover:scale-105")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">focusAnimate</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">Classe Tailwind (ex. "focus:ring-2")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">activeAnimate</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">Classe Tailwind (ex. "active:scale-95")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">disabled</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">false</td>
+                  <td data-label="Modifier">true, false</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">hidden</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">false</td>
+                  <td data-label="Modifier">true, false</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">zIndex</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">Classe Tailwind (ex. "z-10")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">xAlign</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">"normal"</td>
+                  <td data-label="Modifier">"left", "center", "right", etc.</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">yAlign</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">"top"</td>
+                  <td data-label="Modifier">"top", "center", "bottom", "stretch"</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">align</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">undefined</td>
+                  <td data-label="Modifier">"center"</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">textAlign</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">"left"</td>
+                  <td data-label="Modifier">"left", "center", "right"</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">customClasses</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">Classe Tailwind (ex. "bg-red-500")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">backgroundColor</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">"bg-transparent"</td>
+                  <td data-label="Modifier">
+                    <select id="backgroundColor-input">
+                      <option value="bg-transparent" selected>Transparent</option>
+                      <option value="bg-gray-100">Gris clair</option>
+                      <option value="bg-blue-500">Bleu</option>
+                      <option value="bg-green-500">Vert</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td data-label="Option">backgroundImage</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">URL (ex. "bg-[url('/image.jpg')]")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">transitionDuration</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">"duration-300"</td>
+                  <td data-label="Modifier">Classe Tailwind (ex. "duration-500")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">transitionTiming</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">"ease-in-out"</td>
+                  <td data-label="Modifier">Classe Tailwind (ex. "ease-out")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">border</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">false</td>
+                  <td data-label="Modifier">
+                    <select id="border-input">
+                      <option value="false" selected>Non</option>
+                      <option value="true">Oui</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td data-label="Option">borderType</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">"border1"</td>
+                  <td data-label="Modifier">"border1", "border2", "border3"</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">borderColor</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">
+                    <select id="borderColor-input">
+                      <option value="" selected>Aucune</option>
+                      <option value="border-gray-300">Gris</option>
+                      <option value="border-blue-500">Bleu</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td data-label="Option">borderWidth</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">Classe Tailwind (ex. "border-2")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">borderStyle</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">Classe Tailwind (ex. "border-dashed")</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">borderRadius</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">
+                    <select id="borderRadius-input">
+                      <option value="" selected>Aucun</option>
+                      <option value="rounded-lg">Arrondi</option>
+                      <option value="rounded-full">Cercle</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td data-label="Option">boxShadow</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">""</td>
+                  <td data-label="Modifier">
+                    <select id="boxShadow-input">
+                      <option value="" selected>Aucune</option>
+                      <option value="shadow-md">Moyenne</option>
+                      <option value="shadow-lg">Grande</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td data-label="Option">hFull</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">true</td>
+                  <td data-label="Modifier">true, false</td>
+                </tr>
+                <tr>
+                  <td data-label="Option">wFull</td>
+                  <td data-label="Obligatoire ?">Non</td>
+                  <td data-label="Par défaut">true</td>
+                  <td data-label="Modifier">true, false</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </details>
+  </section>
+</body>
+<script is:inline>
+  const exampleGridText = document.getElementById('example-grid-text');
+  const exampleGridImage = document.getElementById('example-grid-image');
+  const colsInput = document.getElementById('cols-input');
+  const gapInput = document.getElementById('gap-input');
+  const backgroundColorInput = document.getElementById('backgroundColor-input');
+  const borderInput = document.getElementById('border-input');
+  const borderColorInput = document.getElementById('borderColor-input');
+  const borderRadiusInput = document.getElementById('borderRadius-input');
+  const boxShadowInput = document.getElementById('boxShadow-input');
+
+  function updateGrids() {
+    const cols = colsInput.value || "1";
+    const gap = gapInput.value;
+    const backgroundColor = backgroundColorInput.value;
+    const border = borderInput.value === "true" ? "border" : "";
+    const borderColor = borderColorInput.value;
+    const borderRadius = borderRadiusInput.value;
+    const boxShadow = boxShadowInput.value;
+
+    const gridClasses = `${gap} ${backgroundColor} ${border} ${borderColor} ${borderRadius} ${boxShadow}`;
+    
+    exampleGridText.className = `example-box grid grid-cols-${cols} ${gridClasses}`;
+    exampleGridImage.className = `example-box grid grid-cols-${cols} ${gridClasses}`;
+  }
+
+  [colsInput, gapInput, backgroundColorInput, borderInput, borderColorInput, borderRadiusInput, boxShadowInput].forEach(input => {
+    input.addEventListener('input', updateGrids);
+  });
+
+  updateGrids();
+</script>

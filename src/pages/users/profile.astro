@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import { type CollectionEntry } from 'astro:content';
+
+// Vérification du token d'accès dans les cookies
+const accessToken = Astro.cookies.get("accessToken") || "";
+
+if (!accessToken) {
+  return Astro.redirect("/users/login");
+}
+
+// Récupérer l'utilisateur actuel depuis la collection 'users'
+const users = await getCollection("users");
+const user = users.find((user) => user.accessToken === accessToken);
+
+// Si l'utilisateur n'est pas trouvé ou n'a pas de token valide, rediriger vers login
+if (!user) {
+  return Astro.redirect("/users/login");
+}
+
+// Déclaration des constantes pour la page
+import Layout from '@layouts/Layout.astro';
+import Grid from "@components/Elements/Grid.astro";
+import Link from '@components/Elements/Link.astro';
+
+const pageTitle = "Mon Profil";
+const pageDescription = "Page de profil utilisateur.";
+const pageKeywords = "profil, utilisateur, astro, cms, site web";
+const pageOgImage = "./images/og-profile.jpg";
+const pageLang = "fr";
+const pageRobots = "noindex, nofollow";
+---
+
+<Layout 
+  title={pageTitle} 
+  description={pageDescription} 
+  keywords={pageKeywords} 
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+  <Grid tag="section" textAlign="center" backgroundColor="bg-blue-200" align="center" gap="gap-0">
+    <h1>Bienvenue, {user.name || "Utilisateur"}</h1>
+  </Grid>
+
+  <Grid tag="section" align="center" gap="gap-4">
+    <!-- Informations utilisateur -->
+    <div>
+      <p><strong>Email:</strong> {user.email}</p>
+      <p><strong>Nom:</strong> {user.name}</p>
+      <!-- D'autres informations peuvent être ajoutées ici -->
+    </div>
+
+    <!-- Lien pour modifier les informations de profil -->
+    <Link href="/users/profile/edit">Modifier mon profil</Link>
+
+    <!-- Bouton de déconnexion -->
+    <form method="POST" action="/api/auth/logout">
+      <button type="submit">Se déconnecter</button>
+    </form>
+  </Grid>
+</Layout>

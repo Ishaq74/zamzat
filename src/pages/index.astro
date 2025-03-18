@@ -1,0 +1,67 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Grid from "@components/Elements/Grid.astro";
+import Flex from '@components/Elements/Flex.astro';
+import Link from '@components/Elements/Link.astro';
+import TwoColumnsSection from '@components/Sections/TwoColumnsSection.astro';
+
+import { SOCIAL_MEDIA, NAV_LINKS, DEFAULT_TITLE } from '../const';
+import QueryLoop from '@components/Elements/QueryLoop.astro';
+
+
+// Déclaration des constantes pour la page
+const pageTitle = "Comment Cuire au Airfryer";
+const pageDescription = "Page d'accueil du site.";
+const pageKeywords = "blog, astro, cms, site web";
+const pageOgImage = "./images/og-home.jpg";
+const pageLang = "fr";
+const pageRobots = "noindex, nofollow";
+
+---
+
+<Layout 
+  title={pageTitle} 
+  description={pageDescription} 
+  keywords={pageKeywords} 
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+<TwoColumnsSection
+  title="Découvrez nos produits",
+  paragraph= "Nos produits sont conçus pour offrir la meilleure qualité et performance. Explorez notre sélection de produits innovants pour améliorer votre quotidien.",
+  imageSrc="/images/fond-orange.jpg",
+  imageAlt= "Produit innovant",
+  imagePosition= "right",
+  aspectRatio="aspect-[4/3]",
+  objectFit="object-cover",
+  imageRadius="rounded-lg",
+  backgroundImage="/images/fond-orange.jpg",
+
+  button1Link="/produits",
+  button1Text="Voir les produits",
+  button2Link="/contact",
+  button2Text="Contactez-nous",
+/>
+
+<Grid tag="section" backgroundColor="bg-yellow-500" align="center">
+  <span class="text-black text-3xl">{DEFAULT_TITLE}</span>
+  <img src="/../images/fond-orange.jpg" alt="" width="80px" height="80px">
+  <Grid tag="section" cols={2} backgroundColor="bg-yellow-500" align="center" xPadding="px-0" yPadding="py-0">
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem. Dignissimos
+      odio temporibus error corporis, magnam eligendi quas beatae, quae repudiandae. Aperiam
+      quae quas, quidem, autem, quibusdam quos quod quia.
+    </p>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quidem. Dignissimos
+      odio temporibus error corporis, magnam eligendi quas beatae, quae repudiandae. Aperiam
+      quae quas, quidem, autem, quibusdam quos quod quia.
+    </p>
+  </Grid>
+  <Link isButtonStyle={true} shape="rounded" href="/produits" style="primary">
+    Voir les AirFryers
+  </Link>
+</Grid>
+<Grid tag="section" backgroundColor="bg-black" align="center">
+  <QueryLoop collection="recipes" limit={4}/>
+</Grid>
+</Layout>

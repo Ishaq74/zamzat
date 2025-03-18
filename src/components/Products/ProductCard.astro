@@ -1,0 +1,105 @@
+---
+import { Icon } from 'astro-icon/components';
+import { type CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'airfryers'>;
+}
+
+const { entry } = Astro.props;
+
+if (!entry || !entry.data) {
+  return null;
+}
+
+const slug = entry.data.slug;
+const { ...entryData } = entry.data;
+
+---
+
+<article class="bg-white border border-gray-200 p-6 rounded-md shadow-md hover:shadow-xl transition-shadow h-full">
+  <a href={`/airfryers/${slug}`}>
+  <!-- Image du produit -->
+  <div class="relative">
+    <img src={entryData.image} alt={entryData.name} class="w-full h-48 object-contain rounded-md" />
+    {entryData.gallery && (
+      <div class="absolute top-0 right-0 bg-gray-800 text-white text-xs p-2 rounded-l-md">Gallery</div>
+    )}
+  </div>
+
+  <!-- Informations principales -->
+  <div class="mt-4">
+    <h3 class="font-semibold text-lg text-gray-800">{entryData.name}</h3>
+    <p class="text-gray-600 text-sm">{entryData.description}</p>
+    <p class="mt-2 text-gray-800 font-semibold">{entryData.price} {entryData.currency}</p>
+  </div>
+
+  <!-- Disponibilité -->
+  <div class="mt-2">
+    <span class={`inline-block text-xs font-semibold px-3 py-1 rounded-full ${entryData.availability === 'in_stock' ? 'bg-green-200 text-green-800' : entryData.availability === 'out_of_stock' ? 'bg-red-200 text-red-800' : 'bg-yellow-200 text-yellow-800'}`}>
+      {entryData.availability === 'in_stock' ? 'In Stock' : entryData.availability === 'out_of_stock' ? 'Out of Stock' : 'Pre-order'}
+    </span>
+  </div>
+
+  <!-- Efficacité énergétique (barre de progression) -->
+  {entryData.energyEfficiency && (
+    <div class="mt-4">
+      <p class="text-sm font-semibold">Energy Efficiency:</p>
+      <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+        <div class="bg-green-500 h-2 rounded-full" style={{ width: `${entryData.energyEfficiency}%` }}></div>
+      </div>
+      <span class="text-xs text-gray-600 mt-1">{entryData.energyEfficiency}% Efficient</span>
+    </div>
+  )}
+
+  <!-- Comparaison visuelle des caractéristiques -->
+  <div class="mt-4 grid grid-cols-2 gap-4">
+    <div class="flex justify-between">
+      <span class="text-sm">Capacity:</span><span class="font-semibold">{entryData.capacity}</span>
+    </div>
+    <div class="flex justify-between">
+      <span class="text-sm">Wattage:</span><span class="font-semibold">{entryData.wattage}</span>
+    </div>
+  </div>
+
+  <!-- Fonctionnalités avec icônes -->
+  <div class="mt-2 flex flex-wrap gap-2">
+    {entryData.features && entryData.features.map(feature => (
+      <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full flex items-center">
+        <Icon name="mdi:check-circle" size={14} class="mr-1" />
+        {feature}
+      </span>
+    ))}
+  </div>
+
+  <!-- Évaluations -->
+  {entryData.rating && entryData.reviewCount && (
+    <div class="flex items-center mt-3 mb-5">
+      <div class="flex items-center space-x-1 rtl:space-x-reverse">
+        {Array.from({ length: 5 }).map((_, i) =>
+          i < Math.round(entryData.rating || 5)
+            ? <Icon name="mdi:star" size={20} class="text-yellow-300" />
+            : <Icon name="mdi:star" size={20} class="text-gray-600" />
+        )}
+      </div>
+      <span class="text-xs text-gray-600 ml-2">({entryData.reviewCount} reviews)</span>
+    </div>
+  )}
+
+  <!-- Badge "Featured" 
+  {entryData.featured && (
+    <div class="mt-2">
+      <span class="inline-block bg-yellow-500 text-white text-sm font-semibold px-3 py-1 rounded-full">
+        Featured
+      </span>
+    </div>
+  )}-->
+
+  <!-- Bouton d'appel à l'action -->
+  <div class="mt-4 flex justify-between items-center">
+    {entryData.amazonLink && (
+      <a href={entryData.amazonLink} class="px-4 py-2 bg-blue-500 text-white rounded-md text-sm" target="_blank">Buy on Amazon</a>
+    )}
+  </div>
+  </a>
+</article>

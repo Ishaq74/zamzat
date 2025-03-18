@@ -1,0 +1,114 @@
+---
+import { Icon } from 'astro-icon/components';
+import Grid from "@components/Elements/Grid.astro";
+import Flex from '@components/Elements/Flex.astro';
+import { LOGO_URL, LOGO_ALT, SOCIAL_MEDIA, NAV_LINKS, DEFAULT_TITLE, LOGO_SIZES } from '../const';
+import { supabase } from '../lib/supabase';
+
+const { cookies } = Astro;
+const accessToken = cookies.get('sb-access-token');
+const refreshToken = cookies.get('sb-refresh-token');
+
+let user = null;
+let isAuthenticated = false;
+let isAdmin = false;
+
+if (accessToken && refreshToken) {
+  const { data: session, error } = await supabase.auth.setSession({
+    refresh_token: refreshToken.value,
+    access_token: accessToken.value,
+  });
+
+  if (!error && session?.user) {
+    user = session.user;
+    isAuthenticated = true;
+
+    // Récupération du rôle
+    const { data: roleData, error: roleError } = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', user.id) // Correction ici
+      .single();
+
+    if (!roleError) {
+      isAdmin = roleData?.role === 'Author';
+    }
+  }
+}
+
+---
+
+<Grid tag="header" gap="gap-2" xPadding="px-4" yPadding="py-4" align="center" backgroundColor="bg-black" customClasses="border-b-3 border-white border-double">
+	<img
+  src={LOGO_URL}
+  title={LOGO_ALT}
+  alt={LOGO_ALT}
+  width={LOGO_SIZES.default.width}
+  height={LOGO_SIZES.default.height}
+  class="sm:w-[LOGO_SIZES.sm.width] sm:h-[LOGO_SIZES.sm.height] md:w-[LOGO_SIZES.md.width] md:h-[LOGO_SIZES.md.height] lg:w-[LOGO_SIZES.lg.width] lg:h-[LOGO_SIZES.lg.height]"
+/>
+	<span class="text-white text-3xl">{DEFAULT_TITLE}</span>
+	<!-- Hamburger visible seulement sur les petits écrans -->
+	<Icon name="mdi:menu" title="menu" size={26} class="hamburger text-white sm:block md:hidden absolute top-4 right-4 ring-1 rounded-sm ring-white cursor-pointer" />
+</Grid>
+
+<Grid id="navbar" tag="nav" customClasses="hidden grid grid-cols-1 md:grid md:grid-cols-[1fr_auto_1fr] border-b-3 border-white border-double shadow-lg transition-[opacity,transform] duration-300 ease-in-out scale-y-95 origin-top" backgroundColor="bg-yellow-500">
+	<!-- Icône de recherche -->
+	<Icon name="mdi:search" title="search" size={26} class="mr-auto" />
+
+	<!-- Menu centré et étendu -->
+	<div class="gap-2 flex flex-col md:flex-row ">
+		{NAV_LINKS.map((link) => (
+			<a href={link.url} class="navbar-item text-black mr-4 uppercase">{link.name}</a>
+		))}
+		  {user ? (
+			<>
+			{isAuthenticated && (
+				<a href="/dashboard" class="navbar-item text-black mr-4 uppercase">
+				<Icon name="mdi:account-circle" title="Profil" size={26}/>
+				</a>
+				<a href="/api/auth/signout" class="navbar-item">
+			  <Icon name="mdi:logout" title="logout" size={26} />
+			  </a>
+				)}
+			  {isAdmin && (
+				<a href="/admin" class="navbar-item ">
+				<Icon name="mdi:account-cog" title="Admin" size={26} />
+				</a>
+			 	<a href="/api/auth/signout" class="navbar-item">
+			  	<Icon name="mdi:logout" title="logout" size={26}/>
+			  	</a>
+			  )}
+			</>
+		  ) : (
+			<>
+			  <a href="/signin" class="navbar-item">
+			  <Icon name="mdi:account-circle" title="login" size={26}/>
+			  </a>
+			</>
+		  )}
+	</div>
+	
+	<!-- Réseaux sociaux -->
+	<Flex gap="gap-2" xAlign="center" yAlign="center" wFull={false} customClasses="ml-auto">
+		{SOCIAL_MEDIA.map((social) => (
+			<a href={social.url} target="_blank" rel="noopener noreferrer">
+				<Icon name={social.iconClass} title={social.name} size={26} class="text-white p-1 bg-black rounded-full" />
+			</a>
+		))}
+	</Flex>
+</Grid>
+
+<script type="module">
+	document.addEventListener("DOMContentLoaded", () => {
+		const hamburger = document.querySelector('.hamburger');
+		const navbar = document.querySelector('#navbar');
+
+		// Gérer l'ouverture/fermeture du menu hamburger
+		hamburger.addEventListener('click', () => {
+			navbar.classList.toggle('hidden');
+
+			console.log('Menu toggle');
+		});
+	});
+</script>

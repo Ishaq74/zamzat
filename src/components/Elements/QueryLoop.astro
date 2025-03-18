@@ -1,0 +1,205 @@
+---
+import AirfryersCard from '@components/Products/ProductCard.astro';
+import ProductCategoriesCard from '@components/Products/CategoryCard.astro';
+import RecipesCard from '@components/Recipes/RecipeCard.astro';
+import RecipeCategoriesCard from '@components/Recipes/CategoryCard.astro';
+import ReviewsCard from '@components/Recipes/ReviewCard.astro';
+import BlogCard from '@components/Blog/BlogCard.astro';
+import UserCard from '@components/Users/UserCard.astro';
+import { type CollectionEntry } from 'astro:content';
+import { collections } from '../../content.config';
+import { getCollection, getEntry, getEntries } from 'astro:content';
+import Grid from './Grid.astro';
+
+// Définition des composants de cartes pour chaque collection
+const CardComponents = {
+  airfryers: AirfryersCard,
+  productcategories: ProductCategoriesCard,
+  recipes: RecipesCard,
+  recipecategories: RecipeCategoriesCard,
+  reviews: ReviewsCard,
+  blog: BlogCard,
+  users: UserCard,
+  profiles: UserCard
+};
+
+// Définition des props attendues
+interface Props {
+  collection: keyof typeof CardComponents;
+  filters?: Record<string, any>;
+  sort?: { field: string; order: 'asc' | 'desc' };
+  limit?: number;
+  references?: string[];
+  categoryFilter?: string | string[];
+  currentId?: string;
+  relatedContent?: boolean;
+  siblingsContent?: boolean;
+  relatedTo?: {
+    collection: string;
+    id: string;
+  };
+  columns?: number;
+}
+
+const {
+  collection,
+  filters = {},
+  sort,
+  limit,
+  references = [],
+  categoryFilter,
+  currentId,
+  relatedContent = false,
+  relatedTo,
+  siblingsContent = false,
+  columns = 3,
+} = Astro.props;
+
+// Obtention de l'entrée courante si un ID est passé
+const currentEntry = currentId ? await getEntry(collection, currentId) : null;
+
+// Fonction de log de performance
+function logPerformance(label: string, startTime: number, endTime: number, length: number) {
+  const executionTime = endTime - startTime;
+  console.log(`[Performance] ${label} - Time: ${executionTime.toFixed(2)}ms | Length: ${length}`);
+}
+
+// 1. Début du processus
+const startTotalTime = performance.now();
+console.log('[START] Process Started');
+
+// 2. Obtention de la collection complète
+const startEntriesFetch = performance.now();
+let entries = await getCollection(collection);
+const endEntriesFetch = performance.now();
+logPerformance('Fetching entries', startEntriesFetch, endEntriesFetch, entries.length);
+
+// Fonction de filtrage des catégories
+function checkCategory(entry: { data: { category: string } }, categoryFilter: string | string[]) {
+  const entryCategory = entry.data.category;
+  if (!entryCategory) {
+    return false;
+  }
+
+  const categoryArray = Array.isArray(categoryFilter) ? categoryFilter : [categoryFilter];
+  const isCategoryMatch = categoryArray.includes(entryCategory);
+  return isCategoryMatch;
+}
+
+// 3. Filtrage des entrées
+// 3. Filtrage des entrées avec application dynamique des filtres
+const startFiltering = performance.now();
+entries = entries.filter(entry => {
+  console.log("Filtering entry:", entry.id);
+  
+  // Filtrage par ID courant
+  if (entry.id === currentId) {
+    return false;
+  }
+
+  // Filtrage lié au contenu
+  if (relatedContent && currentEntry) {
+    const currentCategory = (currentEntry.data as { category: string }).category;
+    return checkCategory(entry as { data: { category: string } }, currentCategory);
+  }
+
+  // Contenu frère
+  if (siblingsContent) {
+    return true;
+  }
+
+  // Filtrage par catégorie si spécifié
+  if (categoryFilter) {
+    return checkCategory(entry as { data: { category: string } }, categoryFilter);
+  }
+
+  // Filtrage dynamique en fonction des filtres passés
+  for (let key in filters) {
+    if (filters.hasOwnProperty(key)) {
+      const filterValue = filters[key];
+      const entryValue = (entry.data as any)[key];
+      
+      // Si la valeur de l'entrée ne correspond pas à celle du filtre, on l'exclut
+      if (entryValue !== filterValue) {
+        return false;
+      }
+    }
+  }
+
+  // Filtrage basé sur une relation (comme "relatedTo")
+  if (relatedTo) {
+    console.log("Filtering for relatedTo:", relatedTo);
+    const relatedField = `related${relatedTo.collection.charAt(0).toUpperCase() + relatedTo.collection.slice(1)}`;
+    const relatedItems = (entry.data as any)[relatedField];
+
+    // Vérifie si l'entrée est liée à l'élément spécifié
+    const isRelated = Array.isArray(relatedItems) && relatedItems.some(item => item.id === relatedTo.id);
+
+    console.log(`Entry ${entry.id} - ${relatedField}:`, relatedItems, "Is related:", isRelated);
+    return isRelated;
+  }
+
+  return true;
+});
+const endFiltering = performance.now();
+logPerformance('Filtering entries', startFiltering, endFiltering, entries.length);
+
+// 4. Randomiser uniquement pour relatedContent
+if (relatedContent) {
+  entries = entries.sort(() => Math.random() - 0.5);
+}
+
+// 5. Application du tri si spécifié
+if (sort) {
+  const startSorting = performance.now();
+  entries.sort((a, b) => {
+    const aValue = (a.data as any)[sort.field];
+    const bValue = (b.data as any)[sort.field];
+    return (aValue < bValue ? -1 : 1) * (sort.order === 'asc' ? 1 : -1);
+  });
+  const endSorting = performance.now();
+  logPerformance('Sorting entries', startSorting, endSorting, entries.length);
+}
+
+// 6. Limitation du nombre d'entrées si un nombre limite est spécifié
+if (limit) {
+  const startLimiting = performance.now();
+  entries = entries.slice(0, limit);
+  const endLimiting = performance.now();
+  logPerformance('Limiting entries', startLimiting, endLimiting, entries.length);
+}
+
+// 7. Résolution des références pour chaque entrée
+const startResolvingReferences = performance.now();
+const resolvedEntries = await Promise.all(
+  entries.map(async (entry) => {
+    const resolvedReferences: Record<string, any> = {};
+    for (const ref of references) {
+      const refData = (entry.data as any)[ref];
+      resolvedReferences[ref] = Array.isArray(refData) ? await getEntries(refData) : await getEntry(collection, refData);
+    }
+    return { ...entry, resolvedReferences };
+  })
+);
+const endResolvingReferences = performance.now();
+logPerformance('Resolving references', startResolvingReferences, endResolvingReferences, resolvedEntries.length);
+
+// 8. Sélection du composant approprié pour la carte
+const startCardComponentSelection = performance.now();
+const CardComponent = CardComponents[collection];
+const endCardComponentSelection = performance.now();
+logPerformance('Selecting Card Component', startCardComponentSelection, endCardComponentSelection, resolvedEntries.length);
+
+// 9. Synthèse générale
+const endTotalTime = performance.now();
+const totalExecutionTime = endTotalTime - startTotalTime;
+console.log(`[FINAL PERFORMANCE] Total execution time: ${totalExecutionTime.toFixed(2)}ms`);
+console.log(`[FINAL PERFORMANCE] Entries processed: ${resolvedEntries.length} entries`);
+---
+
+<Grid tag="section" cols={columns}>
+  {console.log("Rendu des entrées:", resolvedEntries.length)}
+  {resolvedEntries.map((entry: any) => (
+    <CardComponent entry={entry} {...entry.resolvedReferences} />
+  ))}
+</Grid>

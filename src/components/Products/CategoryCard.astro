@@ -1,0 +1,31 @@
+---
+// src/components/CategoryCard.astro
+import { Icon } from 'astro-icon/components';
+import { type CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'productcategories'>;
+}
+
+const { entry } = Astro.props;
+
+if (!entry || !entry.data) {
+  return null;
+}
+
+const { 
+  name,
+  description,
+  image,
+} = entry.data;
+
+const slug = entry.data.slug;
+---
+
+<article class="bg-white border border-gray-200 p-4 text-center rounded-md shadow-md hover:shadow-xl transition-shadow h-full">
+<a href={`/airfryers/${slug}`} class="block">
+ <img src={image} alt={name} class="w-full h-36 object-cover rounded-md" />
+ <h3 class="mt-4 font-semibold text-gray-800">{name}</h3>
+ <p class="mt-2 text-gray-600">{description}</p>
+</a>
+</article>

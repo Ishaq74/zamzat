@@ -1,0 +1,40 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
+import Grid from '@components/Elements/Grid.astro';
+import QueryLoop from '@components/Elements/QueryLoop.astro';
+
+
+const pageTitle = `À propos de CommentCuireAuAirFryer`;
+const pageDescription = 'Découvrez l’histoire de CommentCuireAuAirFryer.fr et comment il peut vous aider à utiliser votre AirFryer au quotidien.';
+const pageKeywords = "cuisine, recettes, friteuse à air, cuire à l'air chaud, air fryer, airfryer";
+const pageOgImage = "";
+const pageLang = 'fr';
+const pageRobots = "index, follow";
+
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+
+<!-- Section Hero avec image d'arrière-plan dynamique -->
+<Grid tag="section" textAlign="center" backgroundColor="bg-blue-200" align="center" gap="gap-0">
+    <h1>Liste des utilisateurs de AirFryers</h1>
+    <p>Voici la liste de mes petits poulets frits</p>
+</Grid>
+
+<Grid tag="section" backgroundColor="bg-green-800" align="center" gap="gap-0">
+    <QueryLoop
+    collection={"profiles"}
+    limit={10}
+    columns={3}
+  />
+</Grid>
+
+</Layout>

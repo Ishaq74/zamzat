@@ -1,0 +1,107 @@
+---
+import type { HTMLAttributes } from "astro/types";
+import { Icon } from 'astro-icon/components'
+
+
+type LinkStyle = "primary" | "secondary" | "accent" | "outline" | "dark" | "link";
+
+// Typage Typescript
+interface Props extends HTMLAttributes<"a"> {
+  href?: string;
+  style?: LinkStyle;
+  ariaLabel?: string;
+  icon?: { name: string; side: "left" | "right" };
+  disabled?: boolean;
+  shape?: "sharp" | "rounded" | "circle";
+  customClasses?: string;
+  ypadding?: string;
+  xpadding?: string;
+  fontSize?: string;
+  fontWeight?: string;
+  isButtonStyle?: boolean;
+  fitContent?: boolean;
+  isHidden?: boolean;
+
+}
+
+// Valeurs par défault
+const {
+  href = "#",
+  style = "link",
+  ariaLabel,
+  icon,
+  disabled = false,
+  shape = "sharp",
+  customClasses = "",
+  ypadding = "py-2",
+  xpadding = "px-4",
+  fontSize = "text-base",
+  fontWeight = "font-semibold",
+  isButtonStyle = false,
+  fitContent = true,
+  isHidden = false,
+  ...htmlAttributes
+} = Astro.props as Props;
+
+// Map des styles Tailwind
+const buttonStyles = {
+  primary:
+    "text-center no-underline bg-primary text-light hover:bg-primary-light focus:ring-2 focus:ring-primary border border-primary-dark shadow-lg uppercase",
+  secondary:
+    "text-center no-underline bg-secondary text-light hover:bg-secondary-light focus:ring-2 focus:ring-secondary border border-secondary-dark shadow-lg uppercase",
+  accent:
+    "text-center no-underline bg-accent text-light hover:bg-accent-light focus:ring-2 focus:ring-accent border border-accent-dark shadow-lg uppercase",
+  outline:
+    "text-center no-underline bg-transparent text-primary border-2 border-primary hover:bg-primary-light focus:ring-2 focus:ring-primary shadow-lg uppercase",
+  dark:
+    "text-center no-underline bg-transparent text-primary border-2 border-primary hover:bg-primary-light focus:ring-2 focus:ring-primary shadow-lg",
+  link: "no-underline text-primary underline hover:text-primary-light",
+};
+
+// Map des styles pour les liens
+const linkStyles = {
+  primary:
+    "no-underline text-primary hover:text-primary-light focus:ring-2 focus:ring-primary",
+  secondary:
+    "no-underline text-secondary hover:text-secondary-light focus:ring-2 focus:ring-secondary",
+  accent:
+    "no-underline text-accent hover:text-accent-light focus:ring-2 focus:ring-accent",
+  outline:
+    "no-underline text-light hover:text-primary focus:ring-2 focus:ring-primary",
+  dark: "text-2xl no-underline text-black hover:text-accent focus:ring-2 focus:ring-primary",
+  link: "no-underline text-primary underline hover:text-primary-light",
+};
+
+
+// Utilisation des styles de bouton ou de lien
+const appliedStyles = isButtonStyle
+  ? buttonStyles[style as Exclude<LinkStyle, "link">]
+  : linkStyles[style];
+
+// Gestion des formes
+const shapeClass =
+  shape === "sharp"
+    ? "rounded-none"
+    : shape === "rounded"
+      ? "rounded-lg"
+      : "rounded-full";
+
+// Gestion du fitContent
+const fitContentClass = fitContent ? "w-fit" : "";
+
+
+// Gestion de l'affichage
+const hiddenClass = isHidden ? "hidden" : "";
+---
+
+<a
+  href={href}
+  aria-label={ariaLabel}
+  class={`inline-flex items-center justify-center ${ypadding} ${xpadding} ${fontSize} ${fontWeight} ${appliedStyles} ${shapeClass} ${fitContentClass} ${disabled ? "opacity-50 cursor-not-allowed" : ""} ${hiddenClass} ${customClasses}`}
+  tabindex={disabled ? -1 : 0}
+  {...htmlAttributes}
+>
+  {icon && icon.side === "left" && <Icon name={icon.name} class="mr-2" />}
+  <slot />
+  {icon && icon.side === "right" && <Icon name={icon.name} class="ml-2" />}
+</a>

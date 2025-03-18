@@ -1,0 +1,88 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
+import Grid from '@components/Elements/Grid.astro';
+import { getCollection } from 'astro:content';
+
+const pageTitle = `À propos de CommentCuireAuAirFryer`;
+const pageDescription = 'Découvrez l’histoire de CommentCuireAuAirFryer.fr et comment il peut vous aider à utiliser votre AirFryer au quotidien.';
+const pageKeywords = "cuisine, recettes, friteuse à air, cuire à l'air chaud, air fryer, airfryer";
+const pageOgImage = "";
+const pageLang = 'fr';
+const pageRobots = "index, follow";
+
+---
+
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+
+<!-- Section Hero avec image d'arrière-plan dynamique -->
+<Grid tag="section" textAlign="center" backgroundColor="bg-blue-200" align="center" gap="gap-0">
+    <h1>À propos de CommentCuireAuAirFryer</h1>
+    <p>Un site simple et pratique pour maîtriser votre AirFryer au quotidien.</p>
+</Grid>
+
+<Grid tag="section" backgroundColor="bg-green-800" align="center" gap="gap-0">
+<Grid tag="section" cols={2} textAlign="left" xPadding="px-0" yPadding="py-0" align="center" gap="gap-4">
+    
+    <img src="/images/cuisine-airfryer.webp" alt="Lucas en cuisine" class="rounded-lg shadow-lg w-full" />
+    
+    <Grid tag="section" backgroundColor="bg-green-200" align="center" gap="gap-0" borderRadius="rounded-lg">
+        <h2>Mon histoire</h2>
+          <p>Je suis Lucas, et l’AirFryer a transformé ma manière de cuisiner. Mais avant d’en arriver là, j’ai traversé un parcours pas comme les autres. J’ai touché à tout : de la boulangerie à la restauration, sans jamais vraiment me fixer jusqu’a ce que je découvre l’AirFryer. Cet appareil n’est pas qu’une simple friteuse, c’est un outil révolutionnaire qui simplifie la cuisine sans sacrifier le goût.</p>
+          <p>Pas de formations de chef, pas d’ambitions culinaires hors de portée. Juste des recettes simples, efficaces, et réalisables avec cet appareil magique. J’ai créé **CommentCuireAuAirFryer.fr** pour vous aider à tirer le meilleur parti de votre AirFryer, en toute simplicité.</p>
+    </Grid>
+    </Grid>
+</Grid>
+
+<Grid tag="section" backgroundColor="bg-black" align="center" textAlign="center">   
+  <h2 class="text-white">Pourquoi ce site ?</h2>
+  <p class="text-white">Parce que l’AirFryer a changé ma vie culinaire, et je suis convaincu qu’il peut aussi transformer la vôtre. Mais je me suis vite rendu compte que beaucoup de sites proposent des recettes compliquées, des accessoires inutiles, et des astuces qui ne fonctionnent pas vraiment. Ce site est une réponse directe à cette frustration.</p>
+  <p class="text-white">CommentCuireAuAirFryer.fr n’est pas ici pour vous vendre des rêves. Ce n’est pas un site de cuisine de luxe. C’est un site réaliste. On vous aide à comprendre les vrais enjeux et à maîtriser l’AirFryer au quotidien, avec des recettes simples et des tests d’accessoires fiables.</p>
+</Grid>
+
+<Grid tag="section" backgroundColor="bg-blue-200" align="center" gap="gap-2">
+<Grid tag="section" cols={2} textAlign="left" xPadding="px-0" yPadding="py-0" backgroundColor="bg-yellow-200" align="center" gap="gap-0">
+    <Grid tag="section" backgroundColor="bg-yellow-800" gap="gap-0">
+        <h2>Ce que vous ne trouverez pas ici</h2>
+        <p><Icon name="mdi:cross-circle" class="inline-block text-red-500" /> Des <strong>promesses magiques</strong> que l’AirFryer va révolutionner votre vie de manière irréaliste.</p>
+        <p><Icon name="mdi:cross-circle" class="inline-block text-red-500" /> Des <strong>recettes compliquées</strong> qui nécessitent une cuisine professionnelle pour être réussies.</p>
+        <p><Icon name="mdi:cross-circle" class="inline-block text-red-500" /> Des <strong>gadgets inutiles</strong> ou des accessoires que vous n’utiliserez jamais.</p>
+      </Grid>
+
+      <Grid tag="section" backgroundColor="bg-purple-200" gap="gap-2" yAlign="top">
+        <h2>Ce que vous trouverez ici</h2>
+            <p><Icon name="mdi:check-circle" class="inline-block text-green-500" /> Des <strong>recettes simples</strong> et testées, pour des plats savoureux et rapides.</p>
+            <p><Icon name="mdi:check-circle" class="inline-block text-green-500" /> Des <strong>tests d’accessoires</strong> pour vous éviter de gaspiller de l’argent dans des gadgets inutiles.</p>
+            <p><Icon name="mdi:check-circle" class="inline-block text-green-500" /> Des <strong>astuces pratiques</strong> pour maîtriser votre AirFryer et gagner du temps en cuisine.</p>
+      </Grid>
+    </Grid>
+  </Grid>
+
+
+    <Grid tag="section" backgroundColor="bg-red-200" align="center" gap="gap-2">
+      <h2>Rejoignez la communauté</h2>
+      <p><Icon name="mdi:lightbulb" class="inline-block text-yellow-500" /> Vous avez une astruce ou recette de cuisine au AirFryer à partager ?</p>
+          <p><Icon name="mdi:lightbulb" class="inline-block text-yellow-500" /> Vous avez testé une recette ?.</p>
+          <p><Icon name="mdi:lightbulb" class="inline-block text-yellow-500" /> Venez nous rejoindre sur les réseaux sociaux et faites partie de notre communauté !</p>
+      <p class="text-lg mt-4">   Nous échangeons, discutons, et testons ensemble pour rendre l’utilisation de l’AirFryer encore plus simple et fun.</p>
+      
+      <div class="mt-6 text-center">
+        <a href="https://www.instagram.com/CommentCuireAuAirFryer" class="inline-block mx-4 text-blue-500 hover:underline">
+          <Icon name="mdi:instagram" class="inline-block mr-2" /> Instagram
+        </a>
+        <a href="https://www.youtube.com/channel/CommentCuireAuAirFryer" class="inline-block mx-4 text-red-500 hover:underline">
+          <Icon name="mdi:youtube" class="inline-block mr-2" /> YouTube
+        </a>
+        <a href="https://www.facebook.com/CommentCuireAuAirFryer" class="inline-block mx-4 text-blue-600 hover:underline">
+          <Icon name="mdi:facebook" class="inline-block mr-2" /> Facebook
+        </a>
+      </div>
+  </Grid>
+</Layout>

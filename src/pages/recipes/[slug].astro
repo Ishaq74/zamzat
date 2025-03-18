@@ -1,0 +1,134 @@
+---
+export const prerender = false;
+import Layout from '@layouts/Layout.astro';
+import Grid from "@components/Elements/Grid.astro";
+import Flex from '@components/Elements/Flex.astro';
+import Link from '@components/Elements/Link.astro';
+import QueryLoop from '@components/Elements/QueryLoop.astro';
+import { getEntry, getCollection } from 'astro:content';
+
+const { slug } = Astro.params;
+
+console.log('Slug demandé depuis l\'URL :', slug);
+
+const recipes = await getCollection('recipes');
+
+console.log('Nombre de recettes chargées :', recipes.length);
+console.log('Slugs disponibles dans recipes :', recipes.map(r => r.data.slug));
+
+const recipe = recipes.find((recipe) => recipe.data.slug === slug);
+
+if (!recipe) {
+  console.log('Aucune recette trouvée pour le slug :', slug);
+  return Astro.redirect("/404");
+}
+
+const { id, data: recipedata } = recipe;
+
+console.log('Recette trouvée :', recipedata);
+
+const authorData = recipedata.author ? await getEntry('profiles', recipedata.author) : null;
+const categoryData = recipedata.category ? await getEntry('recipecategories', recipedata.category) : null;
+
+console.log('Auteur :', authorData);
+console.log('Catégorie :', categoryData);
+
+const pageTitle = recipedata.name;
+const pageDescription = recipedata.description || `Découvrez la recette ${recipedata.name} pour friteuse à air.`;
+const pageKeywords = "cuisine, recettes, friteuse à air, air fryer, airfryer";
+const pageOgImage = recipedata.image || '/default-og-image.jpg';
+const pageLang = "fr";
+const pageRobots = "index, follow";
+---
+
+<Layout 
+  title={pageTitle} 
+  description={pageDescription} 
+  keywords={pageKeywords} 
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+  <Grid tag="article" class="max-w-4xl mx-auto p-4">
+    <Grid tag="section" cols={2} xPadding="px-0" yPadding="py-0" gap="gap-4">
+      <Grid tag="div" xPadding="px-0" yPadding="py-0" hFull={false}>
+        <h1 class="text-2xl font-bold text-gray-800">{recipedata.name}</h1>  
+        {recipedata.description && <p class="mt-2 text-gray-600">{recipedata.description}</p>}
+        
+        {(categoryData || recipedata.featured) && (
+          <div class="flex flex-wrap items-center gap-2 mt-4">
+            {categoryData && (
+              <Link 
+                href={`/recipes/category/${categoryData.data.slug}`} 
+                class="inline-block bg-gray-200 text-gray-700 px-2 py-1 text-sm rounded-full hover:bg-gray-300"
+              >
+                {categoryData.data.name}
+              </Link>
+            )}
+            {recipedata.featured && (
+              <span class="bg-yellow-500 text-white text-sm font-semibold px-3 py-1 rounded-full">
+                Featured
+              </span>
+            )}
+          </div>
+        )}
+        
+        {recipedata.ingredients && recipedata.ingredients.length > 0 && (
+          <section class="mt-6">
+            <h2 class="text-2xl font-semibold text-gray-800">Ingrédients</h2>
+            <ul class="list-disc pl-5 mt-2 text-gray-700">
+              {recipedata.ingredients.map(ing => (
+                <li>{ing}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {recipedata.tags && recipedata.tags.length > 0 && ( 
+          <section class="mt-6">
+            <h2 class="text-2xl font-semibold text-gray-800">Tags</h2>
+            <div class="flex flex-wrap gap-2 mt-2">
+              {recipedata.tags.map(tag => (
+                <span class="bg-green-200 text-green-800 px-2 py-1 text-sm rounded-full">{tag}</span>
+              ))}
+            </div>
+          </section>
+        )}
+      </Grid>
+
+      <Grid tag="div" xPadding="px-0" yPadding="py-0" hFull={false}>
+        {recipedata.image && (
+          <img 
+            src={recipedata.image} 
+            alt={recipedata.name} 
+            class="w-full h-64 object-cover rounded-md shadow-lg" 
+          />
+        )}
+        {recipedata.instructions && (
+          <section class="mt-6">
+            <h2 class="text-2xl font-semibold text-gray-800">Instructions</h2>
+            <div class="mt-2 text-gray-700 whitespace-pre-line">{recipedata.instructions}</div>
+          </section>
+        )}
+        <section class="mt-6">
+          <h2 class="text-2xl font-semibold text-gray-800">Avis</h2>
+          <QueryLoop 
+            collection="reviews"
+            relatedTo={{ collection: "recipes", id: id }}
+            columns={1}
+          />
+        </section>
+      </Grid>
+    </Grid>
+
+    <Grid tag="section" backgroundColor="bg-yellow-100" class="mt-12 p-4 rounded-lg">
+      <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recettes similaires</h2>
+      <QueryLoop 
+        collection="recipes"
+        relatedContent={true}
+        limit={4}
+        currentId={id}
+      />
+    </Grid>
+  </Grid>
+</Layout>

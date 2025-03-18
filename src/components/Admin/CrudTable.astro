@@ -1,0 +1,283 @@
+---
+import { fetchTableData, inferSchemaFromSample, loadOptions } from '@lib/utils';
+import type { TableSchema, Option } from '../../types';
+
+interface Props {
+  table: string;
+}
+
+const { table } = Astro.props;
+console.log(`Initialisation CrudTable pour ${table}`);
+
+const items = await fetchTableData(table);
+console.log(`Items chargés pour ${table}:`, items);
+
+const schema: TableSchema = items.length > 0 
+  ? await inferSchemaFromSample(table, items[0]) 
+  : { fields: [], primaryKey: 'id' };
+console.log(`Schéma inféré pour ${table}:`, schema);
+
+const optionsMap: Record<string, Option[]> = {};
+for (const field of schema.fields) {
+  if (field.type === 'select' && field.relation) {
+    optionsMap[field.name] = await loadOptions(field);
+  }
+}
+console.log(`OptionsMap pour ${table}:`, optionsMap);
+---
+
+<div class="p-4 sm:p-6 bg-gray-100 min-h-screen">
+  <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-6 capitalize">{table}</h2>
+
+  <input
+    type="text"
+    id="search"
+    placeholder={`Rechercher dans ${table}...`}
+    class="mb-6 w-full max-w-md p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+  />
+
+  <div id="items-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-8">
+    {items.map(item => (
+      <div class="bg-white shadow-lg rounded-lg p-4 sm:p-5 hover:shadow-xl transition-shadow">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">{item.name || item.title || item.id}</h3>
+        {schema.fields.map(field => field.name !== 'id' && item[field.name] != null && (
+          <p class="text-gray-600 text-xs sm:text-sm">
+            <span class="font-medium">{field.label}:</span> 
+            {field.type === 'boolean' ? (
+              item[field.name] ? 'Oui' : 'Non'
+            ) : field.type === 'select' ? (
+              optionsMap[field.name]?.find(opt => opt.value === String(item[field.name]))?.label || item[field.name]
+            ) : (
+              String(item[field.name])
+            )}
+          </p>
+        ))}
+        <div class="mt-4 flex gap-4">
+          <button data-id={item.id} class="edit-btn text-blue-600 hover:underline font-medium text-xs sm:text-sm">Éditer</button>
+          <button data-id={item.id} class="delete-btn text-red-600 hover:underline font-medium text-xs sm:text-sm">Supprimer</button>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <form id="crud-form" class="bg-white shadow-lg rounded-lg p-4 sm:p-6 w-full max-w-xl mx-auto">
+    <h3 class="text-lg sm:text-xl font-semibold text-gray-800 mb-4" id="form-title">Ajouter un élément</h3>
+    <div class="mb-4 hidden" id="id-container">
+      <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">ID</label>
+      <input 
+        type="text" 
+        id="id-field" 
+        class="mt-1 block w-full border-gray-300 rounded-md p-2 bg-gray-200 cursor-not-allowed" 
+        disabled 
+      />
+    </div>
+    {schema.fields.filter(f => f.name !== 'id').map(field => (
+      <div class="mb-4">
+        <label class="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
+          {field.label} {field.required && <span class="text-red-500">*</span>}
+        </label>
+        {field.type === 'boolean' ? (
+          <input type="checkbox" name={field.name} class="mt-1 h-5 w-5 text-blue-600" />
+        ) : field.type === 'textarea' ? (
+          <textarea name={field.name} class="mt-1 block w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"></textarea>
+        ) : field.type === 'select' ? (
+          <select name={field.name} class="mt-1 block w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500">
+            <option value="">Sélectionner</option>
+            {optionsMap[field.name]?.map(option => (
+              <option value={option.value}>{option.label}</option>
+            ))}
+          </select>
+        ) : (
+          <input 
+            type={field.type === 'number' ? 'number' : 'text'} 
+            name={field.name} 
+            class="mt-1 block w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring-blue-500 focus:border-blue-500" 
+          />
+        )}
+      </div>
+    ))}
+    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors">
+      Sauvegarder
+    </button>
+  </form>
+</div>
+
+<script define:vars={{ table, schema: JSON.stringify(schema), initialItems: JSON.stringify(items), optionsMap: JSON.stringify(optionsMap) }}>
+  let items = JSON.parse(initialItems);
+  console.log(`Items initiaux pour ${table}:`, items);
+  let isEditing = false;
+  let editId = null;
+  const parsedSchema = JSON.parse(schema);
+  const parsedOptionsMap = JSON.parse(optionsMap);
+
+  const form = document.getElementById('crud-form');
+  const searchInput = document.getElementById('search');
+  const idField = document.getElementById('id-field');
+  const idContainer = document.getElementById('id-container');
+  const formTitle = document.getElementById('form-title');
+
+  async function fetchItems() {
+    console.log(`Rafraîchissement des données pour ${table} via API`);
+    const response = await fetch(`/api/${table}/get`);
+    if (!response.ok) {
+      const error = await response.json();
+      console.error(`Erreur chargement ${table}:`, error);
+      throw new Error(error.message);
+    }
+    const data = await response.json();
+    console.log(`Données rafraîchies pour ${table}:`, data);
+    items = data;
+    return items;
+  }
+
+  function renderItems(filteredItems = items) {
+    console.log(`Rendu des éléments pour ${table}, filtrés:`, filteredItems);
+    const list = document.getElementById('items-list');
+    list.innerHTML = filteredItems.map(item => `
+      <div class="bg-white shadow-lg rounded-lg p-4 sm:p-5 hover:shadow-xl transition-shadow">
+        <h3 class="text-base sm:text-lg font-semibold text-gray-900 mb-2">${item.name || item.title || item.id}</h3>
+        ${parsedSchema.fields.map(field => field.name !== 'id' && item[field.name] != null ? `
+          <p class="text-gray-600 text-xs sm:text-sm">
+            <span class="font-medium">${field.label}:</span> 
+            ${field.type === 'boolean' ? (item[field.name] ? 'Oui' : 'Non') : 
+              field.type === 'select' ? 
+              (parsedOptionsMap[field.name]?.find(opt => opt.value === String(item[field.name]))?.label || item[field.name]) : 
+              String(item[field.name])}
+          </p>
+        ` : '').join('')}
+        <div class="mt-4 flex gap-4">
+          <button data-id="${item.id}" class="edit-btn text-blue-600 hover:underline font-medium text-xs sm:text-sm">Éditer</button>
+          <button data-id="${item.id}" class="delete-btn text-red-600 hover:underline font-medium text-xs sm:text-sm">Supprimer</button>
+        </div>
+      </div>
+    `).join('');
+
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        isEditing = true;
+        editId = btn.dataset.id;
+        console.log(`Édition de l'élément ${editId} dans ${table}`);
+        const item = items.find(i => String(i.id) === editId);
+        for (const [key, value] of Object.entries(item)) {
+          if (key !== 'id') {
+            const input = form.querySelector(`[name="${key}"]`);
+            if (input) {
+              if (input.type === 'checkbox') {
+                input.checked = value === true;
+                console.log(`Checkbox ${key} défini à ${value}`);
+              } else {
+                input.value = value || '';
+                console.log(`Champ ${key} défini à ${value}`);
+              }
+            }
+          }
+        }
+        idField.value = editId || '';
+        idContainer.classList.remove('hidden');
+        formTitle.textContent = 'Modifier un élément';
+      });
+    });
+
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.dataset.id;
+        console.log(`Tentative de suppression de l'élément ${id} dans ${table}`);
+        if (confirm('Voulez-vous vraiment supprimer cet élément ?')) {
+          const response = await fetch(`/api/${table}/delete`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id })
+          });
+          if (!response.ok) {
+            const error = await response.json();
+            console.error(`Erreur suppression ${id}:`, error);
+            alert(`Erreur: ${error.message}`);
+          } else {
+            console.log(`Élément ${id} supprimé avec succès`);
+            await fetchItems();
+            renderItems();
+          }
+        }
+      });
+    });
+  }
+
+  searchInput.addEventListener('input', () => {
+    const searchTerm = searchInput.value.toLowerCase();
+    console.log(`Recherche dynamique dans ${table} avec terme: ${searchTerm}`);
+    const filteredItems = items.filter(item =>
+      Object.values(item).some(value =>
+        String(value).toLowerCase().includes(searchTerm)
+      )
+    );
+    console.log(`Éléments filtrés pour ${table}:`, filteredItems);
+    renderItems(filteredItems);
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const data = {};
+
+    parsedSchema.fields.filter(f => f.name !== 'id').forEach(field => {
+      const value = formData.get(field.name);
+      if (field.type === 'boolean') {
+        data[field.name] = value === 'on';
+      } else if (field.type === 'number' && value) {
+        data[field.name] = Number(value);
+      } else {
+        data[field.name] = value;
+      }
+    });
+
+    console.log(`Données nettoyées du formulaire pour ${table}:`, data);
+
+    try {
+      let response;
+      if (isEditing && editId) {
+        console.log(`Envoi PUT pour ${table} avec ID ${editId} et données:`, data);
+        response = await fetch(`/api/${table}/put`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: editId, ...data })
+        });
+        if (!response.ok) {
+          const error = await response.json();
+          console.error(`Erreur PUT ${table} ID ${editId}:`, error.message);
+          throw new Error(error.message);
+        }
+        const updatedItem = await response.json();
+        console.log(`Mise à jour réussie pour ${editId}:`, updatedItem);
+      } else {
+        console.log(`Envoi POST pour ${table} avec données:`, data);
+        response = await fetch(`/api/${table}/post`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!response.ok) {
+          const error = await response.json();
+          console.error(`Erreur POST ${table}:`, error.message);
+          throw new Error(error.message);
+        }
+        const newItem = await response.json();
+        console.log(`Création réussie:`, newItem);
+      }
+      isEditing = false;
+      editId = null;
+      idField.value = '';
+      idContainer.classList.add('hidden');
+      formTitle.textContent = 'Ajouter un élément';
+      form.reset();
+      await fetchItems();
+      renderItems();
+    } catch (e) {
+      console.error(`Erreur lors de l'opération sur ${table}:`, e.message);
+      alert(`Erreur: ${e.message}`);
+    }
+  });
+
+  idContainer.classList.add('hidden');
+  console.log(`Initialisation complète pour ${table}`);
+  renderItems();
+</script>

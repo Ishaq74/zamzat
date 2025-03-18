@@ -1,0 +1,16 @@
+---
+const accessToken = Astro.cookies.get("accessToken") || "";
+if (!accessToken) {
+  return Astro.redirect("/login");
+}
+---
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <h1>Dashboard</h1>
+    <p><a href="/profile">Retour au profil</a></p>
+  </body>
+</html>

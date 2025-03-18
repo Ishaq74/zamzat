@@ -1,0 +1,118 @@
+---
+import Layout from '@layouts/Layout.astro';
+import { Icon } from 'astro-icon/components';
+import Grid from '@components/Elements/Grid.astro';
+import ProductList from '@components/Products/ProductList.astro';
+import { getCollection } from 'astro:content';
+
+// Page d'Index des Airfryers (collection : airfryers)
+const pageTitle = `Contacter CommentCuireauAirfryer`;
+const pageDescription = 'Partagez vos avis et commentaires sur CommentCuireauAirfryer';
+const pageKeywords = "cuisine, recettes, friteuse à air, cuire à l'air chaud, air fryer, airfryer";
+const pageOgImage = "";
+const pageLang = 'fr';
+const pageRobots = "noindex, nofollow";
+---
+<Layout
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+  <!-- Section Hero avec image d'arrière-plan dynamique -->
+<Grid tag="section" backgroundColor="bg-blue-200" align="center" gap="gap-0">
+      <h1 class="text-5xl font-extrabold">Contactez-nous</h1>
+      <p class="mt-4 text-xl">Nous sommes là pour répondre à vos questions et suggestions.</p>
+</Grid>
+
+<Grid tag="section" cols={2} textAlign="left" xPadding="px-0" yPadding="py-0" gap="gap-2 md:gap-4">
+  
+  <!-- Section Map interactive (optionnelle) -->
+    <Grid tag="section" xAlign="start" hFull={false}>
+        <h2>Où nous trouver ?</h2>
+        <div class="bg-gray-200 rounded-xl shadow-lg">
+        <!-- Ici, on peut intégrer une carte interactive via une iframe Google Maps ou un autre service -->
+        <div class="h-96 bg-gray-400 rounded-lg"></div>
+        </div>
+    </Grid>
+
+  <!-- Section principale avec formulaire -->
+  <Grid tag="section" hFull={false} textAlign="left">
+    <h2>Laissez-nous un message</h2>
+    <p>Si vous avez une question, une suggestion ou un problème, nous sommes à votreécoute. Remplissez le formulaire ci-dessous, et nous reviendrons vers vous rapidement.</p>
+    <!-- Formulaire de contact -->
+    <form class="mx-auto bg-white rounded-xl shadow-xl">
+      <div class="grid md:grid-cols-2 gap-8">
+        <div class="mb-6">
+          <label for="name" class="block text-lg font-semibold text-gray-700">Nom</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            class="w-full p-4 mt-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+            placeholder="Votre nom"
+            required
+          />
+        </div>
+        <div class="mb-6">
+          <label for="email" class="block text-lg font-semibold text-gray-700">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="w-full p-4 mt-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+            placeholder="Votre email"
+            required
+          />
+        </div>
+      </div>
+      <div class="mb-6">
+        <label for="message" class="block text-lg font-semibold text-gray-700">Message</label>
+        <textarea
+          id="message"
+          name="message"
+          rows="5"
+          class="w-full p-4 mt-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500"
+          placeholder="Écrivez votre message ici..."
+          required
+        ></textarea>
+      </div>
+
+      <button
+        type="submit"
+        class="w-full py-3 mt-4 bg-blue-600 text-white rounded-lg hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300"
+      >
+        Envoyer le message
+      </button>
+    </form>
+  </Grid>
+</Grid>
+
+  <!-- Section Contact alternatif -->
+  <Grid tag="section">
+    <div class="container mx-auto text-center">
+      <h2 class="text-3xl font-semibold text-gray-800">Vous préférez nous contacter autrement ?</h2>
+      <p class="mt-4 text-lg text-gray-600">N'hésitez pas à utiliser un des moyens ci-dessous pour nous joindre directement.</p>
+      <div class="mt-8 flex justify-center gap-12">
+        <div class="text-center">
+          <Icon name="mdi:mail" class="text-4xl text-blue-600 mx-auto" />
+          <h3 class="text-xl font-semibold text-gray-800">Email</h3>
+          <p class="mt-2 text-lg text-gray-600">contact@commentcuireauairfryer.com</p>
+        </div>
+        <div class="text-center">
+          <Icon name="mdi:phone" class="text-4xl text-blue-600 mx-auto" />
+          <h3 class="text-xl font-semibold text-gray-800">Téléphone</h3>
+          <p class="mt-2 text-lg text-gray-600">+33 1 23 45 67 89</p>
+        </div>
+        <div class="text-center">
+          <Icon name="mdi:map-marker" class="text-4xl text-blue-600 mx-auto" />
+          <h3 class="text-xl font-semibold text-gray-800">Adresse</h3>
+          <p class="mt-2 text-lg text-gray-600">123 Rue de l'Innovation, Paris, France</p>
+        </div>
+      </div>
+    </div>
+  </Grid>
+
+</Layout>

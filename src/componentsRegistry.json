@@ -1,0 +1,1789 @@
+{
+  "card": {
+    "name": "Card",
+    "props": {
+      "item": {
+        "type": "TableData;",
+        "default": "",
+        "label": "Item"
+      },
+      "schema": {
+        "type": "TableSchema;",
+        "default": "",
+        "label": "Schema"
+      },
+      "optionsMap": {
+        "type": "Record<string, Option[]>;",
+        "default": "",
+        "label": "OptionsMap"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Admin",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'card'}</div>`"
+  },
+  "crudtable": {
+    "name": "Crudtable",
+    "props": {
+      "table": {
+        "type": "string;",
+        "default": "",
+        "label": "Table"
+      },
+      "console.log(`Items chargés pour ${table}": {
+        "type": "`, items);",
+        "default": "",
+        "label": "Console.log(`Items chargés pour ${table}"
+      },
+      "const schema": {
+        "type": "TableSchema = items.length > 0",
+        "default": "",
+        "label": "Const schema"
+      },
+      "console.log(`Schéma inféré pour ${table}": {
+        "type": "`, schema);",
+        "default": "",
+        "label": "Console.log(`Schéma inféré pour ${table}"
+      },
+      "const optionsMap": {
+        "type": "Record<string, Option[]> = {};",
+        "default": "",
+        "label": "Const optionsMap"
+      },
+      "console.log(`OptionsMap pour ${table}": {
+        "type": "`, optionsMap);",
+        "default": "",
+        "label": "Console.log(`OptionsMap pour ${table}"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Admin",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'crudtable'}</div>`"
+  },
+  "dashboard": {
+    "name": "Dashboard",
+    "props": {
+      "console.log('Tables disponibles dans Dashboard": {
+        "type": "', collectionNames);",
+        "default": "",
+        "label": "Console.log('Tables disponibles dans Dashboard"
+      },
+      "console.log('Table sélectionnée dans Dashboard": {
+        "type": "', selectedTable);",
+        "default": "",
+        "label": "Console.log('Table sélectionnée dans Dashboard"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Admin",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'dashboard'}</div>`"
+  },
+  "basehead": {
+    "name": "Basehead",
+    "props": {
+      "title": {
+        "type": "string;",
+        "default": "",
+        "label": "Title"
+      },
+      "description": {
+        "type": "string;",
+        "default": "",
+        "label": "Description"
+      },
+      "image?": {
+        "type": "string;",
+        "default": "",
+        "label": "Image?"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Uncategorized",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'basehead'}</div>`"
+  },
+  "blogcard": {
+    "name": "Blogcard",
+    "props": {
+      "import { getEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { getEntry } from 'astro"
+      },
+      "const categoryData = entryData.category ? await getEntry('blogcategories', entryData.category)": {
+        "type": "null;",
+        "default": "",
+        "label": "Const categoryData = entryData.category ? await getEntry('blogcategories', entryData.category)"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Blog",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'blogcard'}</div>`"
+  },
+  "blogfilter": {
+    "name": "Blogfilter",
+    "props": {
+      "import { getCollection, type CollectionEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { getCollection, type CollectionEntry } from 'astro"
+      },
+      "collection": {
+        "type": "'blog';",
+        "default": "",
+        "label": "Collection"
+      },
+      "initialFilters?": {
+        "type": "{",
+        "default": "",
+        "label": "InitialFilters?"
+      },
+      "category?": {
+        "type": "string;",
+        "default": "",
+        "label": "Category?"
+      },
+      "search?": {
+        "type": "string;",
+        "default": "",
+        "label": "Search?"
+      },
+      "dateRange?": {
+        "type": "{ start",
+        "default": "",
+        "label": "DateRange?"
+      },
+      "limit?": {
+        "type": "number;",
+        "default": "",
+        "label": "Limit?"
+      },
+      "let blogPosts": {
+        "type": "CollectionEntry<'blog'>[] = await getCollection(collection);",
+        "default": "",
+        "label": "Let blogPosts"
+      },
+      "console.log(\"Nombre total d'articles de blog": {
+        "type": "\", blogPosts.length);",
+        "default": "",
+        "label": "Console.log(\"Nombre total d'articles de blog"
+      },
+      "const allCategories": {
+        "type": "string[] = [...new Set(blogPosts.map(post => post.data.category))];",
+        "default": "",
+        "label": "Const allCategories"
+      },
+      "function matchesFilters(post": {
+        "type": "CollectionEntry<'blog'>, filters",
+        "default": "",
+        "label": "Function matchesFilters(post"
+      },
+      "return Object.entries(filters as { [key": {
+        "type": "string]",
+        "default": "",
+        "label": "Return Object.entries(filters as { [key"
+      },
+      "console.log(\"Nombre d'articles après filtres initiaux": {
+        "type": "\", blogPosts.length);",
+        "default": "",
+        "label": "Console.log(\"Nombre d'articles après filtres initiaux"
+      },
+      "console.log(\"Nombre d'articles après limite": {
+        "type": "\", blogPosts.length);",
+        "default": "",
+        "label": "Console.log(\"Nombre d'articles après limite"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Blog",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'blogfilter'}</div>`"
+  },
+  "button": {
+    "name": "Button",
+    "props": {
+      "style?": {
+        "type": "ButtonStyle;",
+        "default": "",
+        "label": "Style?"
+      },
+      "ariaLabel?": {
+        "type": "string;",
+        "default": "",
+        "label": "AriaLabel?"
+      },
+      "icon?": {
+        "type": "{ name",
+        "default": "",
+        "label": "Icon?"
+      },
+      "disabled?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "Disabled?"
+      },
+      "shape?": {
+        "type": "'sharp' | 'rounded' | 'circle';",
+        "default": "",
+        "label": "Shape?"
+      },
+      "customClasses?": {
+        "type": "string;",
+        "default": "",
+        "label": "CustomClasses?"
+      },
+      "paddingY?": {
+        "type": "string;",
+        "default": "",
+        "label": "PaddingY?"
+      },
+      "paddingX?": {
+        "type": "string;",
+        "default": "",
+        "label": "PaddingX?"
+      },
+      "fontSize?": {
+        "type": "string;",
+        "default": "",
+        "label": "FontSize?"
+      },
+      "fontWeight?": {
+        "type": "string;",
+        "default": "",
+        "label": "FontWeight?"
+      },
+      "fitContent?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "FitContent?"
+      },
+      "onClick?": {
+        "type": "() => void;",
+        "default": "",
+        "label": "OnClick?"
+      },
+      "\"text-center no-underline bg-primary text-light hover": {
+        "type": "bg-primary-light focus",
+        "default": "",
+        "label": "\"text-center no-underline bg-primary text-light hover"
+      },
+      "\"text-center no-underline bg-secondary text-light hover": {
+        "type": "bg-secondary-light focus",
+        "default": "",
+        "label": "\"text-center no-underline bg-secondary text-light hover"
+      },
+      "\"text-center no-underline bg-accent text-light hover": {
+        "type": "bg-accent-light focus",
+        "default": "",
+        "label": "\"text-center no-underline bg-accent text-light hover"
+      },
+      "\"text-center no-underline bg-transparent text-primary border-2 border-primary hover": {
+        "type": "bg-primary-light focus",
+        "default": "",
+        "label": "\"text-center no-underline bg-transparent text-primary border-2 border-primary hover"
+      },
+      "const shapeClass = shape === 'sharp' ? 'rounded-none'": {
+        "type": "shape === 'rounded' ? 'rounded-lg'",
+        "default": "",
+        "label": "Const shapeClass = shape === 'sharp' ? 'rounded-none'"
+      },
+      "const fitContentClass = fitContent ? 'w-fit'": {
+        "type": "'';",
+        "default": "",
+        "label": "Const fitContentClass = fitContent ? 'w-fit'"
+      }
+    },
+    "allowsNesting": true,
+    "styles": "",
+    "category": "Elements",
+    "render": "(props) => `<button style=\"background-color: ${props.backgroundColor || '#007bff'}; color: ${props.color || '#fff'}; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer;\">${props.text || 'Bouton'}</button>`"
+  },
+  "crudauto": {
+    "name": "Crudauto",
+    "props": {
+      "table": {
+        "type": "string;",
+        "default": "",
+        "label": "Table"
+      },
+      "fields": {
+        "type": "{",
+        "default": "",
+        "label": "Fields"
+      },
+      "name": {
+        "type": "string;",
+        "default": "",
+        "label": "Name"
+      },
+      "type": {
+        "type": "'text' | 'number' | 'select';",
+        "default": "",
+        "label": "Type"
+      },
+      "label?": {
+        "type": "string; // Label personnalisé",
+        "default": "",
+        "label": "Label?"
+      },
+      "options?": {
+        "type": "string[];",
+        "default": "",
+        "label": "Options?"
+      },
+      "required?": {
+        "type": "boolean; // Champ requis ou non",
+        "default": "",
+        "label": "Required?"
+      },
+      "async function handleSubmit(event": {
+        "type": "Event) {",
+        "default": "",
+        "label": "Async function handleSubmit(event"
+      },
+      "method": {
+        "type": "'POST',",
+        "default": "",
+        "label": "Method"
+      },
+      "headers": {
+        "type": "{",
+        "default": "",
+        "label": "Headers"
+      },
+      "'Content-Type'": {
+        "type": "'application/json',",
+        "default": "",
+        "label": "'Content-Type'"
+      },
+      "'X-Requested-With'": {
+        "type": "'XMLHttpRequest', // Sécurité CSRF basique",
+        "default": "",
+        "label": "'X-Requested-With'"
+      },
+      "body": {
+        "type": "JSON.stringify(data),",
+        "default": "",
+        "label": "Body"
+      },
+      "form.reset(); // UX": {
+        "type": "Reset le formulaire après succès",
+        "default": "",
+        "label": "Form.reset(); // UX"
+      },
+      "alert(`Erreur": {
+        "type": "${result.error || 'Échec de la création'}`);",
+        "default": "",
+        "label": "Alert(`Erreur"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Elements",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'crudauto'}</div>`"
+  },
+  "filter": {
+    "name": "Filter",
+    "props": {
+      "import { getCollection, getEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { getCollection, getEntry } from 'astro"
+      },
+      "type": {
+        "type": "'search' | 'select' | 'checkbox' | 'range';",
+        "default": "",
+        "label": "Type"
+      },
+      "name": {
+        "type": "string;",
+        "default": "",
+        "label": "Name"
+      },
+      "label": {
+        "type": "string;",
+        "default": "",
+        "label": "Label"
+      },
+      "options?": {
+        "type": "string[];",
+        "default": "",
+        "label": "Options?"
+      },
+      "min?": {
+        "type": "number;",
+        "default": "",
+        "label": "Min?"
+      },
+      "max?": {
+        "type": "number;",
+        "default": "",
+        "label": "Max?"
+      },
+      "reference?": {
+        "type": "{",
+        "default": "",
+        "label": "Reference?"
+      },
+      "collection": {
+        "type": "string;",
+        "default": "",
+        "label": "Collection"
+      },
+      "valueField": {
+        "type": "string;",
+        "default": "",
+        "label": "ValueField"
+      },
+      "labelField": {
+        "type": "string;",
+        "default": "",
+        "label": "LabelField"
+      },
+      "filters": {
+        "type": "FilterOption[];",
+        "default": "",
+        "label": "Filters"
+      },
+      "CardComponent": {
+        "type": "any;",
+        "default": "",
+        "label": "CardComponent"
+      },
+      "async function getUniqueValues(filter": {
+        "type": "FilterOption) {",
+        "default": "",
+        "label": "Async function getUniqueValues(filter"
+      },
+      ".map(async f => ({ filter": {
+        "type": "f, options",
+        "default": "",
+        "label": ".map(async f => ({ filter"
+      },
+      "return { id": {
+        "type": "item.id, data };",
+        "default": "",
+        "label": "Return { id"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Elements",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'filter'}</div>`"
+  },
+  "flex": {
+    "name": "Flex",
+    "props": {
+      "tag?": {
+        "type": "FlexTag; // Le tag peut être 'div', 'section', ou 'span'",
+        "default": "",
+        "label": "Tag?"
+      },
+      "xAlign?": {
+        "type": "'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly';",
+        "default": "",
+        "label": "XAlign?"
+      },
+      "yAlign?": {
+        "type": "'start' | 'center' | 'end' | 'stretch';",
+        "default": "",
+        "label": "YAlign?"
+      },
+      "direction?": {
+        "type": "'row' | 'column';",
+        "default": "",
+        "label": "Direction?"
+      },
+      "wrap?": {
+        "type": "'wrap' | 'nowrap';",
+        "default": "",
+        "label": "Wrap?"
+      },
+      "yPadding?": {
+        "type": "string;",
+        "default": "",
+        "label": "YPadding?"
+      },
+      "xPadding?": {
+        "type": "string;",
+        "default": "",
+        "label": "XPadding?"
+      },
+      "marginY?": {
+        "type": "string;",
+        "default": "",
+        "label": "MarginY?"
+      },
+      "marginX?": {
+        "type": "string;",
+        "default": "",
+        "label": "MarginX?"
+      },
+      "gap?": {
+        "type": "string;",
+        "default": "",
+        "label": "Gap?"
+      },
+      "customClasses?": {
+        "type": "string;",
+        "default": "",
+        "label": "CustomClasses?"
+      },
+      "backgroundColor?": {
+        "type": "string;",
+        "default": "",
+        "label": "BackgroundColor?"
+      },
+      "wFull?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "WFull?"
+      },
+      "hFull?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "HFull?"
+      },
+      "const backgroundClass = backgroundColor ? `bg-${backgroundColor}`": {
+        "type": "\"bg-light\";",
+        "default": "",
+        "label": "Const backgroundClass = backgroundColor ? `bg-${backgroundColor}`"
+      },
+      "wrap === 'wrap' ? 'flex-wrap'": {
+        "type": "'flex-nowrap', // Wrap ou nowrap",
+        "default": "",
+        "label": "Wrap === 'wrap' ? 'flex-wrap'"
+      },
+      "wFull ? 'w-full'": {
+        "type": "'', // Largeur pleine",
+        "default": "",
+        "label": "WFull ? 'w-full'"
+      },
+      "hFull ? 'h-full'": {
+        "type": "'', // Hauteur pleine",
+        "default": "",
+        "label": "HFull ? 'h-full'"
+      }
+    },
+    "allowsNesting": true,
+    "styles": "",
+    "category": "Elements",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'flex'}</div>`"
+  },
+  "grid": {
+    "name": "Grid",
+    "props": {
+      "id?": {
+        "type": "string;",
+        "default": "",
+        "label": "Id?"
+      },
+      "tag?": {
+        "type": "\"div\" | \"section\" | \"span\" | \"nav\" | \"main\" | \"header\" | \"footer\" | \"article\" ;",
+        "default": "",
+        "label": "Tag?"
+      },
+      "cols?": {
+        "type": "string;",
+        "default": "",
+        "label": "Cols?"
+      },
+      "autoFit?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "AutoFit?"
+      },
+      "autoFill?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "AutoFill?"
+      },
+      "overflowHidden?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "OverflowHidden?"
+      },
+      "gap?": {
+        "type": "string;",
+        "default": "",
+        "label": "Gap?"
+      },
+      "animate?": {
+        "type": "string; // Animation lors de l'apparition",
+        "default": "",
+        "label": "Animate?"
+      },
+      "hoverAnimate?": {
+        "type": "string; // Animation sur hover",
+        "default": "",
+        "label": "HoverAnimate?"
+      },
+      "focusAnimate?": {
+        "type": "string;",
+        "default": "",
+        "label": "FocusAnimate?"
+      },
+      "activeAnimate?": {
+        "type": "string;",
+        "default": "",
+        "label": "ActiveAnimate?"
+      },
+      "disabled?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "Disabled?"
+      },
+      "hidden?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "Hidden?"
+      },
+      "zIndex?": {
+        "type": "string;",
+        "default": "",
+        "label": "ZIndex?"
+      },
+      "yAlign?": {
+        "type": "\"top\" | \"center\" | \"bottom\" | \"stretch\";",
+        "default": "",
+        "label": "YAlign?"
+      },
+      "align?": {
+        "type": "\"center\";",
+        "default": "",
+        "label": "Align?"
+      },
+      "textAlign?": {
+        "type": "\"left\" | \"center\" | \"right\";",
+        "default": "",
+        "label": "TextAlign?"
+      },
+      "yPadding?": {
+        "type": "string;",
+        "default": "",
+        "label": "YPadding?"
+      },
+      "xPadding?": {
+        "type": "string;",
+        "default": "",
+        "label": "XPadding?"
+      },
+      "xmargin?": {
+        "type": "string;",
+        "default": "",
+        "label": "Xmargin?"
+      },
+      "ymargin?": {
+        "type": "string;",
+        "default": "",
+        "label": "Ymargin?"
+      },
+      "customClasses?": {
+        "type": "string;",
+        "default": "",
+        "label": "CustomClasses?"
+      },
+      "backgroundColor?": {
+        "type": "string;",
+        "default": "",
+        "label": "BackgroundColor?"
+      },
+      "backgroundImage?": {
+        "type": "string;",
+        "default": "",
+        "label": "BackgroundImage?"
+      },
+      "transitionDuration?": {
+        "type": "string; // Durée de la transition",
+        "default": "",
+        "label": "TransitionDuration?"
+      },
+      "transitionTiming?": {
+        "type": "string; // Timing de la transition",
+        "default": "",
+        "label": "TransitionTiming?"
+      },
+      "border?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "Border?"
+      },
+      "borderType?": {
+        "type": "\"border1\" | \"border2\" | \"border3\";",
+        "default": "",
+        "label": "BorderType?"
+      },
+      "borderColor?": {
+        "type": "string;",
+        "default": "",
+        "label": "BorderColor?"
+      },
+      "borderWidth?": {
+        "type": "string;",
+        "default": "",
+        "label": "BorderWidth?"
+      },
+      "borderStyle?": {
+        "type": "string;",
+        "default": "",
+        "label": "BorderStyle?"
+      },
+      "borderRadius?": {
+        "type": "string;",
+        "default": "",
+        "label": "BorderRadius?"
+      },
+      "boxShadow?": {
+        "type": "string;",
+        "default": "",
+        "label": "BoxShadow?"
+      },
+      "hFull?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "HFull?"
+      },
+      "wFull?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "WFull?"
+      },
+      "gap = \"gap-4 md": {
+        "type": "gap-8\",",
+        "default": "",
+        "label": "Gap = \"gap-4 md"
+      },
+      "}": {
+        "type": "GridProps = Astro.props;",
+        "default": "",
+        "label": "}"
+      },
+      "const backgroundClass = backgroundColor ? `${backgroundColor}`": {
+        "type": "\"bg-white\";",
+        "default": "",
+        "label": "Const backgroundClass = backgroundColor ? `${backgroundColor}`"
+      },
+      "const backgroundImageClass = backgroundImage ? `bg-[url('${backgroundImage}')]`": {
+        "type": "\"\";",
+        "default": "",
+        "label": "Const backgroundImageClass = backgroundImage ? `bg-[url('${backgroundImage}')]`"
+      },
+      "const colsClass = cols && !isNaN(parseInt(cols)) ? `grid-cols-${parseInt(cols)}`": {
+        "type": "\"grid-cols-1\";",
+        "default": "",
+        "label": "Const colsClass = cols && !isNaN(parseInt(cols)) ? `grid-cols-${parseInt(cols)}`"
+      },
+      "const heightClass = hFull ? \"h-full\"": {
+        "type": "\"h-auto\";",
+        "default": "",
+        "label": "Const heightClass = hFull ? \"h-full\""
+      },
+      "const widthClass = wFull ? \"w-full\"": {
+        "type": "\"\";",
+        "default": "",
+        "label": "Const widthClass = wFull ? \"w-full\""
+      },
+      "const overflowClass = overflowHidden ? \"overflow-hidden\"": {
+        "type": "\"\";",
+        "default": "",
+        "label": "Const overflowClass = overflowHidden ? \"overflow-hidden\""
+      },
+      "const yPaddingClass = yPadding ? `${yPadding}`": {
+        "type": "\"py-4 md",
+        "default": "",
+        "label": "Const yPaddingClass = yPadding ? `${yPadding}`"
+      },
+      "const xPaddingClass = xPadding ? `${xPadding}`": {
+        "type": "\"px-4 md",
+        "default": "",
+        "label": "Const xPaddingClass = xPadding ? `${xPadding}`"
+      },
+      "const ymarginClass = ymargin ? `${ymargin}`": {
+        "type": "\"mx-0\";",
+        "default": "",
+        "label": "Const ymarginClass = ymargin ? `${ymargin}`"
+      },
+      "const xmarginClass = xmargin ? `${xmargin}`": {
+        "type": "\"my-0\";",
+        "default": "",
+        "label": "Const xmarginClass = xmargin ? `${xmargin}`"
+      },
+      "hoverAnimate ? `hover": {
+        "type": "${hoverAnimate}`",
+        "default": "",
+        "label": "HoverAnimate ? `hover"
+      },
+      "focusAnimate ? `focus": {
+        "type": "${focusAnimate}`",
+        "default": "",
+        "label": "FocusAnimate ? `focus"
+      },
+      "activeAnimate ? `active": {
+        "type": "${activeAnimate}`",
+        "default": "",
+        "label": "ActiveAnimate ? `active"
+      },
+      "disabled ? \"disabled": {
+        "type": "opacity-50 disabled",
+        "default": "",
+        "label": "Disabled ? \"disabled"
+      },
+      "hidden ? \"hidden\"": {
+        "type": "\"\",",
+        "default": "",
+        "label": "Hidden ? \"hidden\""
+      },
+      "zIndex ? `z-${zIndex}`": {
+        "type": "\"\",",
+        "default": "",
+        "label": "ZIndex ? `z-${zIndex}`"
+      },
+      "borderColor ? `${borderColor}`": {
+        "type": "\"\",",
+        "default": "",
+        "label": "BorderColor ? `${borderColor}`"
+      },
+      "borderWidth ? `${borderWidth}`": {
+        "type": "\"\",",
+        "default": "",
+        "label": "BorderWidth ? `${borderWidth}`"
+      },
+      "borderStyle ? `${borderStyle}`": {
+        "type": "\"\",",
+        "default": "",
+        "label": "BorderStyle ? `${borderStyle}`"
+      }
+    },
+    "allowsNesting": true,
+    "styles": "",
+    "category": "Elements",
+    "render": "(props) => `<div style=\"display: grid; grid-template-columns: repeat(${props.cols || 3}, 1fr); gap: ${props.gap || '10px'}; background-color: ${props.backgroundColor || '#f0f0f0'}; padding: 10px;\">${props.children || '<div style=\"border: 1px solid #ddd; padding: 10px;\">Cellule 1</div><div style=\"border: 1px solid #ddd; padding: 10px;\">Cellule 2</div><div style=\"border: 1px solid #ddd; padding: 10px;\">Cellule 3</div>'}</div>`"
+  },
+  "link": {
+    "name": "Link",
+    "props": {
+      "href?": {
+        "type": "string;",
+        "default": "",
+        "label": "Href?"
+      },
+      "style?": {
+        "type": "LinkStyle;",
+        "default": "",
+        "label": "Style?"
+      },
+      "ariaLabel?": {
+        "type": "string;",
+        "default": "",
+        "label": "AriaLabel?"
+      },
+      "icon?": {
+        "type": "{ name",
+        "default": "",
+        "label": "Icon?"
+      },
+      "disabled?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "Disabled?"
+      },
+      "shape?": {
+        "type": "\"sharp\" | \"rounded\" | \"circle\";",
+        "default": "",
+        "label": "Shape?"
+      },
+      "customClasses?": {
+        "type": "string;",
+        "default": "",
+        "label": "CustomClasses?"
+      },
+      "ypadding?": {
+        "type": "string;",
+        "default": "",
+        "label": "Ypadding?"
+      },
+      "xpadding?": {
+        "type": "string;",
+        "default": "",
+        "label": "Xpadding?"
+      },
+      "fontSize?": {
+        "type": "string;",
+        "default": "",
+        "label": "FontSize?"
+      },
+      "fontWeight?": {
+        "type": "string;",
+        "default": "",
+        "label": "FontWeight?"
+      },
+      "isButtonStyle?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "IsButtonStyle?"
+      },
+      "fitContent?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "FitContent?"
+      },
+      "isHidden?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "IsHidden?"
+      },
+      "\"text-center no-underline bg-primary text-light hover": {
+        "type": "bg-primary-light focus",
+        "default": "",
+        "label": "\"text-center no-underline bg-primary text-light hover"
+      },
+      "\"text-center no-underline bg-secondary text-light hover": {
+        "type": "bg-secondary-light focus",
+        "default": "",
+        "label": "\"text-center no-underline bg-secondary text-light hover"
+      },
+      "\"text-center no-underline bg-accent text-light hover": {
+        "type": "bg-accent-light focus",
+        "default": "",
+        "label": "\"text-center no-underline bg-accent text-light hover"
+      },
+      "\"text-center no-underline bg-transparent text-primary border-2 border-primary hover": {
+        "type": "bg-primary-light focus",
+        "default": "",
+        "label": "\"text-center no-underline bg-transparent text-primary border-2 border-primary hover"
+      },
+      "link": {
+        "type": "\"no-underline text-primary underline hover",
+        "default": "",
+        "label": "Link"
+      },
+      "\"no-underline text-primary hover": {
+        "type": "text-primary-light focus",
+        "default": "",
+        "label": "\"no-underline text-primary hover"
+      },
+      "\"no-underline text-secondary hover": {
+        "type": "text-secondary-light focus",
+        "default": "",
+        "label": "\"no-underline text-secondary hover"
+      },
+      "\"no-underline text-accent hover": {
+        "type": "text-accent-light focus",
+        "default": "",
+        "label": "\"no-underline text-accent hover"
+      },
+      "\"no-underline text-light hover": {
+        "type": "text-primary focus",
+        "default": "",
+        "label": "\"no-underline text-light hover"
+      },
+      "dark": {
+        "type": "\"text-2xl no-underline text-black hover",
+        "default": "",
+        "label": "Dark"
+      },
+      "const fitContentClass = fitContent ? \"w-fit\"": {
+        "type": "\"\";",
+        "default": "",
+        "label": "Const fitContentClass = fitContent ? \"w-fit\""
+      },
+      "const hiddenClass = isHidden ? \"hidden\"": {
+        "type": "\"\";",
+        "default": "",
+        "label": "Const hiddenClass = isHidden ? \"hidden\""
+      }
+    },
+    "allowsNesting": true,
+    "styles": "",
+    "category": "Elements",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'link'}</div>`"
+  },
+  "queryloop": {
+    "name": "Queryloop",
+    "props": {
+      "import { type CollectionEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { type CollectionEntry } from 'astro"
+      },
+      "import { getCollection, getEntry, getEntries } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { getCollection, getEntry, getEntries } from 'astro"
+      },
+      "airfryers": {
+        "type": "AirfryersCard,",
+        "default": "",
+        "label": "Airfryers"
+      },
+      "productcategories": {
+        "type": "ProductCategoriesCard,",
+        "default": "",
+        "label": "Productcategories"
+      },
+      "recipes": {
+        "type": "RecipesCard,",
+        "default": "",
+        "label": "Recipes"
+      },
+      "recipecategories": {
+        "type": "RecipeCategoriesCard,",
+        "default": "",
+        "label": "Recipecategories"
+      },
+      "reviews": {
+        "type": "ReviewsCard,",
+        "default": "",
+        "label": "Reviews"
+      },
+      "blog": {
+        "type": "BlogCard,",
+        "default": "",
+        "label": "Blog"
+      },
+      "users": {
+        "type": "UserCard,",
+        "default": "",
+        "label": "Users"
+      },
+      "profiles": {
+        "type": "UserCard",
+        "default": "",
+        "label": "Profiles"
+      },
+      "collection": {
+        "type": "string;",
+        "default": "",
+        "label": "Collection"
+      },
+      "filters?": {
+        "type": "Record<string, any>;",
+        "default": "",
+        "label": "Filters?"
+      },
+      "sort?": {
+        "type": "{ field",
+        "default": "",
+        "label": "Sort?"
+      },
+      "limit?": {
+        "type": "number;",
+        "default": "",
+        "label": "Limit?"
+      },
+      "references?": {
+        "type": "string[];",
+        "default": "",
+        "label": "References?"
+      },
+      "categoryFilter?": {
+        "type": "string | string[];",
+        "default": "",
+        "label": "CategoryFilter?"
+      },
+      "currentId?": {
+        "type": "string;",
+        "default": "",
+        "label": "CurrentId?"
+      },
+      "relatedContent?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "RelatedContent?"
+      },
+      "siblingsContent?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "SiblingsContent?"
+      },
+      "relatedTo?": {
+        "type": "{",
+        "default": "",
+        "label": "RelatedTo?"
+      },
+      "id": {
+        "type": "string;",
+        "default": "",
+        "label": "Id"
+      },
+      "columns?": {
+        "type": "number;",
+        "default": "",
+        "label": "Columns?"
+      },
+      "const currentEntry = currentId ? await getEntry(collection, currentId)": {
+        "type": "null;",
+        "default": "",
+        "label": "Const currentEntry = currentId ? await getEntry(collection, currentId)"
+      },
+      "function logPerformance(label": {
+        "type": "string, startTime",
+        "default": "",
+        "label": "Function logPerformance(label"
+      },
+      "console.log(`[Performance] ${label} - Time": {
+        "type": "${executionTime.toFixed(2)}ms | Length",
+        "default": "",
+        "label": "Console.log(`[Performance] ${label} - Time"
+      },
+      "function checkCategory(entry": {
+        "type": "{ data",
+        "default": "",
+        "label": "Function checkCategory(entry"
+      },
+      "const categoryArray = Array.isArray(categoryFilter) ? categoryFilter": {
+        "type": "[categoryFilter];",
+        "default": "",
+        "label": "Const categoryArray = Array.isArray(categoryFilter) ? categoryFilter"
+      },
+      "console.log(\"Filtering entry": {
+        "type": "\", entry.id);",
+        "default": "",
+        "label": "Console.log(\"Filtering entry"
+      },
+      "const currentCategory = (currentEntry.data as { category": {
+        "type": "string }).category;",
+        "default": "",
+        "label": "Const currentCategory = (currentEntry.data as { category"
+      },
+      "return checkCategory(entry as { data": {
+        "type": "{ category",
+        "default": "",
+        "label": "Return checkCategory(entry as { data"
+      },
+      "console.log(\"Filtering for relatedTo": {
+        "type": "\", relatedTo);",
+        "default": "",
+        "label": "Console.log(\"Filtering for relatedTo"
+      },
+      "console.log(`Entry ${entry.id} - ${relatedField}": {
+        "type": "`, relatedItems, \"Is related",
+        "default": "",
+        "label": "Console.log(`Entry ${entry.id} - ${relatedField}"
+      },
+      "return (aValue < bValue ? -1": {
+        "type": "1) * (sort.order === 'asc' ? 1",
+        "default": "",
+        "label": "Return (aValue < bValue ? -1"
+      },
+      "const resolvedReferences": {
+        "type": "Record<string, any> = {};",
+        "default": "",
+        "label": "Const resolvedReferences"
+      },
+      "resolvedReferences[ref] = Array.isArray(refData) ? await getEntries(refData)": {
+        "type": "await getEntry(collection, refData);",
+        "default": "",
+        "label": "ResolvedReferences[ref] = Array.isArray(refData) ? await getEntries(refData)"
+      },
+      "console.log(`[FINAL PERFORMANCE] Total execution time": {
+        "type": "${totalExecutionTime.toFixed(2)}ms`);",
+        "default": "",
+        "label": "Console.log(`[FINAL PERFORMANCE] Total execution time"
+      },
+      "console.log(`[FINAL PERFORMANCE] Entries processed": {
+        "type": "${resolvedEntries.length} entries`);",
+        "default": "",
+        "label": "Console.log(`[FINAL PERFORMANCE] Entries processed"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Elements",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'queryloop'}</div>`"
+  },
+  "queryloop2": {
+    "name": "Queryloop2",
+    "props": {
+      "airfryers": {
+        "type": "AirfryersCard,",
+        "default": "",
+        "label": "Airfryers"
+      },
+      "productCategories": {
+        "type": "ProductCategoriesCard,",
+        "default": "",
+        "label": "ProductCategories"
+      },
+      "recipes": {
+        "type": "RecipesCard,",
+        "default": "",
+        "label": "Recipes"
+      },
+      "recipeCategories": {
+        "type": "RecipeCategoriesCard,",
+        "default": "",
+        "label": "RecipeCategories"
+      },
+      "reviews": {
+        "type": "ReviewsCard,",
+        "default": "",
+        "label": "Reviews"
+      },
+      "blog": {
+        "type": "BlogCard,",
+        "default": "",
+        "label": "Blog"
+      },
+      "users": {
+        "type": "UserCard,",
+        "default": "",
+        "label": "Users"
+      },
+      "collection": {
+        "type": "string;",
+        "default": "",
+        "label": "Collection"
+      },
+      "filters?": {
+        "type": "Record<string, any>;",
+        "default": "",
+        "label": "Filters?"
+      },
+      "sort?": {
+        "type": "{ field",
+        "default": "",
+        "label": "Sort?"
+      },
+      "limit?": {
+        "type": "number;",
+        "default": "",
+        "label": "Limit?"
+      },
+      "references?": {
+        "type": "string[];",
+        "default": "",
+        "label": "References?"
+      },
+      "categoryFilter?": {
+        "type": "string | string[];",
+        "default": "",
+        "label": "CategoryFilter?"
+      },
+      "currentId?": {
+        "type": "string;",
+        "default": "",
+        "label": "CurrentId?"
+      },
+      "relatedContent?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "RelatedContent?"
+      },
+      "siblingsContent?": {
+        "type": "boolean;",
+        "default": "",
+        "label": "SiblingsContent?"
+      },
+      "relatedTo?": {
+        "type": "{",
+        "default": "",
+        "label": "RelatedTo?"
+      },
+      "id": {
+        "type": "string;",
+        "default": "",
+        "label": "Id"
+      },
+      "columns?": {
+        "type": "number;",
+        "default": "",
+        "label": "Columns?"
+      },
+      "function logPerformance(label": {
+        "type": "string, startTime",
+        "default": "",
+        "label": "Function logPerformance(label"
+      },
+      "console.log(`[Performance] ${label} - Time": {
+        "type": "${executionTime.toFixed(2)}ms | Length",
+        "default": "",
+        "label": "Console.log(`[Performance] ${label} - Time"
+      },
+      "let { data": {
+        "type": "entries, error } = await supabase",
+        "default": "",
+        "label": "Let { data"
+      },
+      ".order(field, { ascending": {
+        "type": "order === 'asc' })",
+        "default": "",
+        "label": ".order(field, { ascending"
+      },
+      "console.error('Erreur de récupération des données": {
+        "type": "', error.message);",
+        "default": "",
+        "label": "Console.error('Erreur de récupération des données"
+      },
+      "function checkCategory(entry": {
+        "type": "{ category",
+        "default": "",
+        "label": "Function checkCategory(entry"
+      },
+      "const categoryArray = Array.isArray(categoryFilter) ? categoryFilter": {
+        "type": "[categoryFilter];",
+        "default": "",
+        "label": "Const categoryArray = Array.isArray(categoryFilter) ? categoryFilter"
+      },
+      "console.log(\"Filtering entry": {
+        "type": "\", entry.id);",
+        "default": "",
+        "label": "Console.log(\"Filtering entry"
+      },
+      "const resolvedReferences": {
+        "type": "Record<string, any> = {};",
+        "default": "",
+        "label": "Const resolvedReferences"
+      },
+      "console.error(`Erreur de récupération pour ${ref} avec ID ${id}": {
+        "type": "`, error.message);",
+        "default": "",
+        "label": "Console.error(`Erreur de récupération pour ${ref} avec ID ${id}"
+      },
+      "console.error(`Erreur de récupération pour ${ref} avec ID ${refData}": {
+        "type": "`, error.message);",
+        "default": "",
+        "label": "Console.error(`Erreur de récupération pour ${ref} avec ID ${refData}"
+      },
+      "console.log(`[FINAL PERFORMANCE] Total execution time": {
+        "type": "${totalExecutionTime.toFixed(2)}ms`);",
+        "default": "",
+        "label": "Console.log(`[FINAL PERFORMANCE] Total execution time"
+      },
+      "console.log(`[FINAL PERFORMANCE] Entries processed": {
+        "type": "${resolvedEntries.length} entries`);",
+        "default": "",
+        "label": "Console.log(`[FINAL PERFORMANCE] Entries processed"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Elements",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'queryloop2'}</div>`"
+  },
+  "footer": {
+    "name": "Footer",
+    "props": {
+      "showResources": {
+        "type": "true,",
+        "default": "",
+        "label": "ShowResources"
+      },
+      "navPrimary": {
+        "type": "true,",
+        "default": "",
+        "label": "NavPrimary"
+      },
+      "navSecondary": {
+        "type": "true,",
+        "default": "",
+        "label": "NavSecondary"
+      },
+      "showSocialMedia": {
+        "type": "true,",
+        "default": "",
+        "label": "ShowSocialMedia"
+      },
+      "showCopyright": {
+        "type": "false,",
+        "default": "",
+        "label": "ShowCopyright"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Uncategorized",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'footer'}</div>`"
+  },
+  "formatteddate": {
+    "name": "Formatteddate",
+    "props": {
+      "date": {
+        "type": "string;",
+        "default": "",
+        "label": "Date"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Uncategorized",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'formatteddate'}</div>`"
+  },
+  "header": {
+    "name": "Header",
+    "props": {
+      "const { data": {
+        "type": "roleData, error",
+        "default": "",
+        "label": "Const { data"
+      },
+      "refresh_token": {
+        "type": "refreshToken.value,",
+        "default": "",
+        "label": "Refresh_token"
+      },
+      "access_token": {
+        "type": "accessToken.value,",
+        "default": "",
+        "label": "Access_token"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Uncategorized",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'header'}</div>`"
+  },
+  "headerlink": {
+    "name": "Headerlink",
+    "props": {
+      "const { href, class": {
+        "type": "className, ...props } = Astro.props;",
+        "default": "",
+        "label": "Const { href, class"
+      }
+    },
+    "allowsNesting": true,
+    "styles": "",
+    "category": "Uncategorized",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'headerlink'}</div>`"
+  },
+  "gallery": {
+    "name": "Gallery",
+    "props": {},
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Medias",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'gallery'}</div>`"
+  },
+  "categorycard": {
+    "name": "Categorycard",
+    "props": {
+      "import { type CollectionEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { type CollectionEntry } from 'astro"
+      },
+      "entry": {
+        "type": "CollectionEntry<'recipeCategories'>;",
+        "default": "",
+        "label": "Entry"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Recipes",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'categorycard'}</div>`"
+  },
+  "productcard": {
+    "name": "Productcard",
+    "props": {
+      "import { type CollectionEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { type CollectionEntry } from 'astro"
+      },
+      "entry": {
+        "type": "CollectionEntry<'airfryers'>;",
+        "default": "",
+        "label": "Entry"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Products",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'productcard'}</div>`"
+  },
+  "productfilter": {
+    "name": "Productfilter",
+    "props": {
+      "import { getCollection, type CollectionEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { getCollection, type CollectionEntry } from 'astro"
+      },
+      "collection": {
+        "type": "'airfryers';",
+        "default": "",
+        "label": "Collection"
+      },
+      "initialFilters?": {
+        "type": "{",
+        "default": "",
+        "label": "InitialFilters?"
+      },
+      "category?": {
+        "type": "string;",
+        "default": "",
+        "label": "Category?"
+      },
+      "brand?": {
+        "type": "string;",
+        "default": "",
+        "label": "Brand?"
+      },
+      "priceRange?": {
+        "type": "{ min",
+        "default": "",
+        "label": "PriceRange?"
+      },
+      "availability?": {
+        "type": "'in_stock' | 'out_of_stock' | 'pre_order';",
+        "default": "",
+        "label": "Availability?"
+      },
+      "features?": {
+        "type": "string[];",
+        "default": "",
+        "label": "Features?"
+      },
+      "capacity?": {
+        "type": "string;",
+        "default": "",
+        "label": "Capacity?"
+      },
+      "wattage?": {
+        "type": "string;",
+        "default": "",
+        "label": "Wattage?"
+      },
+      "initialSearch?": {
+        "type": "string;",
+        "default": "",
+        "label": "InitialSearch?"
+      },
+      "sort?": {
+        "type": "{ field",
+        "default": "",
+        "label": "Sort?"
+      },
+      "limit?": {
+        "type": "number;",
+        "default": "",
+        "label": "Limit?"
+      },
+      "let products": {
+        "type": "CollectionEntry<'airfryers'>[] = await getCollection(collection);",
+        "default": "",
+        "label": "Let products"
+      },
+      "console.log(\"Nombre total de produits": {
+        "type": "\", products.length);",
+        "default": "",
+        "label": "Console.log(\"Nombre total de produits"
+      },
+      "const allCategories": {
+        "type": "string[] = [...new Set(products.map(p => p.data.category))];",
+        "default": "",
+        "label": "Const allCategories"
+      },
+      "const allBrands": {
+        "type": "string[] = [...new Set(products.map(p => p.data.brand))];",
+        "default": "",
+        "label": "Const allBrands"
+      },
+      "const allFeatures": {
+        "type": "string[] = [...new Set(products.flatMap(p => p.data.features || []))];",
+        "default": "",
+        "label": "Const allFeatures"
+      },
+      "const priceRange": {
+        "type": "{ min",
+        "default": "",
+        "label": "Const priceRange"
+      },
+      "min": {
+        "type": "Math.min(...products.map(p => p.data.price)),",
+        "default": "",
+        "label": "Min"
+      },
+      "max": {
+        "type": "Math.max(...products.map(p => p.data.price))",
+        "default": "",
+        "label": "Max"
+      },
+      "function matchesFilters(product": {
+        "type": "CollectionEntry<'airfryers'>, filters",
+        "default": "",
+        "label": "Function matchesFilters(product"
+      },
+      "return Object.entries(filters as { [key": {
+        "type": "string]",
+        "default": "",
+        "label": "Return Object.entries(filters as { [key"
+      },
+      "console.log(\"Nombre de produits après filtres initiaux": {
+        "type": "\", products.length);",
+        "default": "",
+        "label": "Console.log(\"Nombre de produits après filtres initiaux"
+      },
+      "console.log(\"Nombre de produits après recherche initiale": {
+        "type": "\", products.length);",
+        "default": "",
+        "label": "Console.log(\"Nombre de produits après recherche initiale"
+      },
+      "if (aValue < bValue) return sort.order === 'asc' ? -1": {
+        "type": "1;",
+        "default": "",
+        "label": "If (aValue < bValue) return sort.order === 'asc' ? -1"
+      },
+      "if (aValue > bValue) return sort.order === 'asc' ? 1": {
+        "type": "-1;",
+        "default": "",
+        "label": "If (aValue > bValue) return sort.order === 'asc' ? 1"
+      },
+      "console.log(\"Nombre de produits après limite": {
+        "type": "\", products.length);",
+        "default": "",
+        "label": "Console.log(\"Nombre de produits après limite"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Products",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'productfilter'}</div>`"
+  },
+  "recipecard": {
+    "name": "Recipecard",
+    "props": {
+      "import { type CollectionEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { type CollectionEntry } from 'astro"
+      },
+      "import { getEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { getEntry } from 'astro"
+      },
+      "entry": {
+        "type": "CollectionEntry<'recipes'>;",
+        "default": "",
+        "label": "Entry"
+      },
+      "const categoryData = entryData.category ? await getEntry('recipecategories', entryData.category)": {
+        "type": "null;",
+        "default": "",
+        "label": "Const categoryData = entryData.category ? await getEntry('recipecategories', entryData.category)"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Recipes",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'recipecard'}</div>`"
+  },
+  "recipefilter": {
+    "name": "Recipefilter",
+    "props": {
+      "allCategories": {
+        "type": "string[];",
+        "default": "",
+        "label": "AllCategories"
+      },
+      "allCuisineTypes": {
+        "type": "string[];",
+        "default": "",
+        "label": "AllCuisineTypes"
+      },
+      "allTags": {
+        "type": "string[];",
+        "default": "",
+        "label": "AllTags"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Recipes",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'recipefilter'}</div>`"
+  },
+  "reviewcard": {
+    "name": "Reviewcard",
+    "props": {
+      "import { type CollectionEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { type CollectionEntry } from 'astro"
+      },
+      "import { getEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { getEntry } from 'astro"
+      },
+      "const profileData = entryData.userid ? await getEntry('profiles', entryData.userid)": {
+        "type": "null;",
+        "default": "",
+        "label": "Const profileData = entryData.userid ? await getEntry('profiles', entryData.userid)"
+      },
+      "const safeRating = typeof entryData.rating === 'number' ? Math.min(5, Math.max(0, entryData.rating))": {
+        "type": "0;",
+        "default": "",
+        "label": "Const safeRating = typeof entryData.rating === 'number' ? Math.min(5, Math.max(0, entryData.rating))"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Reviews",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'reviewcard'}</div>`"
+  },
+  "twocolumnssection": {
+    "name": "Twocolumnssection",
+    "props": {
+      "hoverAnimate = \"hover": {
+        "type": "scale-105\",",
+        "default": "",
+        "label": "HoverAnimate = \"hover"
+      },
+      "focusAnimate = \"focus": {
+        "type": "ring-2 focus",
+        "default": "",
+        "label": "FocusAnimate = \"focus"
+      },
+      "paddingX = \"px-4 md": {
+        "type": "px-8\",",
+        "default": "",
+        "label": "PaddingX = \"px-4 md"
+      },
+      "paddingY = \"py-4 md": {
+        "type": "py-8\",",
+        "default": "",
+        "label": "PaddingY = \"py-4 md"
+      },
+      "? `bg-[url(${backgroundImage})] bg-${backgroundSize} bg-${backgroundRepeat} bg-${backgroundPosition} ${backgroundFixed ? 'bg-fixed'": {
+        "type": "''}`",
+        "default": "",
+        "label": "? `bg-[url(${backgroundImage})] bg-${backgroundSize} bg-${backgroundRepeat} bg-${backgroundPosition} ${backgroundFixed ? 'bg-fixed'"
+      },
+      "border ? `${borderSize} ${borderColor} ${borderStyle}`": {
+        "type": "\"\",  // Applique les classes de bordure",
+        "default": "",
+        "label": "Border ? `${borderSize} ${borderColor} ${borderStyle}`"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Sections",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'twocolumnssection'}</div>`"
+  },
+  "usercard": {
+    "name": "Usercard",
+    "props": {
+      "import { type CollectionEntry } from 'astro": {
+        "type": "content';",
+        "default": "",
+        "label": "Import { type CollectionEntry } from 'astro"
+      },
+      "entry": {
+        "type": "CollectionEntry<'users'>;",
+        "default": "",
+        "label": "Entry"
+      }
+    },
+    "allowsNesting": false,
+    "styles": "",
+    "category": "Users",
+    "render": "(props) => `<div style=\"padding: 10px; border: 1px solid #ddd;\">${props.label || 'usercard'}</div>`"
+  }
+}

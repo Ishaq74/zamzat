@@ -1,0 +1,120 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+// Typage TypeScript pour Flex
+type FlexTag = 'div' | 'section' | 'span' | 'nav';
+
+interface FlexProps extends HTMLAttributes<FlexTag> {
+  tag?: FlexTag; // Le tag peut être 'div', 'section', ou 'span'
+  xAlign?: 'start' | 'center' | 'end' | 'space-between' | 'space-around' | 'space-evenly';
+  yAlign?: 'start' | 'center' | 'end' | 'stretch';
+  direction?: 'row' | 'column';
+  wrap?: 'wrap' | 'nowrap';
+  yPadding?: string;
+  xPadding?: string;
+  marginY?: string;
+  marginX?: string;
+  gap?: string;
+  customClasses?: string;
+  backgroundColor?: string;
+  wFull?: boolean;
+  hFull?: boolean;
+}
+
+// Valeurs par défaut et récupération des props
+const {
+  tag = 'div', // Par défaut c'est une div
+  xAlign = 'start', // Justification horizontale (par défaut à start)
+  yAlign = 'center', // Alignement vertical (par défaut à center)
+  direction = 'row', // Direction par défaut en row
+  wrap = 'nowrap', // Wrap par défaut à nowrap
+  yPadding = 'py-0',
+  xPadding = 'px-0',
+  marginY = 'my-0',
+  marginX = 'mx-0',
+  gap = 'gap-0',
+  customClasses = '',
+  backgroundColor = 'bg-light',
+  wFull = true,
+  hFull = true,
+  ...htmlAttributes
+} = Astro.props as FlexProps;
+
+const backgroundClass = backgroundColor ? `bg-${backgroundColor}` : "bg-light";
+
+// Construction des classes Tailwind dynamiques
+const justifyContentClass = (() => {
+  switch (xAlign) {
+    case 'start':
+      return 'justify-start';
+    case 'center':
+      return 'justify-center';
+    case 'end':
+      return 'justify-end';
+    case 'space-between':
+      return 'justify-between';
+    case 'space-around':
+      return 'justify-around';
+    case 'space-evenly':
+      return 'justify-evenly';
+    default:
+      return ''; // Si aucune correspondance, pas de classe ajoutée
+  }
+})();
+
+const alignItemsClass = (() => {
+  switch (yAlign) {
+    case 'start':
+      return 'items-start';
+    case 'center':
+      return 'items-center';
+    case 'end':
+      return 'items-end';
+    case 'stretch':
+      return 'items-stretch';
+    default:
+      return ''; // Si aucune correspondance, pas de classe ajoutée
+  }
+})();
+
+// Construction des classes flex
+const classes = [
+  'flex', // Flexbox
+  `flex-${direction}`, // Direction (row ou column)
+  wrap === 'wrap' ? 'flex-wrap' : 'flex-nowrap', // Wrap ou nowrap
+  justifyContentClass, // Justification horizontale
+  alignItemsClass, // Alignement vertical
+  yPadding, // Padding vertical
+  xPadding, // Padding horizontal
+  marginY, // Margin vertical
+  marginX, // Margin horizontal
+  gap, // Gap entre les éléments
+  backgroundClass, // Couleur de fond
+  wFull ? 'w-full' : '', // Largeur pleine
+  hFull ? 'h-full' : '', // Hauteur pleine
+  customClasses, // Classes supplémentaires si spécifiées
+].filter(Boolean).join(' '); // Filtre les valeurs vides et join avec un espace
+
+// Rendu dynamique en fonction du tag sélectionné
+---
+
+{tag === 'div' && (
+  <div class={classes} {...htmlAttributes}>
+    <slot />
+  </div>
+)}
+{tag === 'section' && (
+  <section class={classes} {...htmlAttributes}>
+    <slot />
+  </section>
+)}
+{tag === 'span' && (
+  <span class={classes} {...htmlAttributes}>
+    <slot />
+  </span>
+)}
+{tag === 'nav' && (
+<nav class={classes} {...htmlAttributes}>
+  <slot />
+</nav>
+)}

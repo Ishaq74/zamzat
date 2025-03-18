@@ -1,0 +1,37 @@
+---
+import type { TableData, TableSchema, Option } from '../../types';
+interface Props {
+  item: TableData;
+  schema: TableSchema;
+  optionsMap: Record<string, Option[]>;
+}
+
+const { item, schema, optionsMap } = Astro.props;
+---
+
+<div class="bg-white shadow-md rounded-xl p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-gray-100">
+  <h3 class="text-xl font-semibold text-gray-900 truncate">{item.name || 'Sans nom'}</h3>
+  {schema.fields.map(field => (
+    field.name !== 'id' && field.name !== 'name' && item[field.name] && (
+      <p class="text-gray-600 mt-2 text-sm">
+        {field.label}: {field.type === 'select' && field.relation ? (
+          <span class="inline-block bg-blue-50 text-blue-700 text-xs font-medium px-2 py-1 rounded-full">
+            {optionsMap[field.name]?.find(opt => opt.value === String(item[field.name]))?.label || 'N/A'}
+          </span>
+        ) : field.type === 'array' ? (
+          <span>{(item[field.name] as string[]).join(', ')}</span>
+        ) : (
+          String(item[field.name])
+        )}
+      </p>
+    )
+  ))}
+  <div class="mt-4 flex space-x-4">
+    <button data-id={item.id} data-action="edit" class="text-blue-600 hover:text-blue-800 font-medium text-sm transition-colors">
+      Éditer
+    </button>
+    <button data-id={item.id} data-action="delete" class="text-red-600 hover:text-red-800 font-medium text-sm transition-colors">
+      Supprimer
+    </button>
+  </div>
+</div>

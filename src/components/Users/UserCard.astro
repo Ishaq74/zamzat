@@ -1,0 +1,55 @@
+---
+import Grid from '@components/Elements/Grid.astro';
+import { Icon } from 'astro-icon/components';
+import { type CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'users'>;
+}
+
+const { entry } = Astro.props;
+
+if (!entry || !entry.data) {
+  return null;
+}
+
+const id = entry.id;
+const { ...entryData } = entry.data;
+
+---
+<Grid tag="section" xPadding="px-0" yPadding="py-0" gap="gap-0" backgroundColor="bg-white" borderRadius="rounded-lg" shadow="shadow-lg" width="w-full">
+    <img
+      class="w-full h-56 object-cover object-center"
+      src={entryData.avatar || "/images/avatar-john-doe.jpg"}
+      alt={`avatar de ${entryData.name}`}
+    />
+    <div class="flex items-center justify-center content-center py-3 bg-gray-900">
+      <Icon name="mdi:cook" size={20} class="text-white"/>
+      <h3 class="mx-3 text-white">{entryData.name}</h3>
+    </div>
+    <Grid tag="section" xPadding="px-2" yPadding="py-4" gap="gap-0" backgroundColor="bg-white" borderRadius="rounded-lg" shadow="shadow-lg">
+        <div class="flex gap-2 items-center justify-baseline content-center">
+            <Icon name="mdi:account" size={20} class="text-black"/>
+            <p class=" text-black">{entryData.role}</p>
+          </div>
+      <p class="py-2  text-black">{entryData.bio}</p>
+      <div class="flex gap-2 items-center mt-4 text-gray-700">
+        <Icon name="mdi:map-marker" size={20} class="text-black"/>
+        <p class="text-sm">{entryData.city}</p>
+      </div>
+      {entryData.links && entryData.links.length > 0 && (
+        <div class="grid gap-2 items-center mt-4 text-black">
+          {entryData.links.map((link) => (
+            <div class="flex">
+            <Icon name="mdi:web" size={20} class="text-black"/>
+            <a href={link} class=" text-sm underline">{link}</a>
+            </div>
+          ))}
+        </div>
+      )}
+      <div class="flex items-center mt-4 text-gray-700">
+        <Icon name="mdi:email-edit" size={20} class="text-black"/>
+        <p class="text-sm">{entryData.email}</p>
+      </div>
+    </Grid>
+  </Grid>

@@ -1,0 +1,46 @@
+---
+import { Icon } from 'astro-icon/components';
+import FormattedDate from '@components/FormattedDate.astro';
+import { getEntry } from 'astro:content';
+
+
+const { entry } = Astro.props;
+const { ...entryData } = entry.data;
+const id = entry.id;
+
+if (!entry) {
+  return null;
+}
+
+const categoryData = entryData.category ? await getEntry('blogcategories', entryData.category) : null;
+---
+
+<div class="rounded overflow-hidden shadow-lg flex flex-col h-full bg-white">
+  <div class="relative">
+    <a href={`/blog/${entryData.slug}/`}>
+      <img class="w-full" src={entryData.heroImage || `${Astro.site}/images/fond-orange.jpg`} alt="Hero Image" />
+      <div class="hover:bg-transparent transition duration-300 absolute bottom-0 top-0 right-0 left-0 bg-gray-900 opacity-25"></div>
+    </a>
+    <a href="#!">
+      <div class="text-xs absolute top-0 right-0 bg-indigo-600 px-4 py-2 text-white mt-3 mr-3 hover:bg-white hover:text-indigo-600 transition duration-500 ease-in-out">
+        {categoryData?.data.name}
+      </div>
+    </a>
+  </div>
+  <div class="px-6 py-4 mb-auto bg-white">
+    <a href={`/blog/${entryData.slug}/`} class="font-medium text-lg inline-block hover:text-indigo-600 transition duration-500 ease-in-out mb-2">
+      {entryData.title}
+    </a>
+    <p class="text-gray-500 text-sm">{entryData.description}</p>
+  </div>
+  <div class="px-6 py-3 flex flex-row items-center justify-between bg-gray-100">
+    <span class="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
+      <Icon name="clock" size={15} />
+      <span class="ml-1">{entryData.updateddate ? <FormattedDate date={entryData.updateddate} /> : <FormattedDate date={entryData.pubdate} />}</span>
+    </span>
+    <span class="py-1 text-xs font-regular text-gray-900 mr-1 flex flex-row items-center">
+      <Icon name="comment" size={15} />
+      <span class="ml-1">4 Commentaires</span>
+    </span>
+  </div>
+</div>

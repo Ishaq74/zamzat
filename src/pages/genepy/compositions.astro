@@ -1,0 +1,568 @@
+---
+import { getCollection } from 'astro:content';
+import Landing from '@layouts/Landing.astro';
+import Sortable from 'sortablejs';
+import grapesjs from 'grapesjs';
+import grapesjsPresetWebpage from 'grapesjs-preset-webpage';
+
+const organizationEntries = await getCollection('organizations');
+const organizationData = organizationEntries[0]?.data;
+
+const pageTitle = `Créer un site Internet - Étape 1 : Identité`;
+const pageDescription = 'Commencer par définir son identité';
+const pageKeywords = "créer un site internet, zatchouli";
+const pageOgImage = "/images/logo-msbc.png";
+const pageLang = 'fr';
+const pageRobots = "index, follow";
+---
+<Landing
+  title={pageTitle}
+  description={pageDescription}
+  keywords={pageKeywords}
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+<body>
+  <section class="container">
+    <h1>Configurer Votre Site</h1>
+    <p>Activez les schémas et personnalisez-les avec précision pour une expérience exceptionnelle !</p>
+
+    <div class="schema-list" id="schema-list"></div>
+
+    <!-- Modal pour modifier la structure -->
+    <div id="structure-modal" class="modal">
+      <div class="modal-content">
+        <h3>Modifier la table : <span id="current-table-name"></span></h3>
+        <div class="form-group">
+          <label for="field-id">ID du champ *</label>
+          <input type="text" id="field-id" required>
+          <span id="id-error" class="error-message"></span>
+        </div>
+        <div class="form-group">
+          <label for="field-label">Label *</label>
+          <input type="text" id="field-label" required>
+        </div>
+        <div class="form-group">
+          <label for="field-type">Type</label>
+          <select id="field-type">
+            <option value="string">Texte</option>
+            <option value="number">Nombre</option>
+            <option value="boolean">Oui/Non</option>
+            <option value="image">Image</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="field-required">Requis</label>
+          <input type="checkbox" id="field-required">
+        </div>
+        <div class="form-actions">
+          <button class="btn" onclick="saveField()">Ajouter</button>
+          <button class="btn secondary" onclick="openRelationModal()">Ajouter une relation</button>
+          <button class="btn secondary" onclick="closeModal('structure')">Fermer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal pour ajouter une relation -->
+    <div id="relation-modal" class="modal">
+      <div class="modal-content">
+        <h3>Ajouter une relation</h3>
+        <div class="form-group">
+          <label for="relation-table1">Table 1</label>
+          <select id="relation-table1"></select>
+        </div>
+        <div class="form-group">
+          <label for="relation-table2">Table 2</label>
+          <select id="relation-table2"></select>
+        </div>
+        <div class="form-group">
+          <label for="relation-type">Type de relation</label>
+          <select id="relation-type">
+            <option value="one-to-one">1:1</option>
+            <option value="one-to-many">1:N</option>
+            <option value="many-to-many">N:N</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="btn" onclick="saveRelation()">Ajouter</button>
+          <button class="btn secondary" onclick="closeModal('relation')">Fermer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal pour modifier le design -->
+    <div id="design-modal" class="modal">
+      <div class="modal-content">
+        <h3>Personnaliser le design de <span id="current-design-name"></span></h3>
+        <div class="form-group">
+          <label for="design-color">Couleur de fond</label>
+          <input type="color" id="design-color" value="#f0f0f0">
+        </div>
+        <div class="form-group">
+          <label for="design-font">Police</label>
+          <select id="design-font">
+            <option value="Arial">Arial</option>
+            <option value="Helvetica">Helvetica</option>
+            <option value="Times New Roman">Times New Roman</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button class="btn" onclick="saveDesign()">Appliquer</button>
+          <button class="btn secondary" onclick="closeModal('design')">Fermer</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal pour éditer le wireframe -->
+    <div id="wireframe-modal" class="modal">
+      <div class="modal-content">
+        <h3>Éditer le wireframe de <span id="current-wireframe-name"></span></h3>
+        <div class="wireframe-editor" id="wireframe-editor"></div>
+        <div class="component-list">
+          <h4>Composants disponibles</h4>
+          <div class="component" draggable="true" data-type="header">Header</div>
+          <div class="component" draggable="true" data-type="text">Section Texte</div>
+          <div class="component" draggable="true" data-type="image">Image</div>
+          <div class="component" draggable="true" data-type="footer">Footer</div>
+        </div>
+        <div class="form-actions">
+          <button class="btn" onclick="saveWireframe()">Enregistrer</button>
+          <button class="btn secondary" onclick="closeModal('wireframe')">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+</Landing>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: #f5f5f5;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 2em;
+  color: #333;
+}
+
+.schema-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.schema-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.schema-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.schema-details {
+  display: none;
+  margin-top: 20px;
+}
+
+.schema-details.active {
+  display: block;
+}
+
+.grid-2-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.field-list {
+  margin-top: 10px;
+}
+
+.carousel {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: linear-gradient(to right, transparent, #f0f0f0, transparent);
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.carousel-item {
+  text-align: center;
+  padding: 20px;
+  transition: all 0.5s ease;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.btn.secondary {
+  background: #6c757d;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  width: 600px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.form-group input, .form-group select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9em;
+  display: none;
+}
+
+.error-message.active {
+  display: block;
+}
+
+.wireframe-editor {
+  min-height: 300px;
+  border: 2px dashed #ccc;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.component-list {
+  margin-bottom: 20px;
+}
+
+.component {
+  padding: 10px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  cursor: move;
+  margin-bottom: 5px;
+}
+
+.wireframe-section {
+  padding: 15px;
+  background: #e9ecef;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  cursor: move;
+}
+</style>
+
+<script is:inline>
+const schemaList = [
+  { name: 'vitrine', icon: '🏪', table: { name: 'showcase', fields: ['id', 'name', 'description', 'image'], example: [1, 'Accueil', 'Bienvenue', 'image.jpg'] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'boutique', icon: '🛒', table: { name: 'products', fields: ['id', 'name', 'price', 'image'], example: [1, 'T-shirt', 19.99, 'tshirt.jpg'] }, wireframe: ['header', 'image', 'footer'] },
+  { name: 'blog', icon: '📝', table: { name: 'posts', fields: ['id', 'title', 'content', 'author'], example: [1, 'Premier article', 'Contenu', 'Jean'] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'formation', icon: '🎓', table: { name: 'formations', fields: ['id', 'title', 'duration', 'instructor'], example: [1, 'Formation JS', '6 mois', 'Marie'] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'services', icon: '🛠️', table: { name: 'services', fields: ['id', 'name', 'description', 'price'], example: [1, 'Réparation', 'Réparation rapide', 50] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'annuaire', icon: '📋', table: { name: 'directory', fields: ['id', 'name', 'phone', 'email'], example: [1, 'Jean Dupont', '0123456789', 'jean@example.com'] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'commentaires', icon: '💬', table: { name: 'comments', fields: ['id', 'author', 'content', 'date'], example: [1, 'Alice', 'Super article !', '2023-01-01'] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'avis', icon: '⭐', table: { name: 'reviews', fields: ['id', 'product', 'rating', 'comment'], example: [1, 'T-shirt', 5, 'Excellent'] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'businesslocal', icon: '🏢', table: { name: 'localbusiness', fields: ['id', 'name', 'address', 'phone'], example: [1, 'Café Paris', '123 Rue Exemple', '0123456789'] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'evenements', icon: '🎉', table: { name: 'events', fields: ['id', 'name', 'date', 'location'], example: [1, 'Concert', '2023-12-31', 'Paris'] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'faqs', icon: '❓', table: { name: 'faqs', fields: ['id', 'question', 'answer'], example: [1, 'Comment ça marche ?', 'Voici comment...'] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'contact', icon: '📧', table: { name: 'contacts', fields: ['id', 'name', 'email', 'message'], example: [1, 'Alice', 'alice@example.com', 'Bonjour'] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'newsletter', icon: '📬', table: { name: 'newsletter', fields: ['id', 'email', 'date'], example: [1, 'newsletter@example.com', '2023-01-01'] }, wireframe: ['header', 'text', 'footer'] },
+  { name: 'reservations', icon: '📅', table: { name: 'reservations', fields: ['id', 'name', 'date', 'time'], example: [1, 'Jean', '2023-12-31', '20:00'] }, wireframe: ['header', 'text', 'footer'] }
+];
+
+let activeTables = [];
+let relations = [];
+let currentSchemaIndex = null;
+
+const schemaSection = document.getElementById('schema-list');
+schemaList.forEach((schema, index) => {
+  const div = document.createElement('div');
+  div.className = 'schema-card';
+  div.innerHTML = `
+    <h3>${schema.name} <i>${schema.icon}</i></h3>
+    <div class="toggle-container">
+      <label>
+        <input type="checkbox" id="schema-${schema.name}-toggle">
+        Activer
+      </label>
+    </div>
+    <div id="${schema.name}-details" class="schema-details">
+      <div class="grid-2-col">
+        <div>
+          <h4>Table : ${schema.table.name}</h4>
+          <p>Exemple : ${schema.table.example.join(', ')}</p>
+          <button class="btn" onclick="openStructureModal(${index})">Modifier la structure</button>
+          <label><input type="checkbox" id="category-${schema.name}" onchange="toggleCategory('${schema.name}')"> Ajouter une table de catégories</label>
+          <label><input type="checkbox" id="index-${schema.name}" onchange="toggleIndex('${schema.name}')"> Ajouter un index de pages</label>
+          <button class="btn" onclick="openWireframeModal('${schema.name}')">Éditer le wireframe</button>
+          <button class="btn" onclick="openDesignModal('${schema.name}')">Modifier le design</button>
+          <div class="field-list" id="${schema.name}-fields"></div>
+        </div>
+        <div>
+          <h4>Prévisualisation</h4>
+          <div class="carousel" id="${schema.name}-carousel">
+            <div class="carousel-item">Exemple de ${schema.name}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  schemaSection.appendChild(div);
+
+  const toggle = div.querySelector(`#schema-${schema.name}-toggle`);
+  const details = div.querySelector(`#${schema.name}-details`);
+  toggle.addEventListener('change', () => {
+    details.classList.toggle('active', toggle.checked);
+    if (toggle.checked && !activeTables.some(t => t.schema === schema.name)) {
+      activeTables.push({ 
+        name: schema.table.name, 
+        schema: schema.name, 
+        fields: schema.table.fields.map((f, i) => ({ id: f, label: f, type: 'string', required: i === 0 })), 
+        hasCategory: false, 
+        hasIndex: false,
+        wireframe: schema.wireframe 
+      });
+    } else {
+      activeTables = activeTables.filter(t => t.schema !== schema.name);
+    }
+    renderTables();
+    updateCarousel(schema.name);
+  });
+});
+
+function renderTables() {
+  schemaList.forEach(schema => {
+    const fieldList = document.getElementById(`${schema.name}-fields`);
+    if (!fieldList) return;
+    fieldList.innerHTML = '';
+    const schemaTable = activeTables.find(t => t.schema === schema.name);
+    if (schemaTable) {
+      schemaTable.fields.forEach(f => {
+        const div = document.createElement('div');
+        div.textContent = `${f.label} (${f.type}) ${f.required ? '✔' : ''}`;
+        fieldList.appendChild(div);
+      });
+    }
+  });
+}
+
+function toggleCategory(schemaName) {
+  const schemaTable = activeTables.find(t => t.schema === schemaName);
+  schemaTable.hasCategory = document.getElementById(`category-${schemaName}`).checked;
+  if (schemaTable.hasCategory && !activeTables.some(t => t.name === `${schemaName}_categories`)) {
+    activeTables.push({ 
+      name: `${schemaName}_categories`, 
+      schema: schemaName, 
+      fields: [{ id: 'id', label: 'id', type: 'string', required: true }, { id: 'name', label: 'Nom', type: 'string', required: true }],
+      isCategory: true
+    });
+  } else if (!schemaTable.hasCategory) {
+    activeTables = activeTables.filter(t => t.name !== `${schemaName}_categories`);
+  }
+  updateCarousel(schemaName);
+}
+
+function toggleIndex(schemaName) {
+  const schemaTable = activeTables.find(t => t.schema === schemaName);
+  schemaTable.hasIndex = document.getElementById(`index-${schemaName}`).checked;
+  if (schemaTable.hasIndex && !activeTables.some(t => t.name === `${schemaName}_index`)) {
+    activeTables.push({ 
+      name: `${schemaName}_index`, 
+      schema: schemaName, 
+      fields: [{ id: 'id', label: 'id', type: 'string', required: true }, { id: 'page', label: 'Page', type: 'string', required: true }],
+      isIndex: true
+    });
+  } else if (!schemaTable.hasIndex) {
+    activeTables = activeTables.filter(t => t.name !== `${schemaName}_index`);
+  }
+}
+
+function updateCarousel(schemaName) {
+  const carousel = document.getElementById(`${schemaName}-carousel`);
+  const schemaTable = activeTables.find(t => t.schema === schemaName);
+  if (!schemaTable) return;
+  
+  carousel.innerHTML = `<div class="carousel-item">${schemaTable.name} : ${schemaTable.fields.map(f => f.label).join(', ')}</div>`;
+  if (schemaTable.hasCategory) {
+    const categoryTable = activeTables.find(t => t.name === `${schemaName}_categories`);
+    carousel.innerHTML += `<div class="carousel-item">Catégorie : ${categoryTable.fields.map(f => f.label).join(', ')}</div>`;
+  }
+}
+
+function openStructureModal(index) {
+  currentSchemaIndex = index;
+  document.getElementById('current-table-name').textContent = schemaList[index].table.name;
+  document.getElementById('structure-modal').classList.add('active');
+}
+
+function saveField() {
+  const fieldId = document.getElementById('field-id').value.trim();
+  const fieldLabel = document.getElementById('field-label').value.trim();
+  const fieldType = document.getElementById('field-type').value;
+  const fieldRequired = document.getElementById('field-required').checked;
+
+  if (!fieldId || !fieldLabel) {
+    alert('ID et Label sont obligatoires.');
+    return;
+  }
+
+  const schemaTable = activeTables.find(t => t.schema === schemaList[currentSchemaIndex].name && !t.isCategory && !t.isIndex);
+  if (schemaTable.fields.some(f => f.id === fieldId)) {
+    document.getElementById('id-error').textContent = 'Cet ID existe déjà.';
+    document.getElementById('id-error').classList.add('active');
+    return;
+  }
+
+  schemaTable.fields.push({ id: fieldId, label: fieldLabel, type: fieldType, required: fieldRequired });
+  renderTables();
+  updateCarousel(schemaList[currentSchemaIndex].name);
+  closeModal('structure');
+}
+
+function openRelationModal() {
+  closeModal('structure');
+  document.getElementById('relation-modal').classList.add('active');
+  const table1Select = document.getElementById('relation-table1');
+  const table2Select = document.getElementById('relation-table2');
+  table1Select.innerHTML = '<option value="">Sélectionner</option>';
+  table2Select.innerHTML = '<option value="">Sélectionner</option>';
+  activeTables.forEach(table => {
+    table1Select.innerHTML += `<option value="${table.name}">${table.name}</option>`;
+    table2Select.innerHTML += `<option value="${table.name}">${table.name}</option>`;
+  });
+}
+
+function saveRelation() {
+  const table1 = document.getElementById('relation-table1').value;
+  const table2 = document.getElementById('relation-table2').value;
+  const relationType = document.getElementById('relation-type').value;
+
+  if (!table1 || !table2 || table1 === table2) {
+    alert('Sélectionnez deux tables différentes.');
+    return;
+  }
+
+  relations.push({ table1, table2, type: relationType });
+  closeModal('relation');
+}
+
+function openDesignModal(schemaName) {
+  document.getElementById('current-design-name').textContent = schemaName;
+  document.getElementById('design-modal').classList.add('active');
+}
+
+function saveDesign() {
+  const color = document.getElementById('design-color').value;
+  const font = document.getElementById('design-font').value;
+  const schemaName = document.getElementById('current-design-name').textContent;
+  const carousel = document.getElementById(`${schemaName}-carousel`);
+  carousel.style.background = `linear-gradient(to right, transparent, ${color}, transparent)`;
+  carousel.style.fontFamily = font;
+  closeModal('design');
+}
+
+function openWireframeModal(schemaName) {
+  document.getElementById('current-wireframe-name').textContent = schemaName;
+  const editor = document.getElementById('wireframe-editor');
+  const schemaTable = activeTables.find(t => t.schema === schemaName && !t.isCategory && !t.isIndex);
+  editor.innerHTML = '';
+  schemaTable.wireframe.forEach(section => {
+    const div = document.createElement('div');
+    div.className = 'wireframe-section';
+    div.textContent = section;
+    div.draggable = true;
+    editor.appendChild(div);
+  });
+
+  new Sortable(editor, {
+    animation: 150,
+    onEnd: () => {
+      const newOrder = Array.from(editor.children).map(child => child.textContent);
+      schemaTable.wireframe = newOrder;
+    }
+  });
+
+  document.getElementById('wireframe-modal').classList.add('active');
+
+  const components = document.querySelectorAll('.component');
+  components.forEach(component => {
+    component.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', component.dataset.type);
+    });
+  });
+
+  editor.addEventListener('dragover', (e) => e.preventDefault());
+  editor.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const type = e.dataTransfer.getData('text/plain');
+    const div = document.createElement('div');
+    div.className = 'wireframe-section';
+    div.textContent = type;
+    div.draggable = true;
+    editor.appendChild(div);
+  });
+}
+
+function saveWireframe() {
+  const schemaName = document.getElementById('current-wireframe-name').textContent;
+  const schemaTable = activeTables.find(t => t.schema === schemaName && !t.isCategory && !t.isIndex);
+  schemaTable.wireframe = Array.from(document.getElementById('wireframe-editor').children).map(child => child.textContent);
+  closeModal('wireframe');
+}
+
+function closeModal(modalId) {
+  document.getElementById(`${modalId}-modal`).classList.remove('active');
+  document.getElementById('id-error').classList.remove('active');
+}
+</script>

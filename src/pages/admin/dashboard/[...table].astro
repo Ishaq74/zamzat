@@ -1,0 +1,10 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Dashboard from '@components/Admin/DashBoard.astro';
+
+const { table } = Astro.params;
+console.log('Paramètre table reçu dans [...table].astro:', table);
+---
+<Layout title="Tableau de bord" description="Tableau de bord de l'administration du site.">
+<Dashboard />
+</Layout>

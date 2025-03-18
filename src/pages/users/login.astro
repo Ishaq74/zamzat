@@ -1,0 +1,98 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Grid from "@components/Elements/Grid.astro";
+import Link from '@components/Elements/Link.astro';
+
+// Page meta
+const pageTitle = "Connexion";
+const pageDescription = "Page de connexion du site.";
+const pageKeywords = "blog, astro, cms, site web";
+const pageOgImage = "./images/og-home.jpg";
+const pageLang = "fr";
+const pageRobots = "noindex, nofollow";
+
+// Message d'erreur (si présent)
+const error = Astro.url.searchParams.get("error") || "";
+---
+
+<Layout 
+  title={pageTitle} 
+  description={pageDescription} 
+  keywords={pageKeywords} 
+  ogImage={pageOgImage}
+  lang={pageLang}
+  robots={pageRobots}
+>
+  <Grid tag="section" textAlign="center" backgroundColor="bg-blue-200" align="center" gap="gap-0">
+    <h1>Connexion</h1>
+  </Grid>
+  
+  <Grid tag="section" align="center" gap="gap-4">
+    <!-- Formulaire de connexion -->
+    <form id="loginForm" class="grid grid-cols-1 gap-4">
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Mot de passe" required />
+      <button type="submit">Se connecter</button>
+    </form>
+
+    <!-- Message d'erreur s'il y en a -->
+    {error && <p style="color:red;">{error}</p>}
+
+    <!-- Lien vers la page d'inscription -->
+    <p><Link href="/users/register">Créer un compte</Link></p>
+    
+    <!-- Message de succès (facultatif ici mais peut être utilisé si nécessaire) -->
+    <div id="success-message" style="color: green; display: none;"></div>
+    <!-- Message d'erreur dynamique -->
+    <div id="error-message" style="color: red; display: none;"></div>
+  </Grid>
+</Layout>
+
+<script is:inline>
+  const form = document.getElementById("loginForm");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault(); // Empêche le rechargement de la page
+
+    // Récupérer les données du formulaire
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    // Cacher les messages précédents
+    document.getElementById("success-message").style.display = 'none';
+    document.getElementById("error-message").style.display = 'none';
+
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        // Stocker les tokens en localStorage pour maintenir l'authentification
+        localStorage.setItem("accessToken", result.accessToken);
+        localStorage.setItem("refreshToken", result.refreshToken);
+        
+        // Message de succès
+        document.getElementById("success-message").innerText = "Connexion réussie ! Vous allez être redirigé vers votre profil.";
+        document.getElementById("success-message").style.display = 'block';
+
+        // Redirection après 3 secondes
+        setTimeout(() => {
+          window.location.href = "/users/profile";
+        }, 2000);
+      } else {
+        // Affichage du message d'erreur
+        document.getElementById("error-message").innerText = result.message;
+        document.getElementById("error-message").style.display = 'block';
+      }
+    } catch (error) {
+      // Gérer l'erreur en cas de problème réseau
+      document.getElementById("error-message").innerText = "Erreur de connexion. Veuillez réessayer plus tard.";
+      document.getElementById("error-message").style.display = 'block';
+    }
+  });
+</script>

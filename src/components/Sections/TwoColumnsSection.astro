@@ -1,0 +1,122 @@
+---
+import Link from '@components/Elements/Link.astro';
+
+const {
+  title,
+  paragraph,
+  imageSrc,
+  imageAlt,
+  imageWidth = '350px',
+  imageHeight = '350px',
+  imagePosition = 'right',
+  aspectRatio = "aspect-[16/9]",
+  objectFit = "object-cover",
+  imageRadius = "rounded-lg",
+  parallax = false,
+
+  button1Link,
+  button1Text,
+  button2Link,
+  button2Text,
+
+  backgroundColor = "bg-yellow-500",
+  backgroundImage = "/../images/fond-orange.jpg",
+  backgroundSize = "cover",
+  backgroundRepeat = "no-repeat",
+  backgroundPosition = "center",
+  backgroundFixed = true,
+
+  border = false,
+  borderSize = "border-8",
+  borderColor = "border-purple-800",
+  borderStyle = "border-dashed",
+  borderRadius,
+  boxShadow,
+
+  hoverAnimate = "hover:scale-105",
+  focusAnimate = "focus:ring-2 focus:ring-orange-500",
+  transition = "transition-all duration-300 ease-in-out",
+
+  paddingX = "px-4 md:px-8",
+  paddingY = "py-4 md:py-8",
+  gap = "gap-6",
+  textAlignment = "text-left",
+
+  customClasses = ""
+} = Astro.props;
+
+// Classe dynamique pour le background
+const backgroundClass = backgroundImage
+  ? `bg-[url(${backgroundImage})] bg-${backgroundSize} bg-${backgroundRepeat} bg-${backgroundPosition} ${backgroundFixed ? 'bg-fixed' : ''}`
+  : backgroundColor;  // Si pas d'image de fond, utiliser la couleur de fond
+
+// Classes pour le conteneur principal
+const sectionClasses = [
+  "grid",
+  "grid-cols-2",  // Valeur par défaut
+  "items-center",
+  gap,
+  paddingX,
+  paddingY,
+  backgroundClass,  // Applique la classe de fond calculée
+  border ? `${borderSize} ${borderColor} ${borderStyle}` : "",  // Applique les classes de bordure
+  borderRadius,
+  boxShadow,
+  transition,
+  customClasses
+].filter(Boolean).join(" ");
+
+// Classes pour l’image
+const imageClasses = [
+  aspectRatio,
+  objectFit,
+  imageRadius,
+  "w-full max-w-full"
+].filter(Boolean).join(" ");
+
+// Classes pour la div des boutons
+const buttonContainerClasses = "flex space-x-4 mt-4";
+---
+
+<section class={sectionClasses}>
+  {imagePosition === 'left' && (
+    <div class="flex">
+      <img 
+        src={imageSrc} 
+        alt={imageAlt} 
+        width={imageWidth} 
+        height={imageHeight} 
+        class={imageClasses}
+      />
+    </div>
+  )}
+
+  <div class={`flex flex-col ${textAlignment}`}>
+    <h1>{title}</h1>
+    <p>{paragraph}</p>
+    <div class={buttonContainerClasses}>
+      {button1Link && (
+        <Link isButtonStyle={true} shape="sharp" href={button1Link} style="primary" class={hoverAnimate}>
+          {button1Text}
+        </Link>
+      )}
+      {button2Link && (
+        <Link isButtonStyle={true} shape="sharp" href={button2Link} style="secondary" class={hoverAnimate}>
+          {button2Text}
+        </Link>
+      )}
+    </div>
+  </div>
+
+  {imagePosition === 'right' && (
+    <div class="flex">
+      <img 
+        src={imageSrc} 
+        alt={imageAlt} 
+        width={imageWidth} 
+        height={imageHeight} 
+        class={imageClasses}
+      />
+    </div>
+  )}
+</section>

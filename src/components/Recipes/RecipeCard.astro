@@ -1,0 +1,60 @@
+---
+// RecipeCard.astro
+import Grid from '@components/Elements/Grid.astro';
+import { Icon } from 'astro-icon/components';
+import { type CollectionEntry } from 'astro:content';
+import { getEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'recipes'>;
+}
+
+const { entry } = Astro.props;
+
+if (!entry || !entry.data) {
+  return null;
+}
+
+const averageRating = (entry.data as any).averageRating ?? '5';
+const reviewCount = (entry.data as any).reviewCount ?? '10';
+
+const slug = entry.data.slug;
+const { ...entryData } = entry.data;
+
+const categoryData = entryData.category ? await getEntry('recipecategories', entryData.category) : null;
+---
+<Grid tag="article"  xPadding="px-2" yPadding="py-2" gap="gap-0" backgroundColor="bg-white"  border borderType="border-1" borderRadius="rounded-lg" shadow="shadow-lg" width="w-full">
+  <a href={`/recipes/${slug}`} class="block">
+    <img src={entryData.image || "test" } alt={entryData.name} class="w-full h-48 object-cover rounded-md" />
+    <h3 class="mt-4 font-semibold text-gray-800">{entryData.name}</h2>
+    <p class="mt-2 text-gray-600">{entryData.description}</p>
+  </a>
+  
+      <div class="mt-2 space-x-2">
+          <a href={`/recipes/${categoryData?.data.slug}`} class="inline-block bg-gray-200 text-gray-700 px-2 py-1 text-sm rounded-full hover:bg-gray-300">
+            {categoryData?.data.name}
+          </a>
+      </div>
+
+    {typeof averageRating === 'number' && typeof reviewCount === 'number' && (
+      <div class="flex items-center mt-2.5 mb-5">
+        <div class="flex items-center space-x-1 rtl:space-x-reverse">
+          {Array.from({ length: 5 }).map((_, i) =>
+            i < Math.round(averageRating)
+              ? <Icon name="mdi:star" size={20} class="text-yellow-300" />
+              : <Icon name="mdi:star" size={20} class="text-gray-600" />
+          )}
+        </div>
+        <span class="bg-blue-100 text-blue-800 text-xs font-semibold px-2.5 py-0.5 rounded-sm ms-3">
+          {averageRating} ({reviewCount})
+        </span>
+      </div>
+    )}
+    {entryData.featured && (
+      <div class="mt-2">
+        <span class="inline-block bg-yellow-500 text-white text-sm font-semibold px-3 py-1 rounded-full">
+          Featured
+        </span>
+      </div>
+    )}
+</Grid>

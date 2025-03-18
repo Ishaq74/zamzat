@@ -1,0 +1,17 @@
+---
+import * as components from '@components/**/*.astro';
+
+const { component } = Astro.params;
+const props = await Astro.request.json() || {};
+
+if (!components[component]) {
+  return new Response('Composant non trouvé', { status: 404 });
+}
+
+const Component = components[component];
+const html = await Component.render(props);
+
+return new Response(html, {
+  headers: { 'Content-Type': 'text/html' }
+});
+---

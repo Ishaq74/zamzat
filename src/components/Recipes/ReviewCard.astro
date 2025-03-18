@@ -1,0 +1,44 @@
+---
+import FormattedDate from '@components/FormattedDate.astro';
+import { Icon } from 'astro-icon/components';
+import { type CollectionEntry } from 'astro:content';
+import { getEntry } from 'astro:content';
+
+const { entry } = Astro.props;
+const { ...entryData } = entry.data;
+const id = entry.id;
+
+if (!entry) {
+  return null;
+}
+
+const profileData = entryData.userid ? await getEntry('profiles', entryData.userid) : null;
+
+const safeRating = typeof entryData.rating === 'number' ? Math.min(5, Math.max(0, entryData.rating)) : 0;
+---
+
+<div class="border-b border-gray-800 py-4">
+  <div class="flex items-center space-x-4">
+    <img 
+      src={profileData?.data.avatar ?? '/default-avatar.png'} 
+      alt={profileData?.data.name ?? 'Utilisateur inconnu'} 
+      class="w-12 h-12 rounded-full object-cover" 
+    />
+    <div>
+      <p class="font-semibold">{profileData?.data.name ?? 'Utilisateur inconnu'}</p>
+      <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-1 rtl:space-x-reverse">
+          {Array.from({ length: 5 }).map((_, i) => 
+            i < safeRating 
+              ? <Icon name="mdi:star" size={20} class="text-yellow-300" /> 
+              : <Icon name="mdi:star" size={20} class="text-gray-600" />
+          )}
+        </div>
+        <span class="text-sm text-gray-500">
+          {entryData.datepublished ? <FormattedDate date={entryData.datepublished} /> : 'Date Inconnue'}
+        </span>
+      </div>
+    </div>
+  </div>
+  <p class="mt-2 text-gray-800">{entryData.reviewbody ?? 'Aucun commentaire'}</p>
+</div>

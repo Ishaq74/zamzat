@@ -1,0 +1,42 @@
+---
+import Layout from '@layouts/Layout.astro';
+import Grid from '@components/Elements/Grid.astro';
+import BlogCard from '@components/Blog/BlogCard.astro';
+import { DEFAULT_TITLE, DEFAULT_DESCRIPTION } from '../../const';
+import QueryLoop from '@components/Elements/QueryLoop.astro';
+import Filter from '@components/Elements/Filter.astro';
+
+const pageTitle = 'Blog';
+const pageDescription = 'Découvrez les dernières recettes et conseils pour cuire avec votre AirFryer au quotidien.';
+const pageKeywords = "cuisine, recettes, friteuse à air, cuire à l'air chaud, air fryer, airfryer";
+const pageOgImage = "";
+const pageLang = 'fr';
+const pageRobots = "index, follow";
+
+---
+<Layout title={pageTitle} description={pageDescription} keywords={pageKeywords} ogImage={pageOgImage} lang={pageLang} robots={pageRobots}>
+	  <!-- Section Hero avec image d'arrière-plan dynamique -->
+	<Grid tag="section" backgroundColor="bg-blue-200" align="center" gap="gap-0">
+		<h1 class="text-5xl font-extrabold">{pageTitle}</h1>
+		<p class="mt-4 text-xl">{pageDescription}</p>
+	</Grid>
+	<Grid tag="section" gap="gap-0">
+		<Filter 
+		collection="blog"
+		filters={[
+		  { type: 'search', name: 'title', label: 'Recherche par nom' },
+		  { 
+			type: 'select', 
+			name: 'category', 
+			label: 'Catégorie', 
+			reference: {
+			  collection: 'blogcategories', 
+			  valueField: 'id', 
+			  labelField: 'name'
+			}
+		  },
+		]}
+		CardComponent={BlogCard}
+	  />	  
+	</Grid>
+</Layout>

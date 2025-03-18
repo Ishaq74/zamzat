@@ -1,0 +1,100 @@
+---
+interface Props {
+  table: string;
+  fields: {
+    name: string;
+    type: 'text' | 'number' | 'select';
+    label?: string; // Label personnalisé
+    options?: string[];
+    required?: boolean; // Champ requis ou non
+  }[];
+}
+
+const { table, fields } = Astro.props;
+
+async function handleSubmit(event: Event) {
+  event.preventDefault();
+  const form = event.target as HTMLFormElement;
+  const formData = new FormData(form);
+  const data = Object.fromEntries(formData.entries());
+
+  try {
+    const response = await fetch(`/api/${table}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest', // Sécurité CSRF basique
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      alert('Création réussie !');
+      form.reset(); // UX : Reset le formulaire après succès
+    } else {
+      alert(`Erreur : ${result.error || 'Échec de la création'}`);
+    }
+  } catch (error) {
+    alert('Erreur réseau. Vérifiez votre connexion.');
+    console.error(error);
+  }
+}
+---
+
+<form
+  onsubmit="handleSubmit(event)"
+  class="space-y-4 p-6 bg-white rounded-lg shadow-md max-w-lg mx-auto"
+>
+  {fields.map((field) => (
+    <div class="flex flex-col">
+      <label for={field.name} class="font-medium text-gray-700 mb-1">
+        {field.label || field.name}
+        {field.required && <span class="text-red-500">*</span>}
+      </label>
+      {field.type === 'select' ? (
+        <select
+          id={field.name}
+          name={field.name}
+          class="p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+          required={field.required ?? true}
+        >
+          <option value="">Sélectionnez une option</option>
+          {field.options?.map((option) => (
+            <option value={option}>{option}</option>
+          ))}
+        </select>
+      ) : (
+        <input
+          id={field.name}
+          type={field.type}
+          name={field.name}
+          placeholder={field.label || field.name}
+          class="p-2 border rounded-md focus:ring-2 focus:ring-blue-500"
+          required={field.required ?? true}
+          min={field.type === 'number' ? 0 : undefined}
+        />
+      )}
+    </div>
+  ))}
+  <button
+    type="submit"
+    class="w-full py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+  >
+    Créer
+  </button>
+</form>
+
+<style>
+  /* Amélioration UI */
+  form {
+    font-family: 'Arial', sans-serif;
+  }
+  input, select {
+    transition: all 0.2s ease;
+  }
+  input:focus, select:focus {
+    outline: none;
+    border-color: #3b82f6;
+  }
+</style>
