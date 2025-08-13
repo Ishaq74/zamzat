@@ -35,10 +35,10 @@ Le site est construit avec Astro et utilise Supabase pour la gestion des donnée
 - Système de contenu avec MDX
 - **Build réussi** - Le projet se compile maintenant sans erreur
 - **Serveur de développement** - Fonctionne sur localhost:4321
-- Fallbacks pour les collections Supabase
+- **Collections de fallback** - Données d'exemple réalistes quand Supabase n'est pas disponible
 
 ### ⚠️ Ce qui fonctionne avec limitations
-- Collections Supabase (profiles, reviews, likes, comments) - Retournent des données vides sans configuration Supabase
+- Collections Supabase (profiles, reviews, likes, comments) - Utilisent maintenant des données de fallback réalistes
 - API de rendu de composants - Temporairement désactivée
 
 ### 🚧 Ce qui manque

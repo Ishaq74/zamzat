@@ -1,5 +1,6 @@
 import { glob, file } from 'astro/loaders';
 import { defineCollection, reference, z } from 'astro:content';
+import FallbackContentService from '@lib/fallback';
 
 // Const For the Website Settings
 
@@ -249,8 +250,8 @@ const productCategories = defineCollection({
   }),
 });
 
-// Collections Supabase temporairement désactivées (retournent des données vides)
-// Ces collections seront réactivées une fois Supabase configuré
+// Collections Supabase with intelligent fallback
+// Ces collections utilisent des données de fallback quand Supabase n'est pas disponible
 
 const profiles = defineCollection({
   schema: z.object({
@@ -262,8 +263,12 @@ const profiles = defineCollection({
     user_id: z.string().optional(),
   }),
   loader: async () => {
-    console.warn('Collection profiles désactivée - Supabase requis');
-    return [];
+    try {
+      return await FallbackContentService.getCollectionData('profiles');
+    } catch (error) {
+      console.error('Error loading profiles collection:', error);
+      return [];
+    }
   }
 });
 
@@ -271,14 +276,18 @@ const reviews = defineCollection({
   schema: z.object({
     id: z.string(),
     rating: z.number(),
-    comment: z.string(),
-    productId: z.string(),
+    reviewbody: z.string(), // Changed from 'comment' to match page usage
+    airfryerid: z.string(), // Changed from 'productId' to match page usage  
     userId: z.string(),
-    createdAt: z.string(),
+    datepublished: z.string(), // Changed from 'createdAt' to match page usage
   }),
   loader: async () => {
-    console.warn('Collection reviews désactivée - Supabase requis');
-    return [];
+    try {
+      return await FallbackContentService.getCollectionData('reviews');
+    } catch (error) {
+      console.error('Error loading reviews collection:', error);
+      return [];
+    }
   }
 });
 
@@ -290,8 +299,12 @@ const likes = defineCollection({
     itemType: z.string(),
   }),
   loader: async () => {
-    console.warn('Collection likes désactivée - Supabase requis');
-    return [];
+    try {
+      return await FallbackContentService.getCollectionData('likes');
+    } catch (error) {
+      console.error('Error loading likes collection:', error);
+      return [];
+    }
   }
 });
 
@@ -305,8 +318,12 @@ const comments = defineCollection({
     createdAt: z.string(),
   }),
   loader: async () => {
-    console.warn('Collection comments désactivée - Supabase requis');
-    return [];
+    try {
+      return await FallbackContentService.getCollectionData('comments');
+    } catch (error) {
+      console.error('Error loading comments collection:', error);
+      return [];
+    }
   }
 });
 
