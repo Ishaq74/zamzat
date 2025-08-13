@@ -33,19 +33,20 @@ Le site est construit avec Astro et utilise Supabase pour la gestion des donnée
 - Configuration TypeScript
 - Dépendances installées
 - Système de contenu avec MDX
+- **Build réussi** - Le projet se compile maintenant sans erreur
+- **Serveur de développement** - Fonctionne sur localhost:4321
+- Fallbacks pour les collections Supabase
 
-### ❌ Ce qui ne fonctionne pas actuellement
-- **Build échoue** - Variables d'environnement Supabase manquantes
-- Configuration de production incomplète
-- Tests non configurés
+### ⚠️ Ce qui fonctionne avec limitations
+- Collections Supabase (profiles, reviews, likes, comments) - Retournent des données vides sans configuration Supabase
+- API de rendu de composants - Temporairement désactivée
 
 ### 🚧 Ce qui manque
-- Variables d'environnement (SUPABASE_URL, SUPABASE_ANON_KEY)
-- Documentation de déploiement
-- Tests automatisés
+- Variables d'environnement Supabase pour les fonctionnalités dynamiques
+- Données de démonstration pour les collections Supabase
+- Tests automatisés (infrastructure en place)
 - Configuration CI/CD
 - Guide de contribution
-- Données de test/démonstration
 
 ## 📁 Structure du Projet
 
@@ -85,15 +86,15 @@ Les assets statiques, comme les images, peuvent être placés dans le répertoir
 npm install
 ```
 
-### 3. Configuration Supabase (OBLIGATOIRE)
-Créez un fichier `.env` à la racine du projet avec les variables suivantes :
+### 3. Configuration Supabase (OPTIONNELLE)
+Créez un fichier `.env` à la racine du projet avec les variables suivantes pour activer les fonctionnalités dynamiques :
 
 ```env
 SUPABASE_URL=votre_url_supabase
 SUPABASE_ANON_KEY=votre_cle_anonyme_supabase
 ```
 
-**⚠️ Sans ces variables, le build échouera !**
+**Note** : Le projet peut maintenant être buildé et développé sans Supabase. Les collections dynamiques (profiles, reviews, etc.) retourneront simplement des données vides.
 
 ## 🧞 Commandes
 

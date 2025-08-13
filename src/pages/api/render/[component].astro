@@ -1,7 +1,13 @@
 ---
-import * as components from '@components/**/*.astro';
+// API route temporairement désactivée - problème d'import glob
+// import * as components from '@components/**/*.astro';
 
 const { component } = Astro.params;
+
+// Retourner une erreur pour l'instant
+return new Response('API temporairement désactivée', { status: 503 });
+
+/*
 const props = await Astro.request.json() || {};
 
 if (!components[component]) {
@@ -14,4 +20,5 @@ const html = await Component.render(props);
 return new Response(html, {
   headers: { 'Content-Type': 'text/html' }
 });
+*/
 ---
