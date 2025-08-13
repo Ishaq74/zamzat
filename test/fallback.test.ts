@@ -37,10 +37,10 @@ describe('FallbackContentService', () => {
     const firstReview = reviews[0];
     expect(firstReview).toHaveProperty('id');
     expect(firstReview).toHaveProperty('rating');
-    expect(firstReview).toHaveProperty('comment');
-    expect(firstReview).toHaveProperty('productId');
+    expect(firstReview).toHaveProperty('reviewbody');
+    expect(firstReview).toHaveProperty('airfryerid');
     expect(firstReview).toHaveProperty('userId');
-    expect(firstReview).toHaveProperty('createdAt');
+    expect(firstReview).toHaveProperty('datepublished');
     expect(typeof firstReview.rating).toBe('number');
     expect(firstReview.rating).toBeGreaterThan(0);
     expect(firstReview.rating).toBeLessThanOrEqual(5);

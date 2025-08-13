@@ -2,57 +2,57 @@
   {
     "id": "fallback-review-1",
     "rating": 5,
-    "comment": "Excellente friteuse ! Les frites sont parfaitement croustillantes et le poulet sort délicieusement doré. Je la recommande vivement !",
-    "productId": "philips-airfryer-xxl",
+    "reviewbody": "Excellente friteuse ! Les frites sont parfaitement croustillantes et le poulet sort délicieusement doré. Je la recommande vivement !",
+    "airfryerid": "philips-airfryer-xxl",
     "userId": "fallback-user-1", 
-    "createdAt": "2024-01-15T10:30:00Z"
+    "datepublished": "2024-01-15"
   },
   {
     "id": "fallback-review-2",
     "rating": 4,
-    "comment": "Très bon produit, facile à utiliser. Petit bémol sur le bruit mais sinon parfait pour une famille de 4 personnes.",
-    "productId": "ninja-air-fryer-max-xl",
+    "reviewbody": "Très bon produit, facile à utiliser. Petit bémol sur le bruit mais sinon parfait pour une famille de 4 personnes.",
+    "airfryerid": "ninja-air-fryer-max-xl",
     "userId": "fallback-user-2",
-    "createdAt": "2024-01-20T14:45:00Z"
+    "datepublished": "2024-01-20"
   },
   {
     "id": "fallback-review-3", 
     "rating": 5,
-    "comment": "Je ne peux plus me passer de cette air fryer ! Mes enfants adorent les nuggets maison et moi j'adore la rapidité de cuisson.",
-    "productId": "cosori-air-fryer-max",
+    "reviewbody": "Je ne peux plus me passer de cette air fryer ! Mes enfants adorent les nuggets maison et moi j'adore la rapidité de cuisson.",
+    "airfryerid": "cosori-air-fryer-max",
     "userId": "fallback-user-3",
-    "createdAt": "2024-02-02T09:15:00Z"
+    "datepublished": "2024-02-02"
   },
   {
     "id": "fallback-review-4",
     "rating": 4,
-    "comment": "Parfait pour une cuisine plus saine ! Les légumes grillés sont excellents et la cuisson est très homogène.",
-    "productId": "tefal-actifry-genius-xl", 
+    "reviewbody": "Parfait pour une cuisine plus saine ! Les légumes grillés sont excellents et la cuisson est très homogène.",
+    "airfryerid": "tefal-actifry-genius-xl", 
     "userId": "fallback-user-4",
-    "createdAt": "2024-02-10T16:20:00Z"
+    "datepublished": "2024-02-10"
   },
   {
     "id": "fallback-review-5",
     "rating": 5,
-    "comment": "Design élégant et performances au rendez-vous. Les programmes automatiques sont très pratiques pour débuter.",
-    "productId": "breville-smart-oven-air",
+    "reviewbody": "Design élégant et performances au rendez-vous. Les programmes automatiques sont très pratiques pour débuter.",
+    "airfryerid": "breville-smart-oven-air",
     "userId": "fallback-user-5", 
-    "createdAt": "2024-02-18T11:30:00Z"
+    "datepublished": "2024-02-18"
   },
   {
     "id": "fallback-review-6",
     "rating": 3,
-    "comment": "Correct pour le prix mais la capacité est un peu juste pour une grande famille. Bon pour débuter cependant.",
-    "productId": "black-decker-5l-air-fryer",
+    "reviewbody": "Correct pour le prix mais la capacité est un peu juste pour une grande famille. Bon pour débuter cependant.",
+    "airfryerid": "black-decker-5l-air-fryer",
     "userId": "fallback-user-1",
-    "createdAt": "2024-03-01T13:45:00Z"
+    "datepublished": "2024-03-01"
   },
   {
     "id": "fallback-review-7",
     "rating": 4,
-    "comment": "Très bon rapport qualité-prix ! Simple d'utilisation et facile à nettoyer. Parfait pour les débutants.",
-    "productId": "airfryer-action-4l", 
+    "reviewbody": "Très bon rapport qualité-prix ! Simple d'utilisation et facile à nettoyer. Parfait pour les débutants.",
+    "airfryerid": "airfryer-action-4l", 
     "userId": "fallback-user-3",
-    "createdAt": "2024-03-08T15:10:00Z"
+    "datepublished": "2024-03-08"
   }
 ]

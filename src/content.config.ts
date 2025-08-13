@@ -276,10 +276,10 @@ const reviews = defineCollection({
   schema: z.object({
     id: z.string(),
     rating: z.number(),
-    comment: z.string(),
-    productId: z.string(),
+    reviewbody: z.string(), // Changed from 'comment' to match page usage
+    airfryerid: z.string(), // Changed from 'productId' to match page usage  
     userId: z.string(),
-    createdAt: z.string(),
+    datepublished: z.string(), // Changed from 'createdAt' to match page usage
   }),
   loader: async () => {
     try {
