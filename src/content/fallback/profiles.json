@@ -1,0 +1,42 @@
+[
+  {
+    "id": "fallback-user-1",
+    "name": "Marie Dupont",
+    "avatar": "/images/avatars/marie.jpg",
+    "city": "Paris",
+    "bio": "Passionnée de cuisine saine et rapide avec l'air fryer depuis 3 ans. J'adore partager mes découvertes culinaires !",
+    "user_id": "auth-fallback-1"
+  },
+  {
+    "id": "fallback-user-2", 
+    "name": "Pierre Martin",
+    "avatar": "/images/avatars/pierre.jpg",
+    "city": "Lyon",
+    "bio": "Chef amateur, j'utilise l'air fryer pour créer des versions plus saines de mes plats préférés.",
+    "user_id": "auth-fallback-2"
+  },
+  {
+    "id": "fallback-user-3",
+    "name": "Sophie Leblanc", 
+    "avatar": "/images/avatars/sophie.jpg",
+    "city": "Marseille",
+    "bio": "Maman de 2 enfants, l'air fryer m'aide à préparer des repas rapides et équilibrés pour toute la famille.",
+    "user_id": "auth-fallback-3"
+  },
+  {
+    "id": "fallback-user-4",
+    "name": "Thomas Rousseau",
+    "avatar": "/images/avatars/thomas.jpg", 
+    "city": "Toulouse",
+    "bio": "Nutritionniste et amateur de nouvelles technologies culinaires. L'air fryer est parfait pour une cuisine low-fat !",
+    "user_id": "auth-fallback-4"
+  },
+  {
+    "id": "fallback-user-5",
+    "name": "Claire Moreau",
+    "avatar": "/images/avatars/claire.jpg",
+    "city": "Nantes", 
+    "bio": "Food blogger et testeuse de produits culinaires. Toujours à la recherche de la meilleure recette air fryer !",
+    "user_id": "auth-fallback-5"
+  }
+]

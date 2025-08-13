@@ -1,0 +1,62 @@
+[
+  {
+    "id": "fallback-like-1",
+    "userId": "fallback-user-1",
+    "itemId": "frites-croustillantes",
+    "itemType": "recipe"
+  },
+  {
+    "id": "fallback-like-2", 
+    "userId": "fallback-user-1",
+    "itemId": "poulet-croustillant",
+    "itemType": "recipe"
+  },
+  {
+    "id": "fallback-like-3",
+    "userId": "fallback-user-2", 
+    "itemId": "philips-airfryer-xxl",
+    "itemType": "product"
+  },
+  {
+    "id": "fallback-like-4",
+    "userId": "fallback-user-2",
+    "itemId": "legumes-grilles",
+    "itemType": "recipe"
+  },
+  {
+    "id": "fallback-like-5",
+    "userId": "fallback-user-3",
+    "itemId": "nuggets-maison",
+    "itemType": "recipe"
+  },
+  {
+    "id": "fallback-like-6", 
+    "userId": "fallback-user-3",
+    "itemId": "ninja-air-fryer-max-xl", 
+    "itemType": "product"
+  },
+  {
+    "id": "fallback-like-7",
+    "userId": "fallback-user-4",
+    "itemId": "saumon-legumes",
+    "itemType": "recipe"
+  },
+  {
+    "id": "fallback-like-8",
+    "userId": "fallback-user-4",
+    "itemId": "cosori-air-fryer-max",
+    "itemType": "product"
+  },
+  {
+    "id": "fallback-like-9", 
+    "userId": "fallback-user-5",
+    "itemId": "donuts-light",
+    "itemType": "recipe"
+  },
+  {
+    "id": "fallback-like-10",
+    "userId": "fallback-user-5",
+    "itemId": "breville-smart-oven-air",
+    "itemType": "product"
+  }
+]

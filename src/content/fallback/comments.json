@@ -1,0 +1,66 @@
+[
+  {
+    "id": "fallback-comment-1",
+    "content": "Merci pour cette recette ! J'ai essayé hier soir et c'était délicieux. Mes enfants ont adoré.",
+    "userId": "fallback-user-2",
+    "itemId": "frites-croustillantes", 
+    "itemType": "recipe",
+    "createdAt": "2024-01-16T18:30:00Z"
+  },
+  {
+    "id": "fallback-comment-2",
+    "content": "Petite astuce : j'ajoute une pincée de paprika fumé pour encore plus de goût !",
+    "userId": "fallback-user-3",
+    "itemId": "frites-croustillantes",
+    "itemType": "recipe", 
+    "createdAt": "2024-01-17T12:15:00Z"
+  },
+  {
+    "id": "fallback-comment-3",
+    "content": "Parfait pour les débutants ! J'ai suivi la recette à la lettre et le résultat était parfait.",
+    "userId": "fallback-user-4",
+    "itemId": "poulet-croustillant",
+    "itemType": "recipe",
+    "createdAt": "2024-01-22T20:45:00Z"
+  },
+  {
+    "id": "fallback-comment-4", 
+    "content": "Je confirme, cette air fryer est excellente ! La livraison était rapide en plus.",
+    "userId": "fallback-user-1",
+    "itemId": "philips-airfryer-xxl",
+    "itemType": "product",
+    "createdAt": "2024-01-25T14:20:00Z"
+  },
+  {
+    "id": "fallback-comment-5",
+    "content": "Question : est-ce que ça fonctionne bien avec des légumes surgelés ?", 
+    "userId": "fallback-user-5",
+    "itemId": "legumes-grilles",
+    "itemType": "recipe",
+    "createdAt": "2024-02-05T16:30:00Z"
+  },
+  {
+    "id": "fallback-comment-6",
+    "content": "Oui parfaitement ! Pas besoin de décongeler, juste ajuster le temps de cuisson de 2-3 minutes.",
+    "userId": "fallback-user-1", 
+    "itemId": "legumes-grilles",
+    "itemType": "recipe",
+    "createdAt": "2024-02-05T17:45:00Z"
+  },
+  {
+    "id": "fallback-comment-7",
+    "content": "Mes enfants mangent enfin des légumes grâce à cette recette ! Un grand merci.",
+    "userId": "fallback-user-3",
+    "itemId": "legumes-grilles",
+    "itemType": "recipe",
+    "createdAt": "2024-02-12T19:20:00Z"
+  },
+  {
+    "id": "fallback-comment-8",
+    "content": "Excellent investissement ! Je l'utilise tous les jours maintenant.", 
+    "userId": "fallback-user-4",
+    "itemId": "ninja-air-fryer-max-xl",
+    "itemType": "product",
+    "createdAt": "2024-02-20T11:15:00Z"
+  }
+]
